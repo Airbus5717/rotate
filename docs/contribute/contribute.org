@@ -1,0 +1,7 @@
+#+TITLE: Contribute to Rotate
+
+* Requirments 
+- C++ compiler 
+- Use C as much as possible
+
+
