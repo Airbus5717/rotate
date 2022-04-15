@@ -2,6 +2,6 @@
 
 * Requirments 
 - C++ compiler 
-- Use C as much as possible (after it is done ill remove libC++ dependency) 
+- Use C as much as possible (will remove libC++ dependency in future) 
 
 
