@@ -1,3 +1,255 @@
 #include "include/token.hpp"
 
 // TODO: convert tokens to cstring funcs
+namespace rotate
+{
+
+const char *tkn_type_describe(const token_type type)
+{
+    switch (type)
+    {
+        case TknTypeIdentifier:
+            return "id";
+        case TknTypeBuiltinFunc:
+            return "built_func";
+        case TknTypeEqual:
+            return "assign'='";
+        case TknTypeInteger:
+            return "integer";
+        case TknTypeSemiColon:
+            return "semicolon';'";
+        case TknTypeColon:
+            return "colon':'";
+        case TknTypeString:
+            return "string";
+        case TknTypeFunction:
+            return "function'fn'";
+        case TknTypePLUS:
+            return "plus'+'";
+        case TknTypeMINUS:
+            return "minus'-'";
+        case TknTypeStar:
+            return "star'*'";
+        case TknTypeDIV:
+            return "divide'/'";
+        case TknTypeLeftParen:
+            return "leftparen'('";
+        case TknTypeRightParen:
+            return "rightparen')'";
+        case TknTypeLeftCurly:
+            return "leftcurlybrkt'{'";
+        case TknTypeRightCurly:
+            return "rightcurlybrkt'}'";
+        case TknTypeLeftSQRBrackets:
+            return "leftsqrbrkt']'";
+        case TknTypeRightSQRBrackets:
+            return "rightsqrbrkt'['";
+        case TknTypeChar:
+            return "char";
+        case TknTypeReturn:
+            return "return";
+        case TknTypeImport:
+            return "import";
+        case TknTypeIf:
+            return "if";
+        case TknTypeElse:
+            return "else";
+        case TknTypeFor:
+            return "for";
+        case TknTypeWhile:
+            return "while";
+        case TknTypeGreater:
+            return "greater'>'";
+        case TknTypeLess:
+            return "less'<'";
+        case TknTypeTrue:
+            return "bool:true";
+        case TknTypeFalse:
+            return "bool:false";
+        case TknTypeDot:
+            return "dot";
+        case TknTypeNot:
+            return "not'!'";
+        case TknTypeAnd:
+            return "and";
+        case TknTypeOr:
+            return "or";
+        case TknTypeDoubleQuotes:
+            return "double quotes";
+        case TknTypeQuote:
+            return "quote";
+        case TknTypeFloat:
+            return "float";
+        case TknTypeLet:
+            return "let";
+        case TknTypeComma:
+            return "comma','";
+        case TknTypePublic:
+            return "public";
+        case TknTypeNotEqual:
+            return "`!=` not eql";
+        case TknTypeMutable:
+            return "mutable";
+        case TknTypeCharKeyword:
+            return "char_word";
+        case TknTypeFloatKeyword:
+            return "float_word";
+        case TknTypeIntKeyword:
+            return "int_word";
+        case TknTypeMatch:
+            return "match";
+        case TknTypeStringKeyword:
+            return "str_word";
+        case TknTypeBoolKeyword:
+            return "bool_word";
+        case TknTypeAs:
+            return "as";
+        case TknTypeEqualEqual:
+            return "equality";
+        case TknTypeBreak:
+            return "break";
+        case TknTypeAddEqual:
+            return "add_equal";
+        case TknTypeDivEqual:
+            return "divide_equal";
+        case TknTypeMultEqual:
+            return "multiply_equal";
+        case TknTypeSubEqual:
+            return "subtract_equal";
+        case TknTypeStruct:
+            return "struct";
+        case TknTypeRef:
+            return "ref";
+        case TknTypeVoid:
+            return "void";
+        case TknTypeInclude:
+            return "include";
+        case TknTypeEnum:
+            return "enum";
+        case TknTypeNil:
+            return "nil (null)";
+        case TknTypeVar:
+            return "var";
+        case TknTypeEOT:
+            return "End OF Tokens";
+        default:
+            return "???";
+    }
+}
+
+const char *get_keyword_or_type(const token_type type)
+{
+    switch (type)
+    {
+        case TknTypeAs:
+            return "as";
+        case TknTypeFunction:
+            return "fn";
+        case TknTypeIf:
+            return "if";
+        case TknTypeOr:
+            return "or";
+        case TknTypeFor:
+            return "for";
+        case TknTypeLet:
+            return "let";
+        case TknTypePublic:
+            return "pub";
+        case TknTypeMutable:
+            return "mut";
+        case TknTypeStringKeyword:
+            return "str";
+        case TknTypeIntKeyword:
+            return "int";
+        case TknTypeRef:
+            return "ref";
+        case TknTypeAnd:
+            return "and";
+        case TknTypeNil:
+            return "nil";
+        case TknTypeVar:
+            return "var";
+        case TknTypeEnum:
+            return "enum";
+        case TknTypeElse:
+            return "else";
+        case TknTypeTrue:
+            return "true";
+        case TknTypeCharKeyword:
+            return "char";
+        case TknTypeBoolKeyword:
+            return "bool";
+        case TknTypeVoid:
+            return "void";
+        case TknTypeWhile:
+            return "while";
+        case TknTypeFalse:
+            return "false";
+        case TknTypeMatch:
+            return "match";
+        case TknTypeBreak:
+            return "break";
+        case TknTypeReturn:
+            return "return";
+        case TknTypeImport:
+            return "import";
+        case TknTypeFloatKeyword:
+            return "float";
+        case TknTypeStruct:
+            return "struct";
+
+        // symbols
+        case TknTypeEqualEqual:
+            return "==";
+        case TknTypeEqual:
+            return "=";
+        case TknTypeColon:
+            return ":";
+        case TknTypeSemiColon:
+            return ";";
+        case TknTypeAddEqual:
+            return "+=";
+        case TknTypeSubEqual:
+            return "-=";
+        case TknTypeMultEqual:
+            return "*=";
+        case TknTypeDivEqual:
+            return "/=";
+        case TknTypePLUS:
+            return "+";
+        case TknTypeMINUS:
+            return "-";
+        case TknTypeStar:
+            return "*";
+        case TknTypeDIV:
+            return "/";
+        case TknTypeLeftParen:
+            return "(";
+        case TknTypeRightParen:
+            return ")";
+        case TknTypeLeftCurly:
+            return "{";
+        case TknTypeRightCurly:
+            return "}";
+        case TknTypeLeftSQRBrackets:
+            return "[";
+        case TknTypeRightSQRBrackets:
+            return "]";
+        case TknTypeGreater:
+            return ">";
+        case TknTypeLess:
+            return "<";
+        case TknTypeDot:
+            return ".";
+        case TknTypeNotEqual:
+            return "!=";
+        case TknTypeNot:
+            return "!";
+        case TknTypeComma:
+            return ",";
+        default:
+            return NULL;
+    }
+}
+
+} // namespace rotate

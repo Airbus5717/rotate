@@ -9,7 +9,7 @@ namespace rotate
 class Lexer
 {
     // lexer state variables
-    usize index = 0;
+    usize index = 0, col = 0, line = 0, len = 0;
     file_t *file;
     std::vector<token> tokens{};
 
@@ -24,15 +24,20 @@ class Lexer
     int lex_symbols();
     int lex_builtin_funcs();
     int lex_identifiers();
-    void add_token();
+    int add_token(token_type type);
+    int add_token_default(token_type type);
 
     void skip_whitespace() noexcept;
 
     //
     void advance();
+    void advance(usize i);
     char peek() const;
     char past() const;
     char current() const;
+    bool is_eof() const;
+
+    error_type error;
 
   public:
     //
@@ -41,7 +46,6 @@ class Lexer
     std::vector<token> getTokens();
     int lex_init();
 };
-
 } // namespace rotate
 
 #endif // ROTATE_LEXER

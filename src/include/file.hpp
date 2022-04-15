@@ -9,22 +9,20 @@ namespace rotate
 struct file_t
 {
     string name;
-    std::string_view contents;
+    string contents;
 
-    file_t(const char *name)
+    file_t(const char *name, const char *contents) : name(name), contents(contents)
     {
-        string tmp{name};
-        this->name = tmp;
     }
 
     ~file_t()
     {
         name.clear();
-        free((void *)contents.data());
+        contents.clear();
     }
 };
 
-file_t *file_read(const char *name);
+file_t *file_read(const char *name) noexcept;
 
 } // namespace rotate
 

@@ -3,7 +3,7 @@
 namespace rotate
 {
 // This function is written in C-style (C++ way is confusing and slower)
-file_t *file_read(const char *name)
+file_t *file_read(const char *name) noexcept
 {
     // open file
     FILE *file = fopen(name, "rb");
@@ -73,8 +73,7 @@ file_t *file_read(const char *name)
 
     // Close the file
     fclose(file);
-    file_t *file_   = new file_t(name);
-    file_->contents = buffer;
+    file_t *file_ = new file_t(name, buffer);
     return file_;
 }
 

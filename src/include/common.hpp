@@ -45,16 +45,16 @@ using std::string;
         exit(1);                                                                                   \
     }
 
-#define STR_ASSERT(string, string2, msg)                                                           \
-    if (strcmp(string, string2) != 0)                                                              \
+#define STR_ASSERT(string1, string2, msg)                                                          \
+    if (strcmp(string1, string2) != 0)                                                             \
     {                                                                                              \
         fprintf(stderr, "%sAssert failure: %s\n@line: %d\n@file: %s%s\n", LRED, msg, __LINE__,     \
                 __FILE__, RESET);                                                                  \
         exit(1);                                                                                   \
     }
 
-#define TODO(string)                                                                               \
-    fprintf(stderr, "%sTODO: %s\n@line: %d\n@file: %s%s\n", YELLOW, string, __LINE__, __FILE__,    \
+#define TODO(string1)                                                                              \
+    fprintf(stderr, "%sTODO: %s\n@line: %d\n@file: %s%s\n", YELLOW, string1, __LINE__, __FILE__,   \
             RESET);                                                                                \
     exit(1)
 
