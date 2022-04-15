@@ -15,9 +15,9 @@ int compile(const char *arg)
     lexer = new Lexer(file);
     lexer->lex_init();
     auto tkns = lexer->getTokens();
-    for (usize i = 0; i < tkns.size(); i++)
+    for (token tkn : tkns)
     {
-        std::cout << tkns[i].value << " " << tkns[i].type << std::endl;
+        std::cout << tkn.value << " " << tkn_type_describe(tkn.type) << std::endl;
     }
     delete lexer;
     delete file;

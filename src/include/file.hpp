@@ -15,14 +15,10 @@ struct file_t
     {
     }
 
-    ~file_t()
-    {
-        name.clear();
-        contents.clear();
-    }
+    ~file_t() = default;
 };
 
-file_t *file_read(const char *name) noexcept;
+extern "C" file_t *file_read(const char *name) noexcept;
 
 } // namespace rotate
 

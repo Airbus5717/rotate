@@ -121,6 +121,8 @@ enum error_type
 
 const char *tkn_type_describe(const token_type type);
 const char *get_keyword_or_type(const token_type type);
+const char *advice(error_type error);
+const char *err_msgsfunc(error_type error);
 
 struct token
 {
@@ -132,6 +134,8 @@ struct token
         : type(type), line(line), col(col), index(index), value(str)
     {
     }
+
+    ~token() = default;
 };
 
 } // namespace rotate

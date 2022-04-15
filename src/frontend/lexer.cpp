@@ -3,24 +3,37 @@
 namespace rotate
 {
 
+#define EXIT_DONE 3
+
 Lexer::Lexer(file_t *file)
 {
-    this->file = file;
+    this->file        = file;
+    this->is_done     = false;
+    this->file_length = file->contents.size();
 }
 
 int Lexer::lex_init()
 {
     col = 0, line = 1;
-    for (usize index = 0; index < file->contents.size(); index++)
+    for (index = 0; !is_done; advance())
     {
-        if (lex() == EXIT_FAILURE) return report_error();
+        skip_whitespace();
+        switch (lex())
+        {
+            case EXIT_SUCCESS:
+                continue;
+            case EXIT_DONE:
+                break;
+            case EXIT_FAILURE:
+                return report_error();
+        }
     }
     return EXIT_SUCCESS;
 }
 
 void Lexer::skip_whitespace() noexcept
 {
-    while (is_space_rotate(current()))
+    while (current() == ' ' || current() == '\n')
     {
         advance();
     }
@@ -29,7 +42,6 @@ void Lexer::skip_whitespace() noexcept
 int Lexer::lex()
 {
     len = 0;
-    skip_whitespace();
 
     const char c = current();
 
@@ -41,7 +53,6 @@ int Lexer::lex()
 
     if (c == '_' || isalpha(c)) return lex_identifiers();
     if (c == '@') return lex_builtin_funcs();
-
     return lex_symbols();
 }
 
@@ -67,7 +78,6 @@ int Lexer::lex_numbers()
     {
         if (current() == '.')
         {
-            std::cout << current() << std::endl;
             if (reached_dot) break;
             reached_dot = true;
         }
@@ -213,6 +223,9 @@ int Lexer::lex_symbols()
         default: {
             switch (c)
             {
+                case '\0':
+                    is_done = true;
+                    return EXIT_DONE;
                 case '\t':
                     this->error = TABS;
                     break;
@@ -237,8 +250,8 @@ int Lexer::lex_builtin_funcs()
 void Lexer::advance()
 {
     const char c = current();
-    index += (index < file->contents.size());
-    if (peek() == '\0') error = END_OF_FILE;
+    index += (index < file_length);
+    if (peek() == '\0') this->error = END_OF_FILE;
 
     if (c != '\n')
     {
@@ -253,12 +266,12 @@ void Lexer::advance()
 
 char Lexer::peek() const
 {
-    return (index + 1 < file->contents.size()) ? file->contents.at(index + 1) : '\0';
+    return (index + 1 < file_length) ? file->contents.at(index + 1) : '\0';
 }
 
 char Lexer::current() const
 {
-    return (index < file->contents.size()) ? file->contents.at(index) : '\0';
+    return (index < file_length) ? file->contents.at(index) : '\0';
 }
 
 char Lexer::past() const
@@ -268,12 +281,13 @@ char Lexer::past() const
 
 bool Lexer::is_eof() const
 {
-    return index < file->contents.size();
+    return index < file_length;
 }
 
 int Lexer::report_error()
 {
-    std::cout << "Error: " << error << std::endl;
+    std::cout << "Error: " << err_msgsfunc(error) << std::endl;
+    std::cout << file->contents[index] << std::endl;
     return EXIT_FAILURE;
 }
 

@@ -11,6 +11,8 @@ class Lexer
     // lexer state variables
     usize index = 0, col = 0, line = 0, len = 0;
     file_t *file;
+    usize file_length;
+    bool is_done;
     std::vector<token> tokens{};
 
     //
