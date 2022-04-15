@@ -128,9 +128,9 @@ struct token
 {
     token_type type;
     usize line = 0, col = 0, index = 0;
-    std::string_view value;
+    const char *value;
 
-    token(token_type type, usize line, usize col, usize index, std::string_view str)
+    token(token_type type, usize line, usize col, usize index, const char *str)
         : type(type), line(line), col(col), index(index), value(str)
     {
     }

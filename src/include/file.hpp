@@ -8,7 +8,7 @@ namespace rotate
 
 struct file_t
 {
-    string name;
+    const char *name;
     usize length;
     const char *contents;
 

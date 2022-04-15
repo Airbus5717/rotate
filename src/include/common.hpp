@@ -2,7 +2,6 @@
 #define ROTATE_COMMON
 
 // TODO: replace C++ stdlib
-#include <string>
 #include <vector>
 
 //
@@ -33,8 +32,6 @@ typedef uint64_t u64;
 typedef unsigned long long usize;
 typedef signed   long long isize;
 // clang-format on
-
-using std::string;
 
 #define ASSERT(expr1, expr2, msg)                                                                  \
     if (expr1 != expr2)                                                                            \

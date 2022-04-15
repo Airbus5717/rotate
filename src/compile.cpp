@@ -19,10 +19,10 @@ int compile(const char *arg)
 
 #if defined(DEBUG_MODE)
     {
-        auto tkns = lexer->getTokens();
-        for (token tkn : tkns)
+        std::vector<token> tkns = lexer->getTokens();
+        for (usize i = 0; i < tkns.size(); i++)
         {
-            fprintf(stderr, "%s\n", tkn_type_describe(tkn.type));
+            fprintf(stderr, "%s\n", tkn_type_describe(tkns[i].type));
         }
     }
 #endif // DEBUG_MODE
