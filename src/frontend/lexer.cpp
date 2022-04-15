@@ -21,9 +21,9 @@ int Lexer::lex_init()
         switch (lex())
         {
             case EXIT_SUCCESS:
-                continue;
-            case EXIT_DONE:
                 break;
+            case EXIT_DONE:
+                return EXIT_SUCCESS;
             case EXIT_FAILURE:
                 return report_error();
         }
@@ -276,8 +276,8 @@ bool Lexer::is_eof() const
 
 int Lexer::report_error()
 {
-    std::cout << "Error: " << err_msgsfunc(error) << std::endl;
-    std::cout << file->contents[index] << std::endl;
+    fprintf(stderr, "Error: %s\n", err_msgsfunc(error));
+    fprintf(stderr, "%c\n", file->contents[index]);
     return EXIT_FAILURE;
 }
 

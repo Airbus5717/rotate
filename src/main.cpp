@@ -2,7 +2,7 @@
 
 void print_version_and_exit()
 {
-    std::cout << "Rotate Compiler \nVersion: " << VERSION << std::endl;
+    fprintf(stdout, "Rotate Compiler \nVersion: %s\n", VERSION);
 }
 
 int main(const int argc, char **const argv)

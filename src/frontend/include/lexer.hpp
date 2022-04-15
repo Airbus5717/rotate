@@ -26,10 +26,10 @@ class Lexer
     int lex_symbols();
     int lex_builtin_funcs();
     int lex_identifiers();
+
+    //
     int add_token(token_type type);
     int add_token_default(token_type type);
-
-    void skip_whitespace() noexcept;
 
     //
     void advance();
@@ -38,6 +38,7 @@ class Lexer
     char past() const;
     char current() const;
     bool is_eof() const;
+    void skip_whitespace() noexcept;
 
     error_type error;
 

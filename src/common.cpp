@@ -12,7 +12,7 @@ bool is_space_rotate(char i)
 
 void log_error(const char *str)
 {
-    std::cout << "ERROR: " << str << std::endl;
+    fprintf(stderr, "ERROR: %s\n", str);
 }
 
 } // namespace rotate

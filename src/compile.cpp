@@ -22,7 +22,7 @@ int compile(const char *arg)
         auto tkns = lexer->getTokens();
         for (token tkn : tkns)
         {
-            std::cout << tkn.value << " " << tkn_type_describe(tkn.type) << std::endl;
+            fprintf(stderr, "%s\n", tkn_type_describe(tkn.type));
         }
     }
 #endif // DEBUG_MODE

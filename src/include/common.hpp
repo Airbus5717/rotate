@@ -2,7 +2,6 @@
 #define ROTATE_COMMON
 
 // TODO: replace C++ stdlib
-#include <iostream>
 #include <string>
 #include <vector>
 
