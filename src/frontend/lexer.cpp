@@ -122,6 +122,20 @@ int Lexer::lex_symbols()
     const char p = peek();
     switch (c)
     {
+        // clang-format off
+        case '{': return add_token_default(TknTypeLeftCurly);
+        case '}': return add_token_default(TknTypeRightCurly);
+        case '(': return add_token_default(TknTypeLeftParen);
+        case ')': return add_token_default(TknTypeRightParen);
+        case '[': return add_token_default(TknTypeLeftSQRBrackets);
+        case ']': return add_token_default(TknTypeRightSQRBrackets);
+        case ';': return add_token_default(TknTypeSemiColon);
+        case '>': return add_token_default(TknTypeGreater);
+        case '<': return add_token_default(TknTypeLess);
+        case '.': return add_token_default(TknTypeDot);
+        case ',': return add_token_default(TknTypeComma);
+        case ':': return add_token_default(TknTypeColon);
+        // clang-format on
         case '=': {
             if (p == '=')
             {
@@ -131,10 +145,6 @@ int Lexer::lex_symbols()
             else
                 return add_token_default(TknTypeEqual);
         }
-        case ':':
-            return add_token_default(TknTypeColon);
-        case ';':
-            return add_token_default(TknTypeSemiColon);
         case '+': {
             if (p == '=')
             {
@@ -192,24 +202,6 @@ int Lexer::lex_symbols()
             else
                 return add_token_default(TknTypeDIV);
         }
-        case '(':
-            return add_token_default(TknTypeLeftParen);
-        case ')':
-            return add_token_default(TknTypeRightParen);
-        case '{':
-            return add_token_default(TknTypeLeftCurly);
-        case '}':
-            return add_token_default(TknTypeRightCurly);
-        case '[':
-            return add_token_default(TknTypeLeftSQRBrackets);
-        case ']':
-            return add_token_default(TknTypeRightSQRBrackets);
-        case '>':
-            return add_token_default(TknTypeGreater);
-        case '<':
-            return add_token_default(TknTypeLess);
-        case '.':
-            return add_token_default(TknTypeDot);
         case '!': {
             if (p == '=')
             {
@@ -218,8 +210,6 @@ int Lexer::lex_symbols()
             }
             return add_token_default(TknTypeNot);
         }
-        case ',':
-            return add_token_default(TknTypeComma);
         default: {
             switch (c)
             {

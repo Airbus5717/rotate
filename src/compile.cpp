@@ -10,10 +10,10 @@ int compile(const char *arg)
 {
     file_t *file;
     Lexer *lexer;
-    
+
     file = file_read(arg);
     if (!file) return EXIT_FAILURE;
-    
+
     lexer = new Lexer(file);
     lexer->lex_init();
 
