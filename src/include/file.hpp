@@ -9,13 +9,19 @@ namespace rotate
 struct file_t
 {
     string name;
-    string contents;
+    usize length;
+    const char *contents;
 
-    file_t(const char *name, const char *contents) : name(name), contents(contents)
+    file_t(const char *name, usize length, const char *contents)
+        : name(name), length(length), contents(contents)
     {
     }
 
-    ~file_t() = default;
+    ~file_t()
+    {
+        length = 0;
+        free((void *)contents);
+    };
 };
 
 extern "C" file_t *file_read(const char *name) noexcept;

@@ -1,4 +1,4 @@
-.PHONY: redo clean debug
+.PHONY: redo clean debug all
 
 ARG := 
 

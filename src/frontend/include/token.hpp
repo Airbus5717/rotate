@@ -119,10 +119,10 @@ enum error_type
     FN_TYPE_REQUIRED,
 };
 
-const char *tkn_type_describe(const token_type type);
-const char *get_keyword_or_type(const token_type type);
-const char *advice(error_type error);
-const char *err_msgsfunc(error_type error);
+const char *tkn_type_describe(const token_type type) noexcept;
+const char *get_keyword_or_type(const token_type type) noexcept;
+const char *advice(const error_type error) noexcept;
+const char *err_msgsfunc(const error_type error) noexcept;
 
 struct token
 {

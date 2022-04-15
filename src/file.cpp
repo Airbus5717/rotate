@@ -73,7 +73,7 @@ extern "C" file_t *file_read(const char *name) noexcept
 
     // Close the file
     fclose(file);
-    file_t *file_ = new file_t(name, buffer);
+    file_t *file_ = new file_t(name, length, buffer);
     return file_;
 }
 

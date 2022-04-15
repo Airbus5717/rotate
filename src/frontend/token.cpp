@@ -4,18 +4,22 @@
 namespace rotate
 {
 
-const char *tkn_type_describe(const token_type type)
+const char *tkn_type_describe(const token_type type) noexcept
 {
     switch (type)
     {
         case TknTypeIdentifier:
-            return "id";
+            return "identifier";
         case TknTypeBuiltinFunc:
-            return "built_func";
+            return "builtin_func";
         case TknTypeEqual:
             return "assign'='";
         case TknTypeInteger:
             return "integer";
+        case TknTypeBinaryInteger:
+            return "binary int";
+        case TknTypeHexInteger:
+            return "Hex int";
         case TknTypeSemiColon:
             return "semicolon';'";
         case TknTypeColon:
@@ -137,7 +141,7 @@ const char *tkn_type_describe(const token_type type)
     }
 }
 
-const char *get_keyword_or_type(const token_type type)
+const char *get_keyword_or_type(const token_type type) noexcept
 {
     switch (type)
     {
@@ -252,7 +256,7 @@ const char *get_keyword_or_type(const token_type type)
     }
 }
 
-const char *err_msgsfunc(error_type error)
+const char *err_msgsfunc(const error_type error) noexcept
 {
     switch (error)
     {
@@ -314,7 +318,7 @@ const char *err_msgsfunc(error_type error)
     return "TODO: error msg implementation.";
 }
 
-const char *advice(error_type error)
+const char *advice(const error_type error) noexcept
 {
     switch (error)
     {

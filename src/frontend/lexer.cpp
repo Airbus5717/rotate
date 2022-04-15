@@ -9,7 +9,7 @@ Lexer::Lexer(file_t *file)
 {
     this->file        = file;
     this->is_done     = false;
-    this->file_length = file->contents.size();
+    this->file_length = file->length;
 }
 
 int Lexer::lex_init()
@@ -266,17 +266,17 @@ void Lexer::advance()
 
 char Lexer::peek() const
 {
-    return (index + 1 < file_length) ? file->contents.at(index + 1) : '\0';
+    return (index + 1 < file_length) ? file->contents[index + 1] : '\0';
 }
 
 char Lexer::current() const
 {
-    return (index < file_length) ? file->contents.at(index) : '\0';
+    return (index < file_length) ? file->contents[index] : '\0';
 }
 
 char Lexer::past() const
 {
-    return file->contents.at(index - 1);
+    return file->contents[index - 1];
 }
 
 bool Lexer::is_eof() const
@@ -293,7 +293,9 @@ int Lexer::report_error()
 
 int Lexer::add_token(token_type type)
 {
-    token tkn = token(type, line, col, index, file->contents.substr(index - len, len));
+    const char *str = strndup(file->contents + (index - len), len);
+    if (!str) exit(1);
+    token tkn = token(type, line, col, index, str);
     tokens.push_back(tkn);
     return EXIT_SUCCESS;
 }
