@@ -46,7 +46,7 @@ int Lexer::lex()
     len = 0;
     skip_whitespace();
     const char c = current();
-    printf("%c\n", current());
+
     //
     if (isdigit(c)) return lex_numbers();
 
@@ -77,18 +77,15 @@ int Lexer::lex_numbers()
     if (c == '0' && p == 'b') return lex_binary_numbers();
 
     bool reached_dot = false;
-    advance();
-    ++len;
     while ((isdigit(current()) || current() == '.'))
     {
-        // printf("%c\n", current());
+        advance();
+        len++;
         if (current() == '.')
         {
             if (reached_dot) break;
             reached_dot = true;
         }
-        advance();
-        len++;
     }
 
     if (len > 100)
@@ -297,7 +294,6 @@ int Lexer::add_token(token_type type)
         exit(1);
     }
     token tkn = token(type, line, col, index, str);
-    index += len;
     tokens.push_back(tkn);
     return EXIT_SUCCESS;
 }
@@ -305,7 +301,6 @@ int Lexer::add_token(token_type type)
 int Lexer::add_token_default(token_type type)
 {
     token tkn = token(type, line, col, index, get_keyword_or_type(type));
-    index += len;
     tokens.push_back(tkn);
     return EXIT_SUCCESS;
 }
