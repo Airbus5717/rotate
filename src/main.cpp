@@ -5,23 +5,22 @@ void print_version_and_exit()
     fprintf(stdout, "Rotate Compiler \nVersion: %s\n", VERSION);
 }
 
-int main(const int argc, char **const argv)
+int main(const int argc, char **const argv) noexcept
 {
-    try
+    if (argc > 1)
     {
-        if (argc > 1)
+        if (rotate::compile(argv[1]) == EXIT_FAILURE)
         {
-            return rotate::compile(argv[1]);
+            rotate::log_error("FAILURE");
         }
         else
         {
-            print_version_and_exit();
+            rotate::log_info("SUCCESS");
         }
     }
-    catch (std::exception &e)
+    else
     {
-        rotate::log_error(e.what());
-        return EXIT_FAILURE;
+        print_version_and_exit();
     }
     return EXIT_SUCCESS;
 }

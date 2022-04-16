@@ -140,4 +140,5 @@ struct token
 
 } // namespace rotate
 
+
 #endif // ROTATE_TOKEN

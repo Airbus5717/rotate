@@ -3,13 +3,12 @@
 namespace rotate
 {
 // This function is written in C-style (C++ way is confusing and slower)
-extern "C" file_t *file_read(const char *name) noexcept
+file_t *file_read(const char *name) noexcept
 {
     // open file
     FILE *file = fopen(name, "rb");
     if (!file)
     {
-        // perror("file open error");
         // display error message if file does not exist
         fprintf(stderr, "%s%s%s: %serror:%s %s%s\n", GREEN, BOLD, name, RED, LCYAN, "No such file",
                 RESET);

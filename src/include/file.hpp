@@ -9,22 +9,21 @@ namespace rotate
 struct file_t
 {
     const char *name;
-    usize length;
+    const usize length;
     const char *contents;
 
-    file_t(const char *name, usize length, const char *contents)
+    file_t(const char *name, const usize length, const char *contents)
         : name(name), length(length), contents(contents)
     {
     }
 
     ~file_t()
     {
-        length = 0;
         free((void *)contents);
     };
 };
 
-extern "C" file_t *file_read(const char *name) noexcept;
+file_t *file_read(const char *name) noexcept;
 
 } // namespace rotate
 

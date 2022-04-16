@@ -1,5 +1,7 @@
 #include "include/common.hpp"
 
+#include "frontend/include/token.hpp"
+
 //* USEFUL COMMON UTILS FOR ROTATE-LANG
 
 namespace rotate
@@ -12,7 +14,23 @@ bool is_space_rotate(char i)
 
 void log_error(const char *str)
 {
-    fprintf(stderr, "ERROR: %s\n", str);
+    fprintf(stderr, "[%sERROR%s]: %s\n", LRED, RESET, str);
+}
+
+void log_debug(const char *str)
+{
+    fprintf(stderr, "[%sDEBUG%s]: %s\n", LYELLOW, RESET, str);
+}
+
+void log_info(const char *str)
+{
+    fprintf(stderr, "[%sINFO%s]: %s\n", LGREEN, RESET, str);
+}
+
+void log_token(const rotate::token &tkn)
+{
+    fprintf(stderr, "[%sTOKEN%s]: type: %s, value: %s\n", LYELLOW, RESET,
+            tkn_type_describe(tkn.type), tkn.value);
 }
 
 } // namespace rotate

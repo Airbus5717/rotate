@@ -1,10 +1,10 @@
 #ifndef ROTATE_COMMON
 #define ROTATE_COMMON
 
-// TODO: replace C++ stdlib
+// TODO: remove C++ stdlib
 #include <vector>
 
-//
+// c stdlib
 #include <ctype.h>
 #include <limits.h>
 #include <stdbool.h>
@@ -28,6 +28,16 @@ typedef uint8_t  u8;
 typedef uint16_t u16;
 typedef uint32_t u32;
 typedef uint64_t u64;
+
+#define U8_MAX  UINT8_MAX
+#define U16_MAX UINT16_MAX
+#define U32_MAX UINT32_MAX
+#define U64_MAX UINT64_MAX
+
+#define S8_MAX  INT8_MAX
+#define S16_MAX INT16_MAX
+#define S32_MAX INT32_MAX
+#define S64_MAX INT64_MAX
 
 typedef unsigned long long usize;
 typedef signed   long long isize;
@@ -84,6 +94,8 @@ typedef signed   long long isize;
  */
 bool is_space_rotate(char i);
 void log_error(const char *str);
+void log_debug(const char *str);
+void log_info(const char *str);
 
 } // namespace rotate
 

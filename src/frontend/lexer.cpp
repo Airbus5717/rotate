@@ -14,8 +14,8 @@ Lexer::Lexer(file_t *file)
 
 int Lexer::lex_init()
 {
-    col = 0, line = 1;
-    for (index = 0; !is_done; advance())
+    col = 0, line = 1, index = 0;
+    while (!is_done)
     {
         skip_whitespace();
         switch (lex())
@@ -23,10 +23,12 @@ int Lexer::lex_init()
             case EXIT_SUCCESS:
                 break;
             case EXIT_DONE:
+                add_token(TknTypeEOT);
                 return EXIT_SUCCESS;
             case EXIT_FAILURE:
                 return report_error();
         }
+        advance();
     }
     return EXIT_SUCCESS;
 }
@@ -42,9 +44,9 @@ void Lexer::skip_whitespace() noexcept
 int Lexer::lex()
 {
     len = 0;
-
+    skip_whitespace();
     const char c = current();
-
+    printf("%c\n", current());
     //
     if (isdigit(c)) return lex_numbers();
 
@@ -70,12 +72,16 @@ int Lexer::lex_identifiers()
 int Lexer::lex_numbers()
 {
     const char c = current();
-    if (c == '0' && peek() == 'x') return lex_hex_numbers();
-    if (c == '0' && peek() == 'b') return lex_binary_numbers();
+    const char p = peek();
+    if (c == '0' && p == 'x') return lex_hex_numbers();
+    if (c == '0' && p == 'b') return lex_binary_numbers();
 
     bool reached_dot = false;
-    while (isdigit(current()) || current() == '.')
+    advance();
+    ++len;
+    while ((isdigit(current()) || current() == '.'))
     {
+        // printf("%c\n", current());
         if (current() == '.')
         {
             if (reached_dot) break;
@@ -84,12 +90,14 @@ int Lexer::lex_numbers()
         advance();
         len++;
     }
+
     if (len > 100)
     {
+        log_error("number digits length is above 100");
         return EXIT_FAILURE;
     }
 
-    return add_token(TknTypeInteger);
+    return add_token(reached_dot ? TknTypeFloat : TknTypeInteger);
 }
 
 int Lexer::lex_hex_numbers()
@@ -178,19 +186,18 @@ int Lexer::lex_symbols()
                 len++;
                 return add_token_default(TknTypeDivEqual);
             }
-            else if (peek() == '/')
+            else if (p == '/')
             {
-                while (!is_eof() && current() != '\n')
+                while (is_not_eof() && current() != '\n')
                 {
                     advance();
                 }
                 break;
             }
-
-            else if (peek() == '*')
+            else if (p == '*')
             {
                 bool end_comment = false;
-                while (!is_eof() && current() != '\0' && !end_comment)
+                while (!is_not_eof() && current() != '\0' && !end_comment)
                 {
                     // end_comment will not break
                     // because advancing is needed
@@ -201,6 +208,7 @@ int Lexer::lex_symbols()
             }
             else
                 return add_token_default(TknTypeDIV);
+            break;
         }
         case '!': {
             if (p == '=')
@@ -239,11 +247,10 @@ int Lexer::lex_builtin_funcs()
 
 void Lexer::advance()
 {
-    const char c = current();
     index += (index < file_length);
-    if (peek() == '\0') this->error = END_OF_FILE;
+    if (peek() == '\0') error = END_OF_FILE;
 
-    if (c != '\n')
+    if (current() != '\n')
     {
         col++;
     }
@@ -269,7 +276,7 @@ char Lexer::past() const
     return file->contents[index - 1];
 }
 
-bool Lexer::is_eof() const
+bool Lexer::is_not_eof() const
 {
     return index < file_length;
 }
@@ -277,15 +284,20 @@ bool Lexer::is_eof() const
 int Lexer::report_error()
 {
     fprintf(stderr, "Error: %s\n", err_msgsfunc(error));
-    fprintf(stderr, "%c\n", file->contents[index]);
+    // fprintf(stderr, "%c\n", file->contents[index]);
     return EXIT_FAILURE;
 }
 
 int Lexer::add_token(token_type type)
 {
     const char *str = strndup(file->contents + (index - len), len);
-    if (!str) exit(1);
+    if (!str)
+    {
+        log_error("Memory allocation failure");
+        exit(1);
+    }
     token tkn = token(type, line, col, index, str);
+    index += len;
     tokens.push_back(tkn);
     return EXIT_SUCCESS;
 }
@@ -293,6 +305,7 @@ int Lexer::add_token(token_type type)
 int Lexer::add_token_default(token_type type)
 {
     token tkn = token(type, line, col, index, get_keyword_or_type(type));
+    index += len;
     tokens.push_back(tkn);
     return EXIT_SUCCESS;
 }

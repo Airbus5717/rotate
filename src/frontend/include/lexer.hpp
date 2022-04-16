@@ -37,7 +37,7 @@ class Lexer
     char peek() const;
     char past() const;
     char current() const;
-    bool is_eof() const;
+    bool is_not_eof() const;
     void skip_whitespace() noexcept;
 
     error_type error;
@@ -49,6 +49,9 @@ class Lexer
     std::vector<token> getTokens();
     int lex_init();
 };
+
+void log_token(const token &tkn);
+
 } // namespace rotate
 
 #endif // ROTATE_LEXER

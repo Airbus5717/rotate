@@ -2,6 +2,7 @@
 #include "include/file.hpp"
 
 #include "frontend/include/lexer.hpp"
+#include "frontend/include/token.hpp"
 
 namespace rotate
 {
@@ -10,19 +11,20 @@ int compile(const char *arg)
 {
     file_t *file;
     Lexer *lexer;
+    u8 exit;
 
     file = file_read(arg);
     if (!file) return EXIT_FAILURE;
 
     lexer = new Lexer(file);
-    lexer->lex_init();
+    exit  = lexer->lex_init();
 
 #if defined(DEBUG_MODE)
     {
-        std::vector<token> tkns = lexer->getTokens();
+        auto tkns = lexer->getTokens();
         for (usize i = 0; i < tkns.size(); i++)
         {
-            fprintf(stderr, "%s\n", tkn_type_describe(tkns[i].type));
+            log_token(tkns[i]);
         }
     }
 #endif // DEBUG_MODE
@@ -30,7 +32,7 @@ int compile(const char *arg)
     delete lexer;
     delete file;
 
-    return EXIT_SUCCESS;
+    return exit;
 }
 
 } // namespace rotate
