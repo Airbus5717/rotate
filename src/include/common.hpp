@@ -39,8 +39,8 @@ typedef uint64_t u64;
 #define S32_MAX INT32_MAX
 #define S64_MAX INT64_MAX
 
-typedef unsigned long long usize;
-typedef signed   long long isize;
+typedef unsigned long int usize;
+typedef signed   long int isize;
 // clang-format on
 
 #define ASSERT(expr1, expr2, msg)                                                                  \

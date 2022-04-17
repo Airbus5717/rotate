@@ -14,6 +14,7 @@ class Lexer
     usize file_length;
     bool is_done;
     std::vector<token> tokens{};
+    error_type error;
 
     //
     int lex();
@@ -40,14 +41,13 @@ class Lexer
     bool is_not_eof() const;
     void skip_whitespace() noexcept;
 
-    error_type error;
-
   public:
     //
     Lexer(file_t *file);
-    ~Lexer() = default;
+    ~Lexer();
     std::vector<token> getTokens();
     int lex_init();
+    void save_log();
 };
 
 void log_token(const token &tkn);

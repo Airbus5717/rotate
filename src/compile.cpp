@@ -29,6 +29,7 @@ int compile(const char *arg)
     }
 #endif // DEBUG_MODE
 
+    // Free memory
     delete lexer;
     delete file;
 

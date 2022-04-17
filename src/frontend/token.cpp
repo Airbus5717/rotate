@@ -251,6 +251,8 @@ const char *get_keyword_or_type(const token_type type) noexcept
             return "!";
         case TknTypeComma:
             return ",";
+        case TknTypeEOT:
+            return "end_of_tokens";
         default:
             return NULL;
     }
