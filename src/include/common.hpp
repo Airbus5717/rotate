@@ -46,22 +46,21 @@ typedef signed   long int isize;
 #define ASSERT(expr1, expr2, msg)                                                                  \
     if (expr1 != expr2)                                                                            \
     {                                                                                              \
-        fprintf(stderr, "%sAssert failure: %s\n@line: %d\n@file: %s%s\n", LRED, msg, __LINE__,     \
-                __FILE__, RESET);                                                                  \
+        fprintf(stderr, "%sAssert failure: %s\n@file: %s:%d%s\n", LRED, msg, __FILE__, __LINE__,   \
+                RESET);                                                                            \
         exit(1);                                                                                   \
     }
 
 #define STR_ASSERT(string1, string2, msg)                                                          \
     if (strcmp(string1, string2) != 0)                                                             \
     {                                                                                              \
-        fprintf(stderr, "%sAssert failure: %s\n@line: %d\n@file: %s%s\n", LRED, msg, __LINE__,     \
-                __FILE__, RESET);                                                                  \
+        fprintf(stderr, "%sAssert failure: %s\n@file: %s:%d%s\n", LRED, msg, __FILE__, __LINE__,   \
+                RESET);                                                                            \
         exit(1);                                                                                   \
     }
 
 #define TODO(string1)                                                                              \
-    fprintf(stderr, "%sTODO: %s\n@line: %d\n@file: %s%s\n", YELLOW, string1, __LINE__, __FILE__,   \
-            RESET);                                                                                \
+    fprintf(stderr, "%sTODO: %s\n@file: %s:%d%s\n", YELLOW, string1, __FILE__, __LINE__, RESET);   \
     exit(1)
 
 #define UNUSED(x) (void)(x)

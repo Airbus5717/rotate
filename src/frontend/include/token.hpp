@@ -119,25 +119,24 @@ enum error_type
     FN_TYPE_REQUIRED,
 };
 
-const char *tkn_type_describe(const token_type type) noexcept;
-const char *get_keyword_or_type(const token_type type) noexcept;
-const char *advice(const error_type error) noexcept;
-const char *err_msgsfunc(const error_type error) noexcept;
-
 struct token
 {
     token_type type;
-    usize line = 0, col = 0, index = 0;
-    const char *value;
+    usize index;
+    usize length;
 
-    token(token_type type, usize line, usize col, usize index, const char *str)
-        : type(type), line(line), col(col), index(index), value(str)
+  public:
+    token(token_type type, usize index, usize length) : type(type), index(index), length(length)
     {
     }
 
     ~token() = default;
 };
 
+const char *tkn_type_describe(const token_type type) noexcept;
+const char *get_keyword_or_type(const char *string, const token &tkn);
+const char *advice(const error_type error) noexcept;
+const char *err_msgsfunc(const error_type error) noexcept;
 } // namespace rotate
 
 #endif // ROTATE_TOKEN

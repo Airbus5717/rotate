@@ -10,8 +10,10 @@ SRC = $(wildcard src/*.cpp)
 SRC += $(wildcard src/frontend/*.cpp)
 SRC_C_H = $(SRC) $(wildcard src/include/*.h)
 
+ANALYZE := 
+ifeq ($(CXX), gcc)
 ANALYZE = -fanalyzer
-ifeq ($(CXX), clang++)
+else ifeq ($(CXX), clang++)
 ANALYZE = -Xanalyzer
 CFLAGS += 
 else

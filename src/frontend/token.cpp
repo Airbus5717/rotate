@@ -141,9 +141,9 @@ const char *tkn_type_describe(const token_type type) noexcept
     }
 }
 
-const char *get_keyword_or_type(const token_type type) noexcept
+const char *get_keyword_or_type(const char *string, const token &tkn)
 {
-    switch (type)
+    switch (tkn.type)
     {
         case TknTypeAs:
             return "as";
@@ -254,7 +254,7 @@ const char *get_keyword_or_type(const token_type type) noexcept
         case TknTypeEOT:
             return "end_of_tokens";
         default:
-            return NULL;
+            return strndup(string + (tkn.index - tkn.length), tkn.length);
     }
 }
 

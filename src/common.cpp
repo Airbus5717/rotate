@@ -27,10 +27,10 @@ void log_info(const char *str)
     fprintf(stderr, "[%sINFO%s] : %s\n", LGREEN, RESET, str);
 }
 
-void log_token(const rotate::token &tkn)
+void log_token(const char *str, const rotate::token &tkn)
 {
     fprintf(stderr, "[%sTOKEN%s]: type: %s, value: `%s`\n", LYELLOW, RESET,
-            tkn_type_describe(tkn.type), tkn.value);
+            tkn_type_describe(tkn.type), get_keyword_or_type(str, tkn));
 }
 
 } // namespace rotate

@@ -13,17 +13,7 @@ Lexer::Lexer(file_t *file)
     this->file_length = file->length;
 }
 
-Lexer::~Lexer()
-{
-    for (usize i = 0; i < tokens.size(); i++)
-    {
-        if (get_keyword_or_type(tokens[i].type) == NULL)
-        {
-            free((void *)tokens[i].value);
-             tokens[i].value= NULL; 
-        }
-    }
-}
+Lexer::~Lexer() = default;
 
 void Lexer::save_log()
 {
@@ -97,8 +87,7 @@ int Lexer::lex_numbers()
     bool reached_dot = false;
     while ((isdigit(current()) || current() == '.'))
     {
-        advance();
-        len++;
+        advance_len_inc();
         if (current() == '.')
         {
             if (reached_dot) break;
@@ -117,14 +106,40 @@ int Lexer::lex_numbers()
 
 int Lexer::lex_hex_numbers()
 {
-    TODO("lex hex numbers implementation");
-    return EXIT_FAILURE;
+    advance();
+    advance();
+    len += 2;
+    index += 2;
+    while (isxdigit(current()) || isdigit(current()))
+    {
+        advance_len_inc();
+    }
+
+    if (len > 100)
+    {
+        log_error("hex number digits length is above 100");
+    }
+
+    return add_token(token_type::TknTypeHexInteger);
 }
 
 int Lexer::lex_binary_numbers()
 {
-    TODO("lex binary numbers");
-    return EXIT_FAILURE;
+    advance();
+    advance();
+    len += 2;
+    index += 2;
+    while (current() == '0' || current() == '1')
+    {
+        advance_len_inc();
+    }
+
+    if (len > 128)
+    {
+        log_error("binary number digits length is above 128");
+    }
+
+    return add_token(token_type::TknTypeBinaryInteger);
 }
 
 int Lexer::lex_strings()
@@ -276,6 +291,23 @@ void Lexer::advance()
     }
 }
 
+void Lexer::advance_len_inc()
+{
+    index += is_not_eof();
+    if (peek() == '\0') error = END_OF_FILE;
+
+    if (current() != '\n')
+    {
+        col++;
+    }
+    else
+    {
+        col = 1;
+        line++;
+    }
+    len++;
+}
+
 char Lexer::peek() const
 {
     return (index + 1 < file_length) ? file->contents[index + 1] : '\0';
@@ -305,20 +337,14 @@ int Lexer::report_error()
 
 int Lexer::add_token(token_type type)
 {
-    const char *str = strndup(file->contents + (index - len), len);
-    if (str == NULL)
-    {
-        log_error("Memory allocation failure");
-        exit(1);
-    }
-    token tkn = token(type, line, col, index, str);
+    token tkn = token(type, index, len);
     tokens.push_back(tkn);
     return EXIT_SUCCESS;
 }
 
 int Lexer::add_token_default(token_type type)
 {
-    token tkn = token(type, line, col, index, get_keyword_or_type(type));
+    token tkn = token(type, index, len);
     tokens.push_back(tkn);
     return EXIT_SUCCESS;
 }

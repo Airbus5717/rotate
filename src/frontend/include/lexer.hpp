@@ -35,6 +35,7 @@ class Lexer
     //
     void advance();
     void advance(usize i);
+    void advance_len_inc();
     char peek() const;
     char past() const;
     char current() const;
@@ -50,7 +51,7 @@ class Lexer
     void save_log();
 };
 
-void log_token(const token &tkn);
+void log_token(const char *str, const rotate::token &tkn);
 
 } // namespace rotate
 

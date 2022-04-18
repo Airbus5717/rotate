@@ -24,7 +24,7 @@ int compile(const char *arg)
         auto tkns = lexer->getTokens();
         for (usize i = 0; i < tkns.size(); i++)
         {
-            log_token(tkns[i]);
+            log_token(file->contents, tkns[i]);
         }
     }
 #endif // DEBUG_MODE
