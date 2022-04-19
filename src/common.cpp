@@ -17,6 +17,12 @@ void log_error(const char *str)
     fprintf(stderr, "[%sERROR%s]: %s\n", LRED, RESET, str);
 }
 
+void exit_error(const char *str)
+{
+    log_error(str);
+    exit(1);
+}
+
 void log_debug(const char *str)
 {
     fprintf(stderr, "[%sDEBUG%s]: %s\n", LYELLOW, RESET, str);
@@ -29,8 +35,21 @@ void log_info(const char *str)
 
 void log_token(const char *str, const rotate::token &tkn)
 {
-    fprintf(stderr, "[%sTOKEN%s]: type: %s, value: `%s`\n", LYELLOW, RESET,
-            tkn_type_describe(tkn.type), get_keyword_or_type(str, tkn));
+    auto string = get_keyword_or_type(str, tkn);
+    fprintf(stderr, "[%sTOKEN%s]:index: %zu, length: %zu, type: %s, value: `%s`\n", LYELLOW, RESET,
+            tkn.index, tkn.length, tkn_type_describe(tkn.type), string);
+    switch (tkn.type)
+    {
+        case TknTypeInteger:
+        case TknTypeHexInteger:
+        case TknTypeBinaryInteger:
+        case TknTypeFloat:
+        case TknTypeBuiltinFunc:
+        case TknTypeIdentifier:
+            free((void *)string);
+        default:
+            break;
+    }
 }
 
 } // namespace rotate

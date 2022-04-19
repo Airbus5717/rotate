@@ -63,6 +63,7 @@ int Lexer::lex()
 
     if (c == '_' || isalpha(c)) return lex_identifiers();
     if (c == '@') return lex_builtin_funcs();
+
     return lex_symbols();
 }
 
@@ -73,8 +74,100 @@ std::vector<token> Lexer::getTokens()
 
 int Lexer::lex_identifiers()
 {
-    TODO("lex identifiers implementation");
-    return EXIT_FAILURE;
+    advance_len_inc();
+    while (isalnum(current()) || current() == '_')
+    {
+        advance_len_inc();
+    }
+
+    switch (len)
+    {
+        case 2: {
+            if (keyword_match("as", 2))
+                return add_token_identifiers(TknTypeAs);
+            else if (keyword_match("fn", 2))
+                return add_token_identifiers(TknTypeFunction);
+            else if (keyword_match("if", 2))
+                return add_token_identifiers(TknTypeIf);
+            else if (keyword_match("or", 2))
+                return add_token_identifiers(TknTypeOr);
+            break;
+        }
+        case 3: {
+            if (keyword_match("for", 3))
+                return add_token_identifiers(TknTypeFor);
+            else if (keyword_match("let", 3))
+                return add_token_identifiers(TknTypeLet);
+            else if (keyword_match("pub", 3))
+                return add_token_identifiers(TknTypePublic);
+            else if (keyword_match("mut", 3))
+                return add_token_identifiers(TknTypeMutable);
+            else if (keyword_match("str", 3))
+                return add_token_identifiers(TknTypeStringKeyword);
+            else if (keyword_match("int", 3))
+                return add_token_identifiers(TknTypeIntKeyword);
+            else if (keyword_match("ref", 3))
+                return add_token_identifiers(TknTypeRef);
+            else if (keyword_match("and", 3))
+                return add_token_identifiers(TknTypeAnd);
+            else if (keyword_match("nil", 3))
+                return add_token_identifiers(TknTypeNil);
+            else if (keyword_match("var", 3))
+                return add_token_identifiers(TknTypeVar);
+            break;
+        }
+        case 4: {
+            if (keyword_match("else", 4))
+                return add_token_identifiers(TknTypeElse);
+            else if (keyword_match("true", 4))
+                return add_token_identifiers(TknTypeTrue);
+            else if (keyword_match("enum", 4))
+                return add_token_identifiers(TknTypeEnum);
+            else if (keyword_match("char", 4))
+                return add_token_identifiers(TknTypeCharKeyword);
+            else if (keyword_match("bool", 4))
+                return add_token_identifiers(TknTypeBoolKeyword);
+            else if (keyword_match("void", 4))
+                return add_token_identifiers(TknTypeVoid);
+            break;
+        }
+        case 5: {
+            if (keyword_match("while", 5))
+                return add_token_identifiers(TknTypeWhile);
+            else if (keyword_match("false", 5))
+                return add_token_identifiers(TknTypeFalse);
+            else if (keyword_match("match", 5))
+                return add_token_identifiers(TknTypeMatch);
+            else if (keyword_match("break", 5))
+                return add_token_identifiers(TknTypeBreak);
+            else if (keyword_match("float", 5))
+                return add_token_identifiers(TknTypeFloatKeyword);
+            break;
+        }
+        case 6: {
+            if (keyword_match("return", 6))
+                return add_token_identifiers(TknTypeReturn);
+            else if (keyword_match("import", 6))
+                return add_token_identifiers(TknTypeImport);
+            else if (keyword_match("struct", 6))
+                return add_token_identifiers(TknTypeStruct);
+            break;
+        }
+        case 7: {
+            if (keyword_match("include", 7)) return add_token_identifiers(TknTypeInclude);
+            break;
+        }
+        default:
+            break;
+    }
+
+    if (len > 100)
+    {
+        log_error("identifier length is more than 100 chars");
+        return EXIT_FAILURE;
+    }
+
+    return add_token_identifiers(TknTypeIdentifier);
 }
 
 int Lexer::lex_numbers()
@@ -101,14 +194,13 @@ int Lexer::lex_numbers()
         return EXIT_FAILURE;
     }
 
-    return add_token(reached_dot ? token_type::TknTypeFloat : token_type::TknTypeInteger);
+    return add_token_identifiers(reached_dot ? token_type::TknTypeFloat : token_type::TknTypeInteger);
 }
 
 int Lexer::lex_hex_numbers()
 {
-    advance();
-    advance();
-    len += 2;
+    advance_len_inc();
+    advance_len_inc();
     index += 2;
     while (isxdigit(current()) || isdigit(current()))
     {
@@ -120,14 +212,13 @@ int Lexer::lex_hex_numbers()
         log_error("hex number digits length is above 100");
     }
 
-    return add_token(token_type::TknTypeHexInteger);
+    return add_token_identifiers(token_type::TknTypeHexInteger);
 }
 
 int Lexer::lex_binary_numbers()
 {
-    advance();
-    advance();
-    len += 2;
+    advance_len_inc();
+    advance_len_inc();
     index += 2;
     while (current() == '0' || current() == '1')
     {
@@ -139,7 +230,7 @@ int Lexer::lex_binary_numbers()
         log_error("binary number digits length is above 128");
     }
 
-    return add_token(token_type::TknTypeBinaryInteger);
+    return add_token_identifiers(token_type::TknTypeBinaryInteger);
 }
 
 int Lexer::lex_strings()
@@ -158,6 +249,7 @@ int Lexer::lex_symbols()
 {
     const char c = current();
     const char p = peek();
+    len++;
     switch (c)
     {
         // clang-format off
@@ -328,6 +420,11 @@ bool Lexer::is_not_eof() const
     return index < file_length;
 }
 
+bool Lexer::keyword_match(const char *string, usize length)
+{
+    return strncmp(file->contents + (index - length), string, length) == 0;
+}
+
 int Lexer::report_error()
 {
     fprintf(stderr, "Error: %s\n", err_msgsfunc(error));
@@ -335,17 +432,15 @@ int Lexer::report_error()
     return EXIT_FAILURE;
 }
 
-int Lexer::add_token(token_type type)
+int Lexer::add_token_identifiers(token_type type)
 {
-    token tkn = token(type, index, len);
-    tokens.push_back(tkn);
+    tokens.push_back(token(type, index - len, len));
     return EXIT_SUCCESS;
 }
 
 int Lexer::add_token_default(token_type type)
 {
-    token tkn = token(type, index, len);
-    tokens.push_back(tkn);
+    tokens.push_back(token(type, index, len));
     return EXIT_SUCCESS;
 }
 

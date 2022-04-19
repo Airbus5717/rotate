@@ -125,7 +125,6 @@ struct token
     usize index;
     usize length;
 
-  public:
     token(token_type type, usize index, usize length) : type(type), index(index), length(length)
     {
     }

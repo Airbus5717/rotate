@@ -254,7 +254,7 @@ const char *get_keyword_or_type(const char *string, const token &tkn)
         case TknTypeEOT:
             return "end_of_tokens";
         default:
-            return strndup(string + (tkn.index - tkn.length), tkn.length);
+            return strndup(string + tkn.index, tkn.length);
     }
 }
 

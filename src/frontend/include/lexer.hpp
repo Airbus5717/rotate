@@ -29,7 +29,7 @@ class Lexer
     int lex_identifiers();
 
     //
-    int add_token(token_type type);
+    int add_token_identifiers(token_type type);
     int add_token_default(token_type type);
 
     //
@@ -41,6 +41,7 @@ class Lexer
     char current() const;
     bool is_not_eof() const;
     void skip_whitespace() noexcept;
+    bool keyword_match(const char *string, usize length);
 
   public:
     //
