@@ -194,7 +194,8 @@ int Lexer::lex_numbers()
         return EXIT_FAILURE;
     }
 
-    return add_token_identifiers(reached_dot ? token_type::TknTypeFloat : token_type::TknTypeInteger);
+    return add_token_identifiers(reached_dot ? token_type::TknTypeFloat
+                                             : token_type::TknTypeInteger);
 }
 
 int Lexer::lex_hex_numbers()
@@ -235,8 +236,22 @@ int Lexer::lex_binary_numbers()
 
 int Lexer::lex_strings()
 {
-    TODO("lex strings implementation");
-    return EXIT_FAILURE;
+    advance_len_inc();
+    while (current() != '"' && past() != '\\')
+    {
+        if (current() == '\0' || current() == '\n')
+        {
+            error = error_type::NOT_CLOSED_STRING;
+            return EXIT_FAILURE;
+        }
+        advance_len_inc();
+    }
+    advance_len_inc();
+    if (len > UINT_MAX)
+    {
+        log_error("Too long string");
+    }
+    return add_token_identifiers(TknTypeString);
 }
 
 int Lexer::lex_chars()

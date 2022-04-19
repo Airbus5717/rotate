@@ -17,6 +17,7 @@ void exit_error(const char *str);
 void log_debug(const char *str);
 void log_info(const char *str);
 
+
 } // namespace rotate
 
 #endif // ROTATE COMMON

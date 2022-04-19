@@ -38,7 +38,12 @@ void log_token(const char *str, const rotate::token &tkn)
     auto string = get_keyword_or_type(str, tkn);
     fprintf(stderr, "[%sTOKEN%s]:index: %zu, length: %zu, type: %s, value: `%s`\n", LYELLOW, RESET,
             tkn.index, tkn.length, tkn_type_describe(tkn.type), string);
-    switch (tkn.type)
+    if (is_allocated(tkn.type)) free((void *)string);
+}
+
+bool is_allocated(token_type type)
+{
+    switch (type)
     {
         case TknTypeInteger:
         case TknTypeHexInteger:
@@ -46,9 +51,11 @@ void log_token(const char *str, const rotate::token &tkn)
         case TknTypeFloat:
         case TknTypeBuiltinFunc:
         case TknTypeIdentifier:
-            free((void *)string);
+        case TknTypeString:
+        case TknTypeChar:
+            return true;
         default:
-            break;
+            return false;
     }
 }
 

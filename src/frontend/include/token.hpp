@@ -136,6 +136,8 @@ const char *tkn_type_describe(const token_type type) noexcept;
 const char *get_keyword_or_type(const char *string, const token &tkn);
 const char *advice(const error_type error) noexcept;
 const char *err_msgsfunc(const error_type error) noexcept;
+bool is_allocated(token_type type);
+
 } // namespace rotate
 
 #endif // ROTATE_TOKEN

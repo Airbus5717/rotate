@@ -20,6 +20,7 @@ int compile(const char *arg)
     exit  = lexer->lex_init();
 
 #if defined(DEBUG_MODE)
+    if (exit == EXIT_SUCCESS)
     {
         auto tkns = lexer->getTokens();
         for (usize i = 0; i < tkns.size(); i++)
