@@ -10,8 +10,7 @@ file_t *file_read(const char *name) noexcept
     if (!file)
     {
         // display error message if file does not exist
-        fprintf(stderr, "%s%s%s: %serror:%s %s%s\n", GREEN, BOLD, name, RED, LCYAN, "No such file",
-                RESET);
+        log_error("File does not exist");
         return NULL;
     }
 
@@ -19,9 +18,7 @@ file_t *file_read(const char *name) noexcept
     fseek(file, 0, SEEK_END);
     if (!ftell(file))
     {
-        fprintf(stderr, "%s%s%s: %serror:%s %s%s\n", GREEN, BOLD, name, RED, LCYAN, "File empty",
-                RESET);
-        // printf("\x1b[31merror: file empty \x1b[0m\n");
+        log_error("File is empty");
         fclose(file);
         return NULL;
     }
@@ -29,8 +26,7 @@ file_t *file_read(const char *name) noexcept
 
     if (length > UINT_MAX)
     {
-        fprintf(stderr, "%s%s%s: %serror:%s %s%s\n", GREEN, BOLD, name, RED, LCYAN,
-                "File too large", RESET);
+        log_error("File too large");
         fclose(file);
         return NULL;
     }
@@ -48,8 +44,7 @@ file_t *file_read(const char *name) noexcept
     // get file contents
     if (fread(buffer, sizeof(char), length, file) != length)
     {
-        fprintf(stderr, "%s%s%s: %serror:%s %s%s\n", GREEN, BOLD, name, RED, LCYAN,
-                "file reading error", RESET);
+        log_error("read file error");
         fclose(file);
         free(buffer);
         return NULL;
@@ -63,8 +58,7 @@ file_t *file_read(const char *name) noexcept
     // simple validator (check first char if it is a visible ascii or is_space(without tabs))
     if ((buffer[0] < ' ' || buffer[0] > '~') && !is_space_rotate(buffer[0]))
     {
-        fprintf(stderr, "%s%s%s: %serror:%s %s%s\n", GREEN, BOLD, name, RED, LCYAN,
-                "only ascii text files are supported for compilation", RESET);
+        log_error("only ascii text files are supported for compilation");
         fclose(file);
         free(buffer);
         return NULL;

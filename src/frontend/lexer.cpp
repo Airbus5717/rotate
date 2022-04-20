@@ -22,7 +22,7 @@ void Lexer::save_log()
 
 int Lexer::lex_init()
 {
-    col = 0, line = 1, index = 0;
+    index = 0;
     while (!is_done)
     {
         skip_whitespace();
@@ -43,7 +43,7 @@ int Lexer::lex_init()
 
 void Lexer::skip_whitespace() noexcept
 {
-    while (current() == ' ' || current() == '\n')
+    while (is_space_rotate(current()))
     {
         advance();
     }
@@ -178,7 +178,7 @@ int Lexer::lex_numbers()
     if (c == '0' && p == 'b') return lex_binary_numbers();
 
     bool reached_dot = false;
-    while ((isdigit(current()) || current() == '.'))
+    while (isdigit(current()) || current() == '.')
     {
         advance_len_inc();
         if (current() == '.')
@@ -256,8 +256,33 @@ int Lexer::lex_strings()
 
 int Lexer::lex_chars()
 {
-    TODO("lex chars implementation");
-    return EXIT_FAILURE;
+    TODO("Lex chars implementation");
+    advance_len_inc();
+    if (current() != '\'' && past() != '\\')
+    {
+        if (current() == '\0' || current() == '\n')
+        {
+
+            error = error_type::NOT_CLOSED_CHAR;
+            return EXIT_FAILURE;
+        }
+        advance_len_inc();
+    }
+    else if (current() == '\'' && past() == '\\')
+    {
+        advance_len_inc();
+    }
+    else
+    {
+        error = error_type::NOT_CLOSED_CHAR;
+        return EXIT_FAILURE;
+    }
+    if (len > 2)
+    {
+        log_error("Too long char");
+    }
+    advance_len_inc();
+    return add_token_identifiers(TknTypeChar);
 }
 
 int Lexer::lex_symbols()
@@ -384,34 +409,12 @@ int Lexer::lex_builtin_funcs()
 
 void Lexer::advance()
 {
-    index += is_not_eof();
-    if (peek() == '\0') error = END_OF_FILE;
-
-    if (current() != '\n')
-    {
-        col++;
-    }
-    else
-    {
-        col = 1;
-        line++;
-    }
+    index++;
 }
 
 void Lexer::advance_len_inc()
 {
-    index += is_not_eof();
-    if (peek() == '\0') error = END_OF_FILE;
-
-    if (current() != '\n')
-    {
-        col++;
-    }
-    else
-    {
-        col = 1;
-        line++;
-    }
+    index++;
     len++;
 }
 
@@ -450,6 +453,7 @@ int Lexer::report_error()
 int Lexer::add_token_identifiers(token_type type)
 {
     tokens.push_back(token(type, index - len, len));
+    index--;
     return EXIT_SUCCESS;
 }
 
