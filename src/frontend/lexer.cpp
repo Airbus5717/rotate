@@ -194,23 +194,21 @@ int Lexer::lex_numbers()
         return EXIT_FAILURE;
     }
 
-    return add_token_identifiers(reached_dot ? token_type::TknTypeFloat
-                                             : token_type::TknTypeInteger);
+    return add_token_identifiers(reached_dot ? TknTypeFloat : TknTypeInteger);
 }
 
 int Lexer::lex_hex_numbers()
 {
-    advance_len_inc();
-    advance_len_inc();
-    index += 2;
+    advance();
+    advance();
     while (isxdigit(current()) || isdigit(current()))
     {
         advance_len_inc();
     }
 
-    if (len > 100)
+    if (len > 64)
     {
-        log_error("hex number digits length is above 100");
+        log_error("hex number digits length is above 64");
     }
 
     return add_token_identifiers(token_type::TknTypeHexInteger);
@@ -218,9 +216,8 @@ int Lexer::lex_hex_numbers()
 
 int Lexer::lex_binary_numbers()
 {
-    advance_len_inc();
-    advance_len_inc();
-    index += 2;
+    advance();
+    advance();
     while (current() == '0' || current() == '1')
     {
         advance_len_inc();
@@ -230,7 +227,6 @@ int Lexer::lex_binary_numbers()
     {
         log_error("binary number digits length is above 128");
     }
-
     return add_token_identifiers(token_type::TknTypeBinaryInteger);
 }
 
@@ -420,12 +416,12 @@ void Lexer::advance_len_inc()
 
 char Lexer::peek() const
 {
-    return (index + 1 < file_length) ? file->contents[index + 1] : '\0';
+    return (index + 1 < file_length) ? file->contents[index + 1] : 0;
 }
 
 char Lexer::current() const
 {
-    return (is_not_eof()) ? file->contents[index] : '\0';
+    return (is_not_eof()) ? file->contents[index] : 0;
 }
 
 char Lexer::past() const
