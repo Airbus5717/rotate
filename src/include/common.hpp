@@ -6,18 +6,19 @@
 namespace rotate
 {
 
-template <typename T> class ArrayList
+template <typename T> 
+class Vector
 {
     T *arr;
 
   public:
-    ArrayList()
+    Vector()
     {
-        TODO("ArrayList impl");
+        TODO("Vector impl");
         arr = (T *)calloc(sizeof(T), 10);
     }
 
-    ~ArrayList()
+    ~Vector()
     {
         free((void *)arr);
     }

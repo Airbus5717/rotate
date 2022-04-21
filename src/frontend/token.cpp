@@ -134,6 +134,8 @@ const char *tkn_type_describe(const token_type type) noexcept
             return "nil (null)";
         case TknTypeVar:
             return "var";
+        case TknTypeEscapedChar:
+            return "escaped_char";
         case TknTypeEOT:
             return "End OF Tokens";
         default:
@@ -314,6 +316,8 @@ const char *err_msgsfunc(const error_type error) noexcept
             return "Function requires return type";
         case TABS:
             return "Tabs '\\t' are unsupported";
+        case NOT_VALID_ESCAPE_CHAR:
+            return "Char with escape `\\` is not valid";
         default:
             break;
     }

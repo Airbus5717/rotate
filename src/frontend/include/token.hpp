@@ -22,6 +22,7 @@ enum token_type : u8
     TknTypeString,           // refer to strings
     TknTypeStringKeyword,    // 'str'
     TknTypeChar,             // refers to chars
+    TknTypeEscapedChar,      // '\{}' chars i.e. '\n'
     TknTypeCharKeyword,      // 'char'
     TknTypeTrue,             // 'true'
     TknTypeFalse,            // 'false'
@@ -92,6 +93,7 @@ enum error_type
     // Single quote not closed
     NOT_CLOSED_CHAR,
     // Double quote not closed
+    NOT_VALID_ESCAPE_CHAR,
     NOT_CLOSED_STRING,
     // File empty error
     FILE_EMPTY,

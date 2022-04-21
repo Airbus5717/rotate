@@ -252,33 +252,41 @@ int Lexer::lex_strings()
 
 int Lexer::lex_chars()
 {
-    TODO("Lex chars implementation");
+    // TODO("Lex chars implementation");
     advance_len_inc();
-    if (current() != '\'' && past() != '\\')
+    if (current() != '\\' && peek() == '\'')
     {
-        if (current() == '\0' || current() == '\n')
+        advance_len_inc();
+        advance_len_inc();
+        return add_token_identifiers(TknTypeChar);
+    }
+    else if (current() == '\\')
+    {
+        advance_len_inc();
+        switch (current())
         {
-
-            error = error_type::NOT_CLOSED_CHAR;
+            case 'n':
+            case 't':
+            case 'r':
+            case 'v':
+                advance_len_inc();
+                break;
+            default:
+                error = error_type::NOT_VALID_ESCAPE_CHAR;
+                return EXIT_FAILURE;
+        }
+        if (current() == '\'')
+        {
+            advance_len_inc();
+            return add_token_identifiers(TknTypeEscapedChar);
+        }
+        else
+        {
             return EXIT_FAILURE;
         }
-        advance_len_inc();
     }
-    else if (current() == '\'' && past() == '\\')
-    {
-        advance_len_inc();
-    }
-    else
-    {
-        error = error_type::NOT_CLOSED_CHAR;
-        return EXIT_FAILURE;
-    }
-    if (len > 2)
-    {
-        log_error("Too long char");
-    }
-    advance_len_inc();
-    return add_token_identifiers(TknTypeChar);
+
+    return EXIT_FAILURE;
 }
 
 int Lexer::lex_symbols()
@@ -288,7 +296,7 @@ int Lexer::lex_symbols()
     len++;
     switch (c)
     {
-        // clang-format off
+            // clang-format off
         case '{': return add_token_default(token_type::TknTypeLeftCurly);
         case '}': return add_token_default(token_type::TknTypeRightCurly);
         case '(': return add_token_default(token_type::TknTypeLeftParen);

@@ -27,10 +27,10 @@ CSTD_LINT = --std=c++17
 DEBUG  = -g
 BIN  = ./build/rotate
 
-run: all
+run: all format
 	@$(BIN) $(ARG)
 
-all:
+all: format
 	@cmake --build build
 
 
@@ -71,7 +71,7 @@ lint:
 	@cppcheck  $(SRC_C_H) $(CSTD_LINT) --enable=all --check-config --quiet
 
 format:
-	@clang-format $(SRC_C_H) -i
+	@clang-format -i $(SRC_C_H)
 
 release:
 	$(CXX) $(SRC) -O2 -Ofast -o $(BIN) $(CFLAGS) $(CSTD) $(LIB) $(ANALYZE) -Werror $(STRICT)
