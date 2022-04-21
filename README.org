@@ -2,5 +2,11 @@
 #+OPTIONS: author:nil timestamp:nil date:nil toc:nil num:nil
 
 
-* Rotate (Rewrite in C++)
-- improving C++ skills
+* Rotate (C++)
+- a work in progress language 
+
+
+
+
+* Progress
+- TODO Lexer 
