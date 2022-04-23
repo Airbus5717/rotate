@@ -124,10 +124,10 @@ enum error_type
 struct token
 {
     token_type type;
-    usize index;
-    usize length;
+    u32 index;
+    u32 length;
 
-    token(token_type type, usize index, usize length) : type(type), index(index), length(length)
+    token(token_type type, u32 index, u32 length) : type(type), index(index), length(length)
     {
     }
 

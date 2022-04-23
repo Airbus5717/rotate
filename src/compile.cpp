@@ -20,12 +20,14 @@ int compile(const char *arg)
     exit  = lexer->lex_init();
 
 #if defined(DEBUG_MODE)
-    if (exit == EXIT_SUCCESS)
     {
-        auto tkns = lexer->getTokens();
-        for (usize i = 0; i < tkns.size(); i++)
+        if (exit == EXIT_SUCCESS)
         {
-            log_token(file->contents, tkns[i]);
+            auto tkns = lexer->getTokens();
+            for (usize i = 0; i < tkns.size(); i++)
+            {
+                log_token(file->contents, tkns[i]);
+            }
         }
     }
 #endif // DEBUG_MODE

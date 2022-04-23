@@ -7,6 +7,7 @@ namespace rotate
 
 Lexer::Lexer(file_t *file)
 {
+    ASSERT_NULL(file, "lexer initialization failure");
     this->file        = file;
     this->is_done     = false;
     this->error       = error_type::UNKNOWN;
@@ -20,7 +21,7 @@ void Lexer::save_log()
     TODO("save_log implementation");
 }
 
-int Lexer::lex_init()
+u8 Lexer::lex_init()
 {
     index = 0;
     while (!is_done)
@@ -49,7 +50,7 @@ void Lexer::skip_whitespace() noexcept
     }
 }
 
-int Lexer::lex()
+u8 Lexer::lex()
 {
     len = 0;
     skip_whitespace();
@@ -72,7 +73,7 @@ std::vector<token> Lexer::getTokens()
     return tokens;
 }
 
-int Lexer::lex_identifiers()
+u8 Lexer::lex_identifiers()
 {
     advance_len_inc();
     while (isalnum(current()) || current() == '_')
@@ -170,7 +171,7 @@ int Lexer::lex_identifiers()
     return add_token_identifiers(TknTypeIdentifier);
 }
 
-int Lexer::lex_numbers()
+u8 Lexer::lex_numbers()
 {
     const char c = current();
     const char p = peek();
@@ -197,7 +198,7 @@ int Lexer::lex_numbers()
     return add_token_identifiers(reached_dot ? TknTypeFloat : TknTypeInteger);
 }
 
-int Lexer::lex_hex_numbers()
+u8 Lexer::lex_hex_numbers()
 {
     advance();
     advance();
@@ -214,7 +215,7 @@ int Lexer::lex_hex_numbers()
     return add_token_identifiers(token_type::TknTypeHexInteger);
 }
 
-int Lexer::lex_binary_numbers()
+u8 Lexer::lex_binary_numbers()
 {
     advance();
     advance();
@@ -230,7 +231,7 @@ int Lexer::lex_binary_numbers()
     return add_token_identifiers(token_type::TknTypeBinaryInteger);
 }
 
-int Lexer::lex_strings()
+u8 Lexer::lex_strings()
 {
     advance_len_inc();
     while (current() != '"' && past() != '\\')
@@ -250,7 +251,7 @@ int Lexer::lex_strings()
     return add_token_identifiers(TknTypeString);
 }
 
-int Lexer::lex_chars()
+u8 Lexer::lex_chars()
 {
     // TODO("Lex chars implementation");
     advance_len_inc();
@@ -268,7 +269,10 @@ int Lexer::lex_chars()
             case 'n':
             case 't':
             case 'r':
-            case 'v':
+            case 'b':
+            case 'f':
+            case '\\':
+            case '\'':
                 advance_len_inc();
                 break;
             default:
@@ -282,6 +286,7 @@ int Lexer::lex_chars()
         }
         else
         {
+            error = error_type::LEXER_INVALID_CHAR;
             return EXIT_FAILURE;
         }
     }
@@ -289,7 +294,7 @@ int Lexer::lex_chars()
     return EXIT_FAILURE;
 }
 
-int Lexer::lex_symbols()
+u8 Lexer::lex_symbols()
 {
     const char c = current();
     const char p = peek();
@@ -405,7 +410,7 @@ int Lexer::lex_symbols()
     return EXIT_SUCCESS;
 }
 
-int Lexer::lex_builtin_funcs()
+u8 Lexer::lex_builtin_funcs()
 {
     TODO("lex builtin funcs implementation");
     return EXIT_FAILURE;
@@ -442,26 +447,26 @@ bool Lexer::is_not_eof() const
     return index < file_length;
 }
 
-bool Lexer::keyword_match(const char *string, usize length)
+bool Lexer::keyword_match(const char *string, u32 length)
 {
     return strncmp(file->contents + (index - length), string, length) == 0;
 }
 
-int Lexer::report_error()
+u8 Lexer::report_error()
 {
     fprintf(stderr, "Error: %s\n", err_msgsfunc(error));
     fprintf(stderr, "Advice: %s\n", advice(error));
     return EXIT_FAILURE;
 }
 
-int Lexer::add_token_identifiers(token_type type)
+u8 Lexer::add_token_identifiers(token_type type)
 {
     tokens.push_back(token(type, index - len, len));
     index--;
     return EXIT_SUCCESS;
 }
 
-int Lexer::add_token_default(token_type type)
+u8 Lexer::add_token_default(token_type type)
 {
     tokens.push_back(token(type, index, len));
     return EXIT_SUCCESS;

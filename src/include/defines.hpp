@@ -5,6 +5,7 @@
 #include <vector>
 
 // c stdlib
+#include <assert.h>
 #include <ctype.h>
 #include <limits.h>
 #include <stdbool.h>
@@ -48,6 +49,13 @@ typedef signed   long int isize;
         fprintf(stderr, "%sAssert failure: %s\n@file: %s:%d%s\n", LRED, msg, __FILE__, __LINE__,   \
                 RESET);                                                                            \
         exit(1);                                                                                   \
+    }
+
+#define ASSERT_NULL(expr, msg) \
+    if (!(expr)) { \
+        fprintf(stderr, "%sAssert failure: %s\n@file: %s:%d%s\n", LRED, msg, __FILE__, __LINE__,   \
+                RESET);                                                                            \
+        exit(1);\
     }
 
 #define STR_ASSERT(string1, string2, msg)                                                          \
