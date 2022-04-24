@@ -25,7 +25,7 @@ file_t *file_read(const char *name) noexcept
     const usize length = (usize)ftell(file);
     // number of nullchars after the file
     const usize fill_nullchar = 3;
-    assert(fill_nullchar > 0 && fill_nullchar < 11);
+    ASSERT(fill_nullchar > 0 && fill_nullchar < 11, "fillnull char out of bounds");
 
     if (length + fill_nullchar > UINT32_MAX)
     {

@@ -5,7 +5,6 @@
 #include <vector>
 
 // c stdlib
-#include <assert.h>
 #include <ctype.h>
 #include <limits.h>
 #include <stdbool.h>
@@ -42,8 +41,15 @@ typedef uint64_t u64;
 typedef unsigned long int usize;
 typedef signed   long int isize;
 
+#define ASSERT(expr, msg) \
+    if (!(expr))                                                                            \
+    {                                                                                              \
+        fprintf(stderr, "%sAssert failure: %s\n@file: %s:%d%s\n", LRED, msg, __FILE__, __LINE__,   \
+                RESET);                                                                            \
+        exit(1);                                                                                   \
+    }
 
-#define ASSERT(expr1, expr2, msg)                                                                  \
+#define ASSERT_CMP(expr1, expr2, msg)                                                                  \
     if (expr1 != expr2)                                                                            \
     {                                                                                              \
         fprintf(stderr, "%sAssert failure: %s\n@file: %s:%d%s\n", LRED, msg, __FILE__, __LINE__,   \
@@ -52,7 +58,7 @@ typedef signed   long int isize;
     }
 
 #define ASSERT_NULL(expr, msg) \
-    if (!(expr)) { \
+    if ((expr) == NULL) { \
         fprintf(stderr, "%sAssert failure: %s\n@file: %s:%d%s\n", LRED, msg, __FILE__, __LINE__,   \
                 RESET);                                                                            \
         exit(1);\
