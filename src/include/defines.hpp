@@ -16,29 +16,28 @@
 namespace rotate
 {
 #define VERSION "0.0.1"
-// clang-format off
-typedef int8_t  s8;
+typedef int8_t s8;
 typedef int16_t s16;
 typedef int32_t s32;
 typedef int64_t s64;
 
-typedef uint8_t  u8;
+typedef uint8_t u8;
 typedef uint16_t u16;
 typedef uint32_t u32;
 typedef uint64_t u64;
 
 typedef unsigned long int usize;
-typedef signed   long int isize;
+typedef signed long int isize;
 
-#define ASSERT(expr, msg) \
-    if (!(expr))                                                                            \
+#define ASSERT(expr, msg)                                                                          \
+    if (!(expr))                                                                                   \
     {                                                                                              \
         fprintf(stderr, "%sAssert failure: %s\n@file: %s:%d%s\n", LRED, msg, __FILE__, __LINE__,   \
                 RESET);                                                                            \
         exit(1);                                                                                   \
     }
 
-#define ASSERT_CMP(expr1, expr2, msg)                                                                  \
+#define ASSERT_CMP(expr1, expr2, msg)                                                              \
     if (expr1 != expr2)                                                                            \
     {                                                                                              \
         fprintf(stderr, "%sAssert failure: %s\n@file: %s:%d%s\n", LRED, msg, __FILE__, __LINE__,   \
@@ -46,11 +45,12 @@ typedef signed   long int isize;
         exit(1);                                                                                   \
     }
 
-#define ASSERT_NULL(expr, msg) \
-    if ((expr) == NULL) { \
+#define ASSERT_NULL(expr, msg)                                                                     \
+    if ((expr) == NULL)                                                                            \
+    {                                                                                              \
         fprintf(stderr, "%sAssert failure: %s\n@file: %s:%d%s\n", LRED, msg, __FILE__, __LINE__,   \
                 RESET);                                                                            \
-        exit(1);\
+        exit(1);                                                                                   \
     }
 
 #define STR_ASSERT(string1, string2, msg)                                                          \
@@ -66,8 +66,7 @@ typedef signed   long int isize;
     exit(1)
 
 #define UNUSED(x) (void)(x)
-
-#define RED      "\x1b[31m"
+// clang-format off
 #define GREEN    "\x1b[32m"
 #define YELLOW   "\x1b[33m"
 #define BLUE     "\x1b[34m"

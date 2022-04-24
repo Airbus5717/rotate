@@ -6,8 +6,7 @@
 namespace rotate
 {
 
-template <typename T> 
-class Vector
+template <typename T> class Vector
 {
     T *arr;
 

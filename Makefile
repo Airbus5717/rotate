@@ -8,7 +8,8 @@ CFLAGS += -ftree-vectorize -march=native
 
 SRC = $(wildcard src/*.cpp)
 SRC += $(wildcard src/frontend/*.cpp)
-SRC_C_H = $(SRC) $(wildcard src/include/*.h)
+SRC_C_H = src/**/*.cpp src/**/*.hpp
+
 
 ANALYZE := 
 ifeq ($(CXX), gcc)
