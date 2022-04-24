@@ -9,11 +9,11 @@ namespace rotate
 struct file_t
 {
     const char *name;
-    const usize length;
     const char *contents;
+    const usize length; // contents length
 
-    file_t(const char *name, const usize length, const char *contents)
-        : name(name), length(length), contents(contents)
+    file_t(const char *name, const char *contents, const usize length)
+        : name(name), contents(contents), length(length)
     {
     }
 

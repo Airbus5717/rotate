@@ -47,7 +47,7 @@ file_t *file_read(const char *name) noexcept
     // get file contents
     if (fread(buffer, sizeof(char), length, file) != length)
     {
-        log_error("read file error");
+        log_error("Read file error");
         fclose(file);
         free(buffer);
         return NULL;
@@ -62,7 +62,7 @@ file_t *file_read(const char *name) noexcept
     // simple validator (check first char if it is a visible ascii or is_space(without tabs))
     if ((buffer[0] < ' ' || buffer[0] > '~') && !is_space_rotate(buffer[0]))
     {
-        log_error("only ascii text files are supported for compilation");
+        log_error("Only ascii text files are supported for compilation");
         fclose(file);
         free(buffer);
         return NULL;
@@ -70,8 +70,7 @@ file_t *file_read(const char *name) noexcept
 
     // Close the file
     fclose(file);
-    file_t *file_ = new file_t(name, length, buffer);
-    return file_;
+    return new file_t(name, buffer, length);
 }
 
 } // namespace rotate

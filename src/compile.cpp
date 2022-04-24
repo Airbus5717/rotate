@@ -7,7 +7,7 @@
 namespace rotate
 {
 
-int compile(const char *arg)
+int compile(const char *arg) noexcept
 {
     file_t *file;
     Lexer *lexer;

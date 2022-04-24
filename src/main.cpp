@@ -1,3 +1,4 @@
+#include "include/common.hpp"
 #include "include/compile.hpp"
 
 void print_version_and_exit()
@@ -7,15 +8,17 @@ void print_version_and_exit()
 
 int main(const int argc, char **const argv) noexcept
 {
+    using namespace rotate;
     if (argc > 1)
     {
-        if (rotate::compile(argv[1]) == EXIT_FAILURE)
+        u8 exit = compile(argv[1]);
+        if (exit == EXIT_FAILURE)
         {
-            rotate::log_error("FAILURE");
+            log_error("FAILURE");
         }
-        else
+        else if (exit == EXIT_SUCCESS)
         {
-            rotate::log_info("SUCCESS");
+            log_info("SUCCESS");
         }
     }
     else
