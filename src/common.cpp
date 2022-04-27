@@ -35,10 +35,9 @@ void log_info(const char *str)
 
 void log_token(const char *str, const rotate::token &tkn)
 {
-    auto string = get_keyword_or_type(str, tkn);
-    fprintf(stderr, "[%sTOKEN%s]: idx: %u, len: %u, type: %s, val: `%s`\n", LYELLOW, RESET,
-            tkn.index, tkn.length, tkn_type_describe(tkn.type), string);
-    if (is_allocated(tkn.type)) free((void *)string);
+    fprintf(stderr, "[%sTOKEN%s]: idx: %u, len: %u, col: %u, line: %u, type: %s, val: `%.*s`\n",
+            LYELLOW, RESET, tkn.index, tkn.length, tkn.col, tkn.line, tkn_type_describe(tkn.type),
+            tkn.length, str + tkn.index);
 }
 
 bool is_allocated(token_type type)

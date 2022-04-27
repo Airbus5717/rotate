@@ -253,7 +253,6 @@ u8 Lexer::lex_strings()
 
 u8 Lexer::lex_chars()
 {
-    // TODO("Lex chars implementation");
     advance_len_inc();
     if (current() != '\\' && peek() == '\'')
     {
@@ -412,19 +411,65 @@ u8 Lexer::lex_symbols()
 
 u8 Lexer::lex_builtin_funcs()
 {
-    TODO("lex builtin funcs implementation");
+    advance();
+    while (isalpha(current()) || current() == '_')
+    {
+        advance_len_inc();
+    }
+
+    switch (len)
+    {
+        case 3: {
+            if (keyword_match("col", 3)) return add_token_identifiers(TknTypeBuiltinFunc);
+            break;
+        }
+        case 4: {
+            if (keyword_match("line", 4))
+                return add_token_identifiers(TknTypeBuiltinFunc);
+            else if (keyword_match("file", 4))
+                return add_token_identifiers(TknTypeBuiltinFunc);
+            break;
+        }
+        case 7: {
+            if (keyword_match("println", 7)) return add_token_identifiers(TknTypeBuiltinFunc);
+            break;
+        }
+        default: {
+        }
+    }
+    error = error_type::LEXER_INVALID_BUILTN_FN;
     return EXIT_FAILURE;
 }
 
 void Lexer::advance()
 {
+    char c = current();
     index++;
+    if (c != '\n')
+    {
+        col++;
+    }
+    else
+    {
+        col = 1;
+        line++;
+    }
 }
 
 void Lexer::advance_len_inc()
 {
+    const char c = current();
     index++;
     len++;
+    if (c != '\n')
+    {
+        col++;
+    }
+    else
+    {
+        col = 1;
+        line++;
+    }
 }
 
 char Lexer::peek() const
@@ -456,19 +501,20 @@ u8 Lexer::report_error()
 {
     fprintf(stderr, "Error: %s\n", err_msgsfunc(error));
     fprintf(stderr, "Advice: %s\n", advice(error));
+    TODO("error msgs impl");
     return EXIT_FAILURE;
 }
 
 u8 Lexer::add_token_identifiers(token_type type)
 {
-    tokens.push_back(token(type, index - len, len));
+    tokens.push_back(token(type, index - len, len, line, col - len));
     index--;
     return EXIT_SUCCESS;
 }
 
 u8 Lexer::add_token_default(token_type type)
 {
-    tokens.push_back(token(type, index, len));
+    tokens.push_back(token(type, index, len, line, col));
     return EXIT_SUCCESS;
 }
 

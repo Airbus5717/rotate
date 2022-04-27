@@ -9,7 +9,7 @@ namespace rotate
 class Lexer
 {
     // lexer state variables
-    u32 index = 0, len = 0;
+    u32 index = 0, len = 0, line = 1, col = 1;
     file_t *file;
     u32 file_length;
     bool is_done;

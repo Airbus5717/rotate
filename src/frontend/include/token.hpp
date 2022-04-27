@@ -76,12 +76,13 @@ enum token_type : u8
     TknTypeEOT,              // EOT - END OF TOKENS
 };
 
-enum error_type
+enum error_type : u32
 {
     // Unknown token/error (default)
     UNKNOWN,
     OUT_OF_MEMORY,
     LEXER_INVALID_CHAR,
+    LEXER_INVALID_BUILTN_FN,
     // an ID can have up to a specific length
     TOO_LONG_IDENTIFIER,
     TOO_LONG_NUMBER,
@@ -126,8 +127,11 @@ struct token
     token_type type;
     u32 index;
     u32 length;
+    u32 line;
+    u32 col; // starts from 1
 
-    token(token_type type, u32 index, u32 length) : type(type), index(index), length(length)
+    token(token_type type, u32 index, u32 length, u32 line, u32 col)
+        : type(type), index(index), length(length), line(line), col(col)
     {
     }
 
