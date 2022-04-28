@@ -28,8 +28,6 @@ CSTD_LINT = --std=c++17
 DEBUG  = -g
 BIN  = ./build/rotate
 
-run: all format
-	@$(BIN) $(ARG)
 
 all: format
 	@cmake --build build

@@ -24,7 +24,7 @@ file_t *file_read(const char *name) noexcept
     }
     const usize length = (usize)ftell(file);
     // number of nullchars after the file
-    const usize fill_nullchar = 3;
+    const u8 fill_nullchar = 3;
     ASSERT(fill_nullchar > 0 && fill_nullchar < 11, "fillnull char out of bounds");
 
     if (length + fill_nullchar > UINT32_MAX)
@@ -38,11 +38,7 @@ file_t *file_read(const char *name) noexcept
 
     // Read the file into a buffer
     char *buffer = (char *)malloc(length + 3);
-    if (!buffer)
-    {
-        fclose(file);
-        return NULL;
-    }
+    if (!buffer) exit_error("Memory allocation failure");
 
     // get file contents
     if (fread(buffer, sizeof(char), length, file) != length)
@@ -54,7 +50,7 @@ file_t *file_read(const char *name) noexcept
     }
 
     // add NULL charactor (3 for extra safety)
-    for (usize i = 0; i < fill_nullchar; i++)
+    for (u8 i = 0; i < fill_nullchar; i++)
     {
         buffer[length + i] = '\0';
     }

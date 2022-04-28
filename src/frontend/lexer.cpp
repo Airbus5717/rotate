@@ -300,7 +300,7 @@ u8 Lexer::lex_symbols()
     len++;
     switch (c)
     {
-            // clang-format off
+        // clang-format off
         case '{': return add_token_default(token_type::TknTypeLeftCurly);
         case '}': return add_token_default(token_type::TknTypeRightCurly);
         case '(': return add_token_default(token_type::TknTypeLeftParen);
@@ -499,9 +499,29 @@ bool Lexer::keyword_match(const char *string, u32 length)
 
 u8 Lexer::report_error()
 {
-    fprintf(stderr, "Error: %s\n", err_msgsfunc(error));
-    fprintf(stderr, "Advice: %s\n", advice(error));
-    TODO("error msgs impl");
+    //
+    u32 low = index;
+    while (file->contents[low] != '\n' && low > 0)
+        low--;
+
+    low += 1;
+
+    //
+    u32 _length = index;
+    while (file->contents[_length] != '\n' && _length + 1 < file->length)
+        _length++;
+
+    _length -= low + 1;
+
+    //
+    fprintf(stderr, "%s%s%s:%u:%u: %serror: %s %s%s\n", BOLD, WHITE, file->name, line, col, LRED,
+            LBLUE, err_msgsfunc(error), RESET);
+    fprintf(stderr, " %s%u%s | %.*s\n", LYELLOW, line, RESET, _length + 1, (file->contents + low));
+
+    // print spaces then advice
+    fprintf(stderr, " %*c | %*c%s%s---%*c---\n", get_digits_from_number(line), ' ', index - low - 3,
+            ' ', LRED, BOLD, len, '^');
+    fprintf(stderr, " Advice: %s%s\n", RESET, advice(error));
     return EXIT_FAILURE;
 }
 

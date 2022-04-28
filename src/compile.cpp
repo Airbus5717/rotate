@@ -29,7 +29,7 @@ int compile(const char *arg) noexcept
                 log_token(file->contents, tkns[i]);
             }
         }
-        log_info("Debug mode is always slower than normal mode");
+        // log_info("Debug mode is always slower than normal mode");
     }
 #endif // DEBUG_MODE
 

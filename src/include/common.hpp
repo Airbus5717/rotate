@@ -33,6 +33,9 @@ void exit_error(const char *str);
 void log_debug(const char *str);
 void log_info(const char *str);
 
+//
+u32 get_digits_from_number(u32 v);
+
 } // namespace rotate
 
 #endif // ROTATE COMMON
