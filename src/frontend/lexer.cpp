@@ -504,19 +504,19 @@ u8 Lexer::report_error()
     while (file->contents[low] != '\n' && low > 0)
         low--;
 
-    low += 1;
+    low++;
 
     //
     u32 _length = index;
     while (file->contents[_length] != '\n' && _length + 1 < file->length)
         _length++;
 
-    _length -= low + 1;
+    _length -= low;
 
     //
-    fprintf(stderr, "%s%s%s:%u:%u: %serror: %s %s%s\n", BOLD, WHITE, file->name, line, col, LRED,
+    fprintf(stderr, " %s%s%s:%u:%u: %serror: %s %s%s\n", BOLD, WHITE, file->name, line, col, LRED,
             LBLUE, err_msgsfunc(error), RESET);
-    fprintf(stderr, " %s%u%s | %.*s\n", LYELLOW, line, RESET, _length + 1, (file->contents + low));
+    fprintf(stderr, " %s%u%s | %.*s\n", LYELLOW, line, RESET, _length, (file->contents + low));
 
     // print spaces then advice
     fprintf(stderr, " %*c | %*c%s%s---%*c---\n", get_digits_from_number(line), ' ', index - low - 3,
