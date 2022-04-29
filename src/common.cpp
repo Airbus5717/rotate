@@ -54,7 +54,7 @@ u32 get_digits_from_number(u32 num)
                                 : 0;
 }
 
-bool is_allocated(token_type type)
+bool is_token_type_length_variable(token_type type)
 {
     switch (type)
     {

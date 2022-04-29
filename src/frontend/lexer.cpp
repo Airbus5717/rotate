@@ -5,20 +5,21 @@ namespace rotate
 
 #define EXIT_DONE 3
 
+// file must not be null
 Lexer::Lexer(file_t *file)
 {
-    ASSERT_NULL(file, "lexer initialization failure");
+    ASSERT_NULL(file, "Lexer File init failure");
     this->file        = file;
     this->is_done     = false;
     this->error       = error_type::UNKNOWN;
     this->file_length = file->length;
-    this->tokens      = new Vector<token>();
+    this->tokens      = new std::vector<token>();
     ASSERT_NULL(tokens, "Tokens vector initialization failure");
 }
 
 Lexer::~Lexer()
 {
-    delete tokens;
+    // delete tokens;
 }
 
 void Lexer::save_log()
@@ -73,7 +74,7 @@ u8 Lexer::lex()
     return lex_symbols();
 }
 
-Vector<token> *Lexer::getTokens()
+std::vector<token> *Lexer::getTokens()
 {
     return tokens;
 }
@@ -557,14 +558,14 @@ u8 Lexer::report_error()
 
 u8 Lexer::add_token_variant_length(token_type type)
 {
-    tokens->push(token(type, index - len, len, line, col - len));
+    tokens->push_back(token(type, index - len, len, line, col - len));
     index--;
     return EXIT_SUCCESS;
 }
 
 u8 Lexer::add_token_fixed_length(token_type type)
 {
-    tokens->push(token(type, index, len, line, col));
+    tokens->push_back(token(type, index, len, line, col));
     return EXIT_SUCCESS;
 }
 

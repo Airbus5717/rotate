@@ -23,9 +23,9 @@ u32 get_digits_from_number(u32 v);
 // TODO: Implement alternative to libc++ vector
 template <typename T> class Vector
 {
-    usize index;
-    usize capacity;
-    T *arr;
+    usize index    = 0;
+    usize capacity = 0;
+    T *arr         = NULL;
 
     // TODO: growth rate optimizer
     static const usize growth_rate = 2;
@@ -33,10 +33,11 @@ template <typename T> class Vector
   public:
     Vector()
     {
+        TODO("Fix");
         this->index    = 0;
         this->capacity = 10;
         arr            = (T *)calloc(sizeof(T), capacity);
-        check();
+        if (!arr) exit_error("Vector is null");
     }
 
     ~Vector()
@@ -46,27 +47,28 @@ template <typename T> class Vector
         arr      = NULL;
     }
 
-    void check()
-    {
-        if (!arr || (index > capacity))
-        {
-            log_error("Init vector failure");
-        }
-    }
+    // void check()
+    // {
+    //     if (!arr) log_error("Vector is null");
+    //     if (index > capacity) log_error("out of bounds");
+    // }
 
     usize size()
     {
         return index;
     }
 
-    void push(T elem)
+    u8 push(T elem)
     {
+        if (index + 2 == ULONG_LONG_MAX) return EXIT_FAILURE;
         if (index + 1 == capacity)
         {
             capacity *= growth_rate;
             arr = (T *)realloc(arr, capacity);
+            if (!arr) return EXIT_FAILURE;
         }
         arr[index++] = elem;
+        return EXIT_SUCCESS;
     }
 
     T operator[](usize i)
@@ -75,9 +77,20 @@ template <typename T> class Vector
         return arr[i];
     }
 
+    T at(usize i)
+    {
+        ASSERT(i < index, "out of bounds");
+        return arr[i];
+    }
+
     Vector<T> *operator=(Vector<T> *)
     {
         return this;
+    }
+
+    T *getElements()
+    {
+        return arr;
     }
 };
 

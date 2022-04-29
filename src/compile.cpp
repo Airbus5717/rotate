@@ -19,19 +19,19 @@ int compile(const char *arg) noexcept
     lexer = new Lexer(file);
     exit  = lexer->lex_init();
 
-    //#if defined(DEBUG_MODE)
+#if defined(DEBUG_MODE)
     {
         if (exit == EXIT_SUCCESS)
         {
-            auto tkns = *(lexer->getTokens());
-            for (usize i = 0; i < tkns.size(); i++)
+            auto tkns = (lexer->getTokens());
+            for (usize i = 0; i < tkns->size(); i++)
             {
-                log_token(file->contents, tkns[0]);
+                log_token(file->contents, tkns->at(i));
             }
         }
         // log_info("Debug mode is always slower than normal mode");
     }
-    ///#endif // DEBUG_MODE
+#endif // DEBUG_MODE
 
     // Free memory
     delete lexer;
