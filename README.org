@@ -5,7 +5,11 @@
 * Rotate (C++)
 - a work in progress language 
 
-
+#+begin_src cpp
+fn main() void {
+    @println("Hello World");
+}
+#+end_src
 
 
 * Progress

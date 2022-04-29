@@ -25,7 +25,7 @@ template <typename T> class Vector
 {
     usize index    = 0;
     usize capacity = 0;
-    T *arr         = NULL;
+    T *arr;
 
     // TODO: growth rate optimizer
     static const usize growth_rate = 2;
@@ -33,18 +33,17 @@ template <typename T> class Vector
   public:
     Vector()
     {
-        TODO("Fix");
         this->index    = 0;
         this->capacity = 10;
-        arr            = (T *)calloc(sizeof(T), capacity);
-        if (!arr) exit_error("Vector is null");
+
+        arr = (T *)calloc(sizeof(T), capacity);
+        ASSERT_NULL(arr, "Vector init failure");
     }
 
     ~Vector()
     {
         if (capacity > 0 && arr) free((void *)arr);
         capacity = 0;
-        arr      = NULL;
     }
 
     // void check()
@@ -58,26 +57,28 @@ template <typename T> class Vector
         return index;
     }
 
-    u8 push(T elem)
+    u8 push_back(T elem)
     {
-        if (index + 2 == ULONG_LONG_MAX) return EXIT_FAILURE;
+        ASSERT(capacity < UINT32_MAX, "too large vector");
         if (index + 1 == capacity)
         {
+            T *tmp = (T *)realloc(arr, growth_rate * capacity);
+            if (tmp == NULL) return EXIT_FAILURE;
             capacity *= growth_rate;
-            arr = (T *)realloc(arr, capacity);
-            if (!arr) return EXIT_FAILURE;
+            arr = tmp;
         }
+
         arr[index++] = elem;
         return EXIT_SUCCESS;
     }
 
-    T operator[](usize i)
+    const T &operator[](usize i)
     {
         ASSERT(i < index, "out of bounds");
         return arr[i];
     }
 
-    T at(usize i)
+    const T &at(usize i)
     {
         ASSERT(i < index, "out of bounds");
         return arr[i];

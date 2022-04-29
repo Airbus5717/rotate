@@ -13,13 +13,13 @@ Lexer::Lexer(file_t *file)
     this->is_done     = false;
     this->error       = error_type::UNKNOWN;
     this->file_length = file->length;
-    this->tokens      = new std::vector<token>();
+    this->tokens      = new Vector<token>();
     ASSERT_NULL(tokens, "Tokens vector initialization failure");
 }
 
 Lexer::~Lexer()
 {
-    // delete tokens;
+    delete tokens;
 }
 
 void Lexer::save_log()
@@ -62,19 +62,20 @@ u8 Lexer::lex()
     skip_whitespace();
     const char c = current();
 
-    //
     if (isdigit(c)) return lex_numbers();
 
+    //
     if (c == '\'') return lex_chars();
     if (c == '"') return lex_strings();
 
+    //
     if (c == '_' || isalpha(c)) return lex_identifiers();
     if (c == '@') return lex_builtin_funcs();
 
     return lex_symbols();
 }
 
-std::vector<token> *Lexer::getTokens()
+Vector<token> *Lexer::getTokens()
 {
     return tokens;
 }
@@ -206,6 +207,7 @@ u8 Lexer::lex_numbers()
 
 u8 Lexer::lex_hex_numbers()
 {
+    // skip '0x'
     advance();
     advance();
     while (isxdigit(current()))
@@ -223,6 +225,7 @@ u8 Lexer::lex_hex_numbers()
 
 u8 Lexer::lex_binary_numbers()
 {
+    // skip '0b'
     advance();
     advance();
     while (current() == '0' || current() == '1')
@@ -558,15 +561,15 @@ u8 Lexer::report_error()
 
 u8 Lexer::add_token_variant_length(token_type type)
 {
-    tokens->push_back(token(type, index - len, len, line, col - len));
+    u8 x = tokens->push_back(token(type, index - len, len, line, col - len));
     index--;
-    return EXIT_SUCCESS;
+    return x;
 }
 
 u8 Lexer::add_token_fixed_length(token_type type)
 {
-    tokens->push_back(token(type, index, len, line, col));
-    return EXIT_SUCCESS;
+    return tokens->push_back(token(type, index, len, line, col));
+    // return EXIT_SUCCESS;
 }
 
 } // namespace rotate
