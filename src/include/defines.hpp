@@ -1,9 +1,6 @@
 #if !defined(ROTATE_DEFINE)
 #define ROTATE_DEFINE
 
-// TODO: remove C++ stdlib
-#include <vector>
-
 // c stdlib
 #include <ctype.h>
 #include <limits.h>

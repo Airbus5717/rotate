@@ -12,9 +12,14 @@ Lexer::Lexer(file_t *file)
     this->is_done     = false;
     this->error       = error_type::UNKNOWN;
     this->file_length = file->length;
+    this->tokens      = new Vector<token>();
+    ASSERT_NULL(tokens, "Tokens vector initialization failure");
 }
 
-Lexer::~Lexer() = default;
+Lexer::~Lexer()
+{
+    delete tokens;
+}
 
 void Lexer::save_log()
 {
@@ -32,7 +37,7 @@ u8 Lexer::lex_init()
             case EXIT_SUCCESS:
                 break;
             case EXIT_DONE:
-                add_token_default(token_type::TknTypeEOT);
+                add_token_fixed_length(token_type::TknTypeEOT);
                 return EXIT_SUCCESS;
             case EXIT_FAILURE:
                 return report_error();
@@ -68,7 +73,7 @@ u8 Lexer::lex()
     return lex_symbols();
 }
 
-std::vector<token> Lexer::getTokens()
+Vector<token> *Lexer::getTokens()
 {
     return tokens;
 }
@@ -85,77 +90,77 @@ u8 Lexer::lex_identifiers()
     {
         case 2: {
             if (keyword_match("as", 2))
-                return add_token_identifiers(TknTypeAs);
+                return add_token_variant_length(TknTypeAs);
             else if (keyword_match("fn", 2))
-                return add_token_identifiers(TknTypeFunction);
+                return add_token_variant_length(TknTypeFunction);
             else if (keyword_match("if", 2))
-                return add_token_identifiers(TknTypeIf);
+                return add_token_variant_length(TknTypeIf);
             else if (keyword_match("or", 2))
-                return add_token_identifiers(TknTypeOr);
+                return add_token_variant_length(TknTypeOr);
             break;
         }
         case 3: {
             if (keyword_match("for", 3))
-                return add_token_identifiers(TknTypeFor);
+                return add_token_variant_length(TknTypeFor);
             else if (keyword_match("let", 3))
-                return add_token_identifiers(TknTypeLet);
+                return add_token_variant_length(TknTypeLet);
             else if (keyword_match("pub", 3))
-                return add_token_identifiers(TknTypePublic);
+                return add_token_variant_length(TknTypePublic);
             else if (keyword_match("mut", 3))
-                return add_token_identifiers(TknTypeMutable);
+                return add_token_variant_length(TknTypeMutable);
             else if (keyword_match("str", 3))
-                return add_token_identifiers(TknTypeStringKeyword);
+                return add_token_variant_length(TknTypeStringKeyword);
             else if (keyword_match("int", 3))
-                return add_token_identifiers(TknTypeIntKeyword);
+                return add_token_variant_length(TknTypeIntKeyword);
             else if (keyword_match("ref", 3))
-                return add_token_identifiers(TknTypeRef);
+                return add_token_variant_length(TknTypeRef);
             else if (keyword_match("and", 3))
-                return add_token_identifiers(TknTypeAnd);
+                return add_token_variant_length(TknTypeAnd);
             else if (keyword_match("nil", 3))
-                return add_token_identifiers(TknTypeNil);
+                return add_token_variant_length(TknTypeNil);
             else if (keyword_match("var", 3))
-                return add_token_identifiers(TknTypeVar);
+                return add_token_variant_length(TknTypeVar);
             break;
         }
         case 4: {
             if (keyword_match("else", 4))
-                return add_token_identifiers(TknTypeElse);
+                return add_token_variant_length(TknTypeElse);
             else if (keyword_match("true", 4))
-                return add_token_identifiers(TknTypeTrue);
+                return add_token_variant_length(TknTypeTrue);
             else if (keyword_match("enum", 4))
-                return add_token_identifiers(TknTypeEnum);
+                return add_token_variant_length(TknTypeEnum);
             else if (keyword_match("char", 4))
-                return add_token_identifiers(TknTypeCharKeyword);
+                return add_token_variant_length(TknTypeCharKeyword);
             else if (keyword_match("bool", 4))
-                return add_token_identifiers(TknTypeBoolKeyword);
+                return add_token_variant_length(TknTypeBoolKeyword);
             else if (keyword_match("void", 4))
-                return add_token_identifiers(TknTypeVoid);
+                return add_token_variant_length(TknTypeVoid);
             break;
         }
         case 5: {
             if (keyword_match("while", 5))
-                return add_token_identifiers(TknTypeWhile);
+                return add_token_variant_length(TknTypeWhile);
             else if (keyword_match("false", 5))
-                return add_token_identifiers(TknTypeFalse);
+                return add_token_variant_length(TknTypeFalse);
             else if (keyword_match("match", 5))
-                return add_token_identifiers(TknTypeMatch);
+                return add_token_variant_length(TknTypeMatch);
             else if (keyword_match("break", 5))
-                return add_token_identifiers(TknTypeBreak);
+                return add_token_variant_length(TknTypeBreak);
             else if (keyword_match("float", 5))
-                return add_token_identifiers(TknTypeFloatKeyword);
+                return add_token_variant_length(TknTypeFloatKeyword);
             break;
         }
         case 6: {
             if (keyword_match("return", 6))
-                return add_token_identifiers(TknTypeReturn);
+                return add_token_variant_length(TknTypeReturn);
             else if (keyword_match("import", 6))
-                return add_token_identifiers(TknTypeImport);
+                return add_token_variant_length(TknTypeImport);
             else if (keyword_match("struct", 6))
-                return add_token_identifiers(TknTypeStruct);
+                return add_token_variant_length(TknTypeStruct);
             break;
         }
         case 7: {
-            if (keyword_match("include", 7)) return add_token_identifiers(TknTypeInclude);
+            if (keyword_match("include", 7)) return add_token_variant_length(TknTypeInclude);
             break;
         }
         default:
@@ -168,7 +173,7 @@ u8 Lexer::lex_identifiers()
         return EXIT_FAILURE;
     }
 
-    return add_token_identifiers(TknTypeIdentifier);
+    return add_token_variant_length(TknTypeIdentifier);
 }
 
 u8 Lexer::lex_numbers()
@@ -195,14 +200,14 @@ u8 Lexer::lex_numbers()
         return EXIT_FAILURE;
     }
 
-    return add_token_identifiers(reached_dot ? TknTypeFloat : TknTypeInteger);
+    return add_token_variant_length(reached_dot ? TknTypeFloat : TknTypeInteger);
 }
 
 u8 Lexer::lex_hex_numbers()
 {
     advance();
     advance();
-    while (isxdigit(current()) || isdigit(current()))
+    while (isxdigit(current()))
     {
         advance_len_inc();
     }
@@ -212,7 +217,7 @@ u8 Lexer::lex_hex_numbers()
         log_error("hex number digits length is above 64");
     }
 
-    return add_token_identifiers(token_type::TknTypeHexInteger);
+    return add_token_variant_length(token_type::TknTypeHexInteger);
 }
 
 u8 Lexer::lex_binary_numbers()
@@ -228,7 +233,7 @@ u8 Lexer::lex_binary_numbers()
     {
         log_error("binary number digits length is above 128");
     }
-    return add_token_identifiers(token_type::TknTypeBinaryInteger);
+    return add_token_variant_length(token_type::TknTypeBinaryInteger);
 }
 
 u8 Lexer::lex_strings()
@@ -239,16 +244,17 @@ u8 Lexer::lex_strings()
         if (current() == '\0' || current() == '\n')
         {
             error = error_type::NOT_CLOSED_STRING;
+            index -= len;
             return EXIT_FAILURE;
         }
         advance_len_inc();
     }
     advance_len_inc();
-    if (len > UINT_MAX)
+    if (len > UINT32_MAX)
     {
         log_error("Too long string");
     }
-    return add_token_identifiers(TknTypeString);
+    return add_token_variant_length(TknTypeString);
 }
 
 u8 Lexer::lex_chars()
@@ -258,7 +264,7 @@ u8 Lexer::lex_chars()
     {
         advance_len_inc();
         advance_len_inc();
-        return add_token_identifiers(TknTypeChar);
+        return add_token_variant_length(TknTypeChar);
     }
     else if (current() == '\\')
     {
@@ -281,12 +287,12 @@ u8 Lexer::lex_chars()
         if (current() == '\'')
         {
             advance_len_inc();
-            return add_token_identifiers(TknTypeEscapedChar);
+            return add_token_variant_length(TknTypeEscapedChar);
         }
         else
         {
             error = error_type::LEXER_INVALID_CHAR;
-            return EXIT_FAILURE;
+            return reverse_len_for_error();
         }
     }
 
@@ -301,60 +307,60 @@ u8 Lexer::lex_symbols()
     switch (c)
     {
         // clang-format off
-        case '{': return add_token_default(token_type::TknTypeLeftCurly);
-        case '}': return add_token_default(token_type::TknTypeRightCurly);
-        case '(': return add_token_default(token_type::TknTypeLeftParen);
-        case ')': return add_token_default(token_type::TknTypeRightParen);
-        case '[': return add_token_default(token_type::TknTypeLeftSQRBrackets);
-        case ']': return add_token_default(token_type::TknTypeRightSQRBrackets);
-        case ';': return add_token_default(token_type::TknTypeSemiColon);
-        case '>': return add_token_default(token_type::TknTypeGreater);
-        case '<': return add_token_default(token_type::TknTypeLess);
-        case '.': return add_token_default(token_type::TknTypeDot);
-        case ',': return add_token_default(token_type::TknTypeComma);
-        case ':': return add_token_default(token_type::TknTypeColon);
+        case '{': return add_token_fixed_length(token_type::TknTypeLeftCurly);
+        case '}': return add_token_fixed_length(token_type::TknTypeRightCurly);
+        case '(': return add_token_fixed_length(token_type::TknTypeLeftParen);
+        case ')': return add_token_fixed_length(token_type::TknTypeRightParen);
+        case '[': return add_token_fixed_length(token_type::TknTypeLeftSQRBrackets);
+        case ']': return add_token_fixed_length(token_type::TknTypeRightSQRBrackets);
+        case ';': return add_token_fixed_length(token_type::TknTypeSemiColon);
+        case '>': return add_token_fixed_length(token_type::TknTypeGreater);
+        case '<': return add_token_fixed_length(token_type::TknTypeLess);
+        case '.': return add_token_fixed_length(token_type::TknTypeDot);
+        case ',': return add_token_fixed_length(token_type::TknTypeComma);
+        case ':': return add_token_fixed_length(token_type::TknTypeColon);
         // clang-format on
         case '=': {
             if (p == '=')
             {
                 len++;
-                return add_token_default(token_type::TknTypeEqualEqual);
+                return add_token_fixed_length(token_type::TknTypeEqualEqual);
             }
             else
-                return add_token_default(token_type::TknTypeEqual);
+                return add_token_fixed_length(token_type::TknTypeEqual);
         }
         case '+': {
             if (p == '=')
             {
                 len++;
-                return add_token_default(token_type::TknTypeAddEqual);
+                return add_token_fixed_length(token_type::TknTypeAddEqual);
             }
             else
-                return add_token_default(token_type::TknTypePLUS);
+                return add_token_fixed_length(token_type::TknTypePLUS);
         }
         case '-': {
             if (p == '=')
             {
                 len++;
-                return add_token_default(token_type::TknTypeSubEqual);
+                return add_token_fixed_length(token_type::TknTypeSubEqual);
             }
             else
-                return add_token_default(token_type::TknTypeMINUS);
+                return add_token_fixed_length(token_type::TknTypeMINUS);
         }
         case '*': {
             if (p == '=')
             {
                 len++;
-                return add_token_default(token_type::TknTypeMultEqual);
+                return add_token_fixed_length(token_type::TknTypeMultEqual);
             }
             else
-                return add_token_default(token_type::TknTypeStar);
+                return add_token_fixed_length(token_type::TknTypeStar);
         }
         case '/': {
             if (p == '=')
             {
                 len++;
-                return add_token_default(token_type::TknTypeDivEqual);
+                return add_token_fixed_length(token_type::TknTypeDivEqual);
             }
             else if (p == '/')
             {
@@ -377,16 +383,16 @@ u8 Lexer::lex_symbols()
                 break;
             }
             else
-                return add_token_default(token_type::TknTypeDIV);
+                return add_token_fixed_length(token_type::TknTypeDIV);
             break;
         }
         case '!': {
             if (p == '=')
             {
                 len++;
-                return add_token_default(token_type::TknTypeNotEqual);
+                return add_token_fixed_length(token_type::TknTypeNotEqual);
             }
-            return add_token_default(token_type::TknTypeNot);
+            return add_token_fixed_length(token_type::TknTypeNot);
         }
         default: {
             switch (c)
@@ -420,30 +426,30 @@ u8 Lexer::lex_builtin_funcs()
     switch (len)
     {
         case 3: {
-            if (keyword_match("col", 3)) return add_token_identifiers(TknTypeBuiltinFunc);
+            if (keyword_match("col", 3)) return add_token_variant_length(TknTypeBuiltinFunc);
             break;
         }
         case 4: {
             if (keyword_match("line", 4))
-                return add_token_identifiers(TknTypeBuiltinFunc);
+                return add_token_variant_length(TknTypeBuiltinFunc);
             else if (keyword_match("file", 4))
-                return add_token_identifiers(TknTypeBuiltinFunc);
+                return add_token_variant_length(TknTypeBuiltinFunc);
             break;
         }
         case 7: {
-            if (keyword_match("println", 7)) return add_token_identifiers(TknTypeBuiltinFunc);
+            if (keyword_match("println", 7)) return add_token_variant_length(TknTypeBuiltinFunc);
             break;
         }
         default: {
         }
     }
     error = error_type::LEXER_INVALID_BUILTN_FN;
-    return EXIT_FAILURE;
+    return reverse_len_for_error();
 }
 
 void Lexer::advance()
 {
-    char c = current();
+    const char c = current();
     index++;
     if (c != '\n')
     {
@@ -474,12 +480,12 @@ void Lexer::advance_len_inc()
 
 char Lexer::peek() const
 {
-    return (index + 1 < file_length) ? file->contents[index + 1] : 0;
+    return (index + 1 < file_length) ? file->contents[index + 1] : '\0';
 }
 
 char Lexer::current() const
 {
-    return (is_not_eof()) ? file->contents[index] : 0;
+    return (is_not_eof()) ? file->contents[index] : '\0';
 }
 
 char Lexer::past() const
@@ -495,6 +501,12 @@ bool Lexer::is_not_eof() const
 bool Lexer::keyword_match(const char *string, u32 length)
 {
     return strncmp(file->contents + (index - length), string, length) == 0;
+}
+
+u8 Lexer::reverse_len_for_error()
+{
+    index -= len;
+    return EXIT_FAILURE;
 }
 
 u8 Lexer::report_error()
@@ -513,28 +525,46 @@ u8 Lexer::report_error()
 
     _length -= low;
 
-    //
+    // error msg
     fprintf(stderr, " %s%s%s:%u:%u: %serror: %s %s%s\n", BOLD, WHITE, file->name, line, col, LRED,
             LBLUE, err_msgsfunc(error), RESET);
+
+    // line from source code
     fprintf(stderr, " %s%u%s | %.*s\n", LYELLOW, line, RESET, _length, (file->contents + low));
 
-    // print spaces then advice
-    fprintf(stderr, " %*c | %*c%s%s---%*c---\n", get_digits_from_number(line), ' ', index - low - 3,
-            ' ', LRED, BOLD, len, '^');
+    u32 num_lin_digits = get_digits_from_number(line);
+
+    // arrows pointing to error location
+    u32 spaces = index - low + 1;
+    if (len < 101)
+    {
+        char *arrows = (char *)malloc(len + 1);
+        if (!arrows) exit_error("couldn't display error message");
+        memset(arrows, '^', len);
+        arrows[len] = '\0';
+
+        fprintf(stderr, " %*c |%*c%s%s%s\n", num_lin_digits, ' ', spaces, ' ', LRED, BOLD, arrows);
+        free(arrows);
+    }
+    else
+    {
+        fprintf(stderr, " %*c |%*c%s%s^^^---...\n", num_lin_digits, ' ', spaces, ' ', LRED, BOLD);
+    }
+    // error advice
     fprintf(stderr, " Advice: %s%s\n", RESET, advice(error));
     return EXIT_FAILURE;
 }
 
-u8 Lexer::add_token_identifiers(token_type type)
+u8 Lexer::add_token_variant_length(token_type type)
 {
-    tokens.push_back(token(type, index - len, len, line, col - len));
+    tokens->push(token(type, index - len, len, line, col - len));
     index--;
     return EXIT_SUCCESS;
 }
 
-u8 Lexer::add_token_default(token_type type)
+u8 Lexer::add_token_fixed_length(token_type type)
 {
-    tokens.push_back(token(type, index, len, line, col));
+    tokens->push(token(type, index, len, line, col));
     return EXIT_SUCCESS;
 }
 

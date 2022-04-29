@@ -10,15 +10,14 @@ class Lexer
 {
     // lexer state variables
     u32 index = 0, len = 0, line = 1, col = 1;
-    file_t *file;
+    file_t *file; // not owned by the lexer
     u32 file_length;
     bool is_done;
-    std::vector<token> tokens{};
+    Vector<token> *tokens;
     error_type error;
 
     //
     u8 lex();
-    u8 report_error();
     u8 lex_chars();
     u8 lex_numbers();
     u8 lex_strings();
@@ -29,8 +28,12 @@ class Lexer
     u8 lex_identifiers();
 
     //
-    u8 add_token_identifiers(token_type type);
-    u8 add_token_default(token_type type);
+    u8 report_error();
+    u8 reverse_len_for_error();
+
+    //
+    u8 add_token_variant_length(token_type type);
+    u8 add_token_fixed_length(token_type type);
 
     //
     void advance();
@@ -46,7 +49,7 @@ class Lexer
     //
     Lexer(file_t *file);
     ~Lexer();
-    std::vector<token> getTokens();
+    Vector<token> *getTokens();
     u8 lex_init();
     void save_log();
 };

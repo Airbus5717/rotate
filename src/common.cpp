@@ -40,18 +40,18 @@ void log_token(const char *str, const rotate::token &tkn)
             tkn.length, str + tkn.index);
 }
 
-u32 get_digits_from_number(u32 v)
+u32 get_digits_from_number(u32 num)
 {
-    return (v >= 1000000000)  ? 9
-           : (v >= 100000000) ? 8
-           : (v >= 10000000)  ? 7
-           : (v >= 1000000)   ? 6
-           : (v >= 100000)    ? 5
-           : (v >= 10000)     ? 4
-           : (v >= 1000)      ? 3
-           : (v >= 100)       ? 2
-           : (v >= 10)        ? 1
-                              : 0;
+    return (num >= 1000000000)  ? 9
+           : (num >= 100000000) ? 8
+           : (num >= 10000000)  ? 7
+           : (num >= 1000000)   ? 6
+           : (num >= 100000)    ? 5
+           : (num >= 10000)     ? 4
+           : (num >= 1000)      ? 3
+           : (num >= 100)       ? 2
+           : (num >= 10)        ? 1
+                                : 0;
 }
 
 bool is_allocated(token_type type)
