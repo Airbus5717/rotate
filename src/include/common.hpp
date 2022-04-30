@@ -93,6 +93,11 @@ template <typename T> class Vector
     {
         return arr;
     }
+
+    usize getGrowthRate()
+    {
+        return growth_rate;
+    }
 };
 
 } // namespace rotate

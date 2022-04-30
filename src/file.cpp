@@ -23,11 +23,8 @@ file_t *file_read(const char *name) noexcept
         return NULL;
     }
     const usize length = (usize)ftell(file);
-    // number of nullchars after the file
-    const u8 fill_nullchar = 3;
-    ASSERT(fill_nullchar > 0 && fill_nullchar < 11, "fillnull char out of bounds");
 
-    if (length + fill_nullchar > UINT32_MAX)
+    if (length + 3 > UINT32_MAX)
     {
         log_error("File too large");
         fclose(file);
@@ -50,10 +47,8 @@ file_t *file_read(const char *name) noexcept
     }
 
     // add NULL charactor (3 for extra safety)
-    for (u8 i = 0; i < fill_nullchar; i++)
-    {
+    for (u8 i = 0; i < 3; i++)
         buffer[length + i] = '\0';
-    }
 
     // simple validator (check first char if it is a visible ascii or is_space(without tabs))
     if ((buffer[0] < ' ' || buffer[0] > '~') && !is_space_rotate(buffer[0]))

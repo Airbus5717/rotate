@@ -1,0 +1,115 @@
+#+TITLE: Rotate Programming Language
+#+OPTIONS: num:nil html-style:nil timestamp:nil date:nil author:nil
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="stylesheet.css"/>
+* Project Link
+[[https://github.com/Airbus5717/rotate]]
+
+
+* Basics
+** Hello World
+#+begin_src cpp
+fn main() void {
+  @println("Hello World");
+}
+#+end_src
+
+** Comments
+#+begin_src cpp
+// for single line comments
+
+/*
+  multi-line comments
+*/
+#+end_src
+
+* Variables
+** Basic variables
+#+begin_src cpp
+let x: int = 1;
+let y: float = 1.0;
+let z: char = 'c';
+let a: bool = true;
+let b: str = "string";
+
+// arrays
+arr1: [3]int = { 1, 2, 3 };
+
+// structs
+struct vec {
+    c: int;
+    d: int;
+}
+
+let vector = vec{c:1, d:1};
+vector.c = 12;
+vector.d = 3;
+#+end_src
+
+
+
+* Language specification
+** Types
+- int
+- floats
+- strings
+- chars
+- booleans
+
+
+** Symbols
+- equal equal ====
+- equal ===
+- colon =:=
+- semicolon =;=
+- add equal =+==
+- plus =+=
+- sub equal =-==
+- minus =-=
+- mult equal =*==
+- star =*=
+- div equal =/==
+- division =/=
+- left parenthese =(=
+- right parenthese =)=
+- left curly brackets ={=
+- right curly brackets =}=
+- left sqr brackets =[=
+- right sqr brackets =]=
+- greater or equal =>==
+- greater =>=
+- less or equal =<==
+- less =<=
+- dot =.=
+- not =!=
+
+-----
+** Keywords
+
+- if
+- fn
+- or
+- as
+- for
+- let
+- pub
+- str
+- mut
+- int
+- ref
+- and
+- else
+- true
+- char
+- bool
+- void
+- skip
+- while
+- false
+- match
+- break
+- float
+- defer
+- return
+- import
+- struct
+- include

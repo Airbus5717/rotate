@@ -25,7 +25,7 @@ int compile(const char *arg) noexcept
         {
             auto tkns = (lexer->getTokens());
             auto size = tkns->size();
-            if (size > 64)
+            if (size > 128)
             {
                 log_info("Too many Tokens to display");
             }
@@ -37,7 +37,7 @@ int compile(const char *arg) noexcept
                 }
             }
         }
-        // log_info("Debug mode is always slower than normal mode");
+        // Debug mode is always slower than normal mode
     }
 #endif // DEBUG_MODE
 

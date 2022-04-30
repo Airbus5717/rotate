@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Rotate Programming Language</title>
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="stylesheet.css"/>
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">Rotate Programming Language</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#orgcb166ee">Project Link</a></li>
+<li><a href="#orge657cae">Basics</a>
+<ul>
+<li><a href="#org8472fc3">Hello World</a></li>
+<li><a href="#orgea4da21">Comments</a></li>
+</ul>
+</li>
+<li><a href="#org534a35f">Variables</a>
+<ul>
+<li><a href="#org40b8b59">Basic variables</a></li>
+</ul>
+</li>
+<li><a href="#orgf9848ff">Language specification</a>
+<ul>
+<li><a href="#org75329c1">Types</a></li>
+<li><a href="#orgb1bb18b">Symbols</a></li>
+<li><a href="#orga6a19a3">Keywords</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgcb166ee" class="outline-2">
+<h2 id="orgcb166ee">Project Link</h2>
+<div class="outline-text-2" id="text-orgcb166ee">
+<p>
+<a href="https://github.com/Airbus5717/rotate">https://github.com/Airbus5717/rotate</a>
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-orge657cae" class="outline-2">
+<h2 id="orge657cae">Basics</h2>
+<div class="outline-text-2" id="text-orge657cae">
+</div>
+<div id="outline-container-org8472fc3" class="outline-3">
+<h3 id="org8472fc3">Hello World</h3>
+<div class="outline-text-3" id="text-org8472fc3">
+<div class="org-src-container">
+<pre class="src src-cpp"><span style="color: #ECBE7B;">fn</span> <span style="color: #c678dd;">main</span>() <span style="color: #ECBE7B;">void</span> {
+  @println(<span style="color: #98be65;">"Hello World"</span>);
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgea4da21" class="outline-3">
+<h3 id="orgea4da21">Comments</h3>
+<div class="outline-text-3" id="text-orgea4da21">
+<div class="org-src-container">
+<pre class="src src-cpp"><span style="color: #5B6268;">// </span><span style="color: #5B6268;">for single line comments</span>
+
+<span style="color: #5B6268;">/*</span>
+<span style="color: #5B6268;">  multi-line comments</span>
+<span style="color: #5B6268;">*/</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org534a35f" class="outline-2">
+<h2 id="org534a35f">Variables</h2>
+<div class="outline-text-2" id="text-org534a35f">
+</div>
+<div id="outline-container-org40b8b59" class="outline-3">
+<h3 id="org40b8b59">Basic variables</h3>
+<div class="outline-text-3" id="text-org40b8b59">
+<div class="org-src-container">
+<pre class="src src-cpp"><span style="color: #ECBE7B;">let</span> <span style="color: #dcaeea;">x</span>: <span style="color: #ECBE7B;">int</span> = <span style="color: #da8548; font-weight: bold;">1</span>;
+<span style="color: #ECBE7B;">let</span> <span style="color: #dcaeea;">y</span>: <span style="color: #ECBE7B;">float</span> = <span style="color: #da8548; font-weight: bold;">1.0</span>;
+<span style="color: #ECBE7B;">let</span> <span style="color: #dcaeea;">z</span>: <span style="color: #ECBE7B;">char</span> = <span style="color: #98be65;">'c'</span>;
+<span style="color: #ECBE7B;">let</span> <span style="color: #dcaeea;">a</span>: <span style="color: #ECBE7B;">bool</span> = <span style="color: #a9a1e1;">true</span>;
+<span style="color: #ECBE7B;">let</span> <span style="color: #dcaeea;">b</span>: str = <span style="color: #98be65;">"string"</span>;
+
+<span style="color: #5B6268;">// </span><span style="color: #5B6268;">arrays</span>
+<span style="color: #a9a1e1;">arr1</span>: [<span style="color: #da8548; font-weight: bold;">3</span>]<span style="color: #ECBE7B;">int</span> = { <span style="color: #da8548; font-weight: bold;">1</span>, <span style="color: #da8548; font-weight: bold;">2</span>, <span style="color: #da8548; font-weight: bold;">3</span> };
+
+<span style="color: #5B6268;">// </span><span style="color: #5B6268;">structs</span>
+<span style="color: #51afef;">struct</span> <span style="color: #ECBE7B;">vec</span> {
+    <span style="color: #a9a1e1;">c</span>: <span style="color: #ECBE7B;">int</span>;
+    <span style="color: #a9a1e1;">d</span>: <span style="color: #ECBE7B;">int</span>;
+}
+
+<span style="color: #ECBE7B;">let</span> <span style="color: #dcaeea;">vector</span> = vec{c:<span style="color: #da8548; font-weight: bold;">1</span>, d:<span style="color: #da8548; font-weight: bold;">1</span>};
+vector.c = <span style="color: #da8548; font-weight: bold;">12</span>;
+vector.d = <span style="color: #da8548; font-weight: bold;">3</span>;
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+
+
+<div id="outline-container-orgf9848ff" class="outline-2">
+<h2 id="orgf9848ff">Language specification</h2>
+<div class="outline-text-2" id="text-orgf9848ff">
+</div>
+<div id="outline-container-org75329c1" class="outline-3">
+<h3 id="org75329c1">Types</h3>
+<div class="outline-text-3" id="text-org75329c1">
+<ul class="org-ul">
+<li>int</li>
+<li>floats</li>
+<li>strings</li>
+<li>chars</li>
+<li>booleans</li>
+</ul>
+</div>
+</div>
+
+
+<div id="outline-container-orgb1bb18b" class="outline-3">
+<h3 id="orgb1bb18b">Symbols</h3>
+<div class="outline-text-3" id="text-orgb1bb18b">
+<ul class="org-ul">
+<li>equal equal <code>==</code></li>
+<li>equal <code>=</code></li>
+<li>colon <code>:</code></li>
+<li>semicolon <code>;</code></li>
+<li>add equal <code>+=</code></li>
+<li>plus <code>+</code></li>
+<li>sub equal <code>-=</code></li>
+<li>minus <code>-</code></li>
+<li>mult equal <code>*=</code></li>
+<li>star <code>*</code></li>
+<li>div equal <code>/=</code></li>
+<li>division <code>/</code></li>
+<li>left parenthese <code>(</code></li>
+<li>right parenthese <code>)</code></li>
+<li>left curly brackets <code>{</code></li>
+<li>right curly brackets <code>}</code></li>
+<li>left sqr brackets <code>[</code></li>
+<li>right sqr brackets <code>]</code></li>
+<li>greater or equal <code>&gt;=</code></li>
+<li>greater <code>&gt;</code></li>
+<li>less or equal <code>&lt;=</code></li>
+<li>less <code>&lt;</code></li>
+<li>dot <code>.</code></li>
+<li>not <code>!</code></li>
+</ul>
+
+<hr />
+</div>
+</div>
+<div id="outline-container-orga6a19a3" class="outline-3">
+<h3 id="orga6a19a3">Keywords</h3>
+<div class="outline-text-3" id="text-orga6a19a3">
+<ul class="org-ul">
+<li>if</li>
+<li>fn</li>
+<li>or</li>
+<li>as</li>
+<li>for</li>
+<li>let</li>
+<li>pub</li>
+<li>str</li>
+<li>mut</li>
+<li>int</li>
+<li>ref</li>
+<li>and</li>
+<li>else</li>
+<li>true</li>
+<li>char</li>
+<li>bool</li>
+<li>void</li>
+<li>skip</li>
+<li>while</li>
+<li>false</li>
+<li>match</li>
+<li>break</li>
+<li>float</li>
+<li>defer</li>
+<li>return</li>
+<li>import</li>
+<li>struct</li>
+<li>include</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

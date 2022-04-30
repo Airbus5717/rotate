@@ -13,7 +13,7 @@ class Lexer
     file_t *file; // not owned by the lexer
     u32 file_length;
     bool is_done;
-    Vector<token> *tokens;
+    std::vector<token> *tokens;
     error_type error;
 
     //
@@ -49,7 +49,7 @@ class Lexer
     //
     Lexer(file_t *file);
     ~Lexer();
-    Vector<token> *getTokens();
+    std::vector<token> *getTokens();
     u8 lex_init();
     void save_log();
 };
