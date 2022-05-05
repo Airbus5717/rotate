@@ -22,9 +22,25 @@ Lexer::~Lexer()
     delete tokens;
 }
 
-void Lexer::save_log()
+void Lexer::save_log(FILE *output)
 {
-    TODO("save_log implementation");
+    ASSERT_NULL(tokens, "Tokens var is null in save_log");
+    ASSERT(output && ((output == stderr) || (output == stdout)), "output is NULL");
+    if (tokens->size() > 0)
+    {
+        auto size = tokens->size();
+        if (size > 128)
+        {
+            log_info("Too many Tokens to display");
+        }
+        else
+        {
+            for (usize i = 0; i < size; i++)
+            {
+                log_token(output, file->contents, tokens->at(i));
+            }
+        }
+    }
 }
 
 u8 Lexer::lex()

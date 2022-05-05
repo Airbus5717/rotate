@@ -23,23 +23,7 @@ int compile(compile_options *options) noexcept
 
     if (options->debug_info)
     {
-        if (exit == EXIT_SUCCESS)
-        {
-            auto tkns = (lexer->getTokens());
-            auto size = tkns->size();
-            if (size > 128)
-            {
-                log_info("Too many Tokens to display");
-            }
-            else
-            {
-                for (usize i = 0; i < size; i++)
-                {
-                    log_token(stderr, file->contents, tkns->at(i));
-                }
-            }
-        }
-        // Debug mode is always slower than normal mode
+        lexer->save_log(stderr);
     }
 
     // Free memory

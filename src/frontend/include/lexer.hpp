@@ -51,7 +51,7 @@ class Lexer
     ~Lexer();
     std::vector<token> *getTokens();
     u8 lex();
-    void save_log();
+    void save_log(FILE *output);
 };
 
 void log_token(FILE *output, const char *str, const rotate::token &tkn);
