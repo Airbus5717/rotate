@@ -36,9 +36,8 @@ void log_info(const char *str)
 // func definition in ./frontend/include/lexer.hpp
 void log_token(FILE *output, const char *str, const rotate::token &tkn)
 {
-    fprintf(output, "[%sTOKEN%s]: idx: %u, len: %u, col: %u, line: %u, type: %s, val: `%.*s`\n",
-            LYELLOW, RESET, tkn.index, tkn.length, tkn.col, tkn.line, tkn_type_describe(tkn.type),
-            tkn.length, str + tkn.index);
+    fprintf(output, "[%sTOKEN%s]: idx: %u, len: %u, type: %s, val: `%.*s`\n", LYELLOW, RESET,
+            tkn.index, tkn.length, tkn_type_describe(tkn.type), tkn.length, str + tkn.index);
 }
 
 u32 get_digits_from_number(u32 num)

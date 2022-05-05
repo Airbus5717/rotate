@@ -583,14 +583,14 @@ u8 Lexer::report_error()
 
 u8 Lexer::add_token_variant_length(token_type type)
 {
-    tokens->push_back(token(type, index - len, len, line, col - len));
+    tokens->push_back(token(type, index - len, len));
     index--;
     return EXIT_SUCCESS;
 }
 
 u8 Lexer::add_token_fixed_length(token_type type)
 {
-    tokens->push_back(token(type, index, len, line, col));
+    tokens->push_back(token(type, index, len));
     return EXIT_SUCCESS;
 }
 

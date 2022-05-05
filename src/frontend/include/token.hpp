@@ -127,11 +127,8 @@ struct token
     token_type type;
     u32 index;
     u32 length;
-    u32 line; // starts from 1
-    u32 col;  // starts from 1
 
-    token(token_type type, u32 index, u32 length, u32 line, u32 col)
-        : type(type), index(index), length(length), line(line), col(col)
+    token(token_type type, u32 index, u32 length) : type(type), index(index), length(length)
     {
     }
 
