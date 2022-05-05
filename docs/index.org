@@ -32,7 +32,7 @@ let a: bool = true;
 let b: str = "string";
 
 // arrays
-arr1: [3]int = { 1, 2, 3 };
+let arr1 := []int{ 1, 2, 3 };
 
 // structs
 struct vec {

@@ -5,6 +5,15 @@ namespace rotate
 // This function is written in C-style (C++ way is confusing and slower)
 file_t *file_read(const char *name) noexcept
 {
+    u16 len                    = strlen(name);
+    const char *file_extension = &(name)[len - 3];
+    if (strcmp(file_extension, ".vr") != 0)
+    {
+        fprintf(stderr, "%s%serror:%s file name: `%s` must end with `.vr`%s\n", BOLD, LRED, WHITE,
+                name, RESET);
+        return NULL;
+    }
+
     // open file
     FILE *file = fopen(name, "rb");
     if (!file)
