@@ -13,6 +13,8 @@ enum token_type : u8
     TknTypeBuiltinFunc,      // @ids
     TknTypeEqual,            // =
     TknTypeLet,              // 'let'
+    TknTypeVar,              // 'var'
+    TknTypeConst,            // 'const'
     TknTypeInteger,          // refers to 10 digits ints
     TknTypeHexInteger,       // refers to Hexidecimal ints
     TknTypeBinaryInteger,    // refers to binary ints
@@ -57,7 +59,6 @@ enum token_type : u8
     TknTypeQuote,            // '
     TknTypeComma,            // ,
     TknTypePublic,           // 'pub'
-    TknTypeMutable,          // 'mut'
     TknTypeMatch,            // 'match'
     TknTypeAs,               // 'as'
     TknTypeEnum,             // 'enum'
@@ -72,7 +73,6 @@ enum token_type : u8
     TknTypeVoid,             // 'void'
     TknTypeInclude,          // 'include'
     TknTypeNil,              // `nil` basically null
-    TknTypeVar,              // 'var' mutable variable declaration
     TknTypeEOT,              // EOT - END OF TOKENS
 };
 

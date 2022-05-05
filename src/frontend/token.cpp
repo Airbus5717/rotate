@@ -92,8 +92,8 @@ const char *tkn_type_describe(const token_type type) noexcept
             return "public";
         case TknTypeNotEqual:
             return "`!=` not eql";
-        case TknTypeMutable:
-            return "mutable";
+        case TknTypeConst:
+            return "const";
         case TknTypeCharKeyword:
             return "char_word";
         case TknTypeFloatKeyword:
@@ -161,8 +161,8 @@ const char *get_keyword_or_type(const char *string, const token &tkn)
             return "let";
         case TknTypePublic:
             return "pub";
-        case TknTypeMutable:
-            return "mut";
+        case TknTypeConst:
+            return "const";
         case TknTypeStringKeyword:
             return "str";
         case TknTypeIntKeyword:
@@ -317,7 +317,7 @@ const char *err_msgsfunc(const error_type error) noexcept
         case TABS:
             return "Tabs '\\t' are unsupported";
         case NOT_VALID_ESCAPE_CHAR:
-            return "Char with escape `\\` is not valid";
+            return "Invalid escaped char";
         default:
             break;
     }

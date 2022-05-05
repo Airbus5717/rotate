@@ -124,8 +124,6 @@ u8 Lexer::lex_identifiers()
                 return add_token_variant_length(TknTypeLet);
             else if (keyword_match("pub", 3))
                 return add_token_variant_length(TknTypePublic);
-            else if (keyword_match("mut", 3))
-                return add_token_variant_length(TknTypeMutable);
             else if (keyword_match("str", 3))
                 return add_token_variant_length(TknTypeStringKeyword);
             else if (keyword_match("int", 3))
@@ -164,6 +162,8 @@ u8 Lexer::lex_identifiers()
                 return add_token_variant_length(TknTypeMatch);
             else if (keyword_match("break", 5))
                 return add_token_variant_length(TknTypeBreak);
+            else if (keyword_match("const", 5))
+                return add_token_variant_length(TknTypeConst);
             else if (keyword_match("float", 5))
                 return add_token_variant_length(TknTypeFloatKeyword);
             break;
