@@ -127,8 +127,8 @@ struct token
     token_type type;
     u32 index;
     u32 length;
-    u32 line;
-    u32 col; // starts from 1
+    u32 line; // starts from 1
+    u32 col;  // starts from 1
 
     token(token_type type, u32 index, u32 length, u32 line, u32 col)
         : type(type), index(index), length(length), line(line), col(col)
@@ -136,7 +136,6 @@ struct token
     }
 
     ~token() = default;
-
 };
 
 const char *tkn_type_describe(const token_type type) noexcept;

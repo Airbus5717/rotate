@@ -17,7 +17,7 @@ class Lexer
     error_type error;
 
     //
-    u8 lex();
+    u8 lex_director();
     u8 lex_chars();
     u8 lex_numbers();
     u8 lex_strings();
@@ -50,11 +50,11 @@ class Lexer
     Lexer(file_t *file);
     ~Lexer();
     std::vector<token> *getTokens();
-    u8 lex_init();
+    u8 lex();
     void save_log();
 };
 
-void log_token(const char *str, const rotate::token &tkn);
+void log_token(FILE *output, const char *str, const rotate::token &tkn);
 
 } // namespace rotate
 

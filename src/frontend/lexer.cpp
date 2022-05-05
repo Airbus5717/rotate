@@ -27,13 +27,13 @@ void Lexer::save_log()
     TODO("save_log implementation");
 }
 
-u8 Lexer::lex_init()
+u8 Lexer::lex()
 {
     index = 0;
-    while (!is_done)
+    do
     {
         skip_whitespace();
-        switch (lex())
+        switch (lex_director())
         {
             case EXIT_SUCCESS:
                 break;
@@ -44,7 +44,7 @@ u8 Lexer::lex_init()
                 return report_error();
         }
         advance();
-    }
+    } while (true);
     return EXIT_SUCCESS;
 }
 
@@ -56,7 +56,7 @@ void Lexer::skip_whitespace() noexcept
     }
 }
 
-u8 Lexer::lex()
+u8 Lexer::lex_director()
 {
     len = 0;
     skip_whitespace();
