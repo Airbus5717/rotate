@@ -394,11 +394,15 @@ u8 Lexer::lex_symbols()
                 advance();
                 // TODO: Allow nested comments
                 bool end_comment = false;
-                while (!is_not_eof() && current() != '\0' && !end_comment)
+                while (is_not_eof() && !end_comment)
                 {
                     // end_comment will not break
                     // because advancing is needed
-                    if ((past() == '*' && current() == '/')) end_comment = true;
+                    if ((past() != '/' && current() == '*' && peek() == '/'))
+                    {
+                        advance();
+                        end_comment = true;
+                    }
                     advance();
                 }
             }
