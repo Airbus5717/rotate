@@ -11,4 +11,4 @@ fn main() void {
 
 ## Progress
 - [x] Lexer
-- [] Parser
+- [ ] Parser
