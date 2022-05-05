@@ -8,6 +8,7 @@
 <title>Rotate Programming Language</title>
 <meta name="generator" content="Org Mode" />
 <link rel="stylesheet" type="text/css" href="stylesheet.css"/>
+<script src="code.js"></script>
 </head>
 <body>
 <div id="content" class="content">
@@ -16,31 +17,38 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgf531d56">Project Link</a></li>
-<li><a href="#org53799f3">Basics</a>
+<li><a href="#org884772e">Project Link</a></li>
+<li><a href="#org0622e8d">Basics</a>
 <ul>
-<li><a href="#org7256a1e">Hello World</a></li>
-<li><a href="#orge0afe89">Comments</a></li>
+<li><a href="#org3dfa658">Hello World</a></li>
+<li><a href="#org3db1267">Comments</a></li>
 </ul>
 </li>
-<li><a href="#org9aea35f">Variables</a>
+<li><a href="#orgfc91b21">Variables</a>
 <ul>
-<li><a href="#orgca224f7">Basic variables</a></li>
+<li><a href="#orge635339">Basic variables</a></li>
 </ul>
 </li>
-<li><a href="#orgfab1295">Language specification</a>
+<li><a href="#orgf1418eb">Language specification</a>
 <ul>
-<li><a href="#orgc8005fb">Types</a></li>
-<li><a href="#orgf1ff50c">Symbols</a></li>
-<li><a href="#orge8abdeb">Keywords</a></li>
+<li><a href="#org037e51d">Types</a></li>
+<li><a href="#org09eb678">Symbols</a></li>
+<li><a href="#org532623c">Keywords</a></li>
+</ul>
+</li>
+<li><a href="#org19328e3"><span class="todo TODO">TODO</span> </a>
+<ul>
+<li><a href="#org1b28024">Compiler</a></li>
+<li><a href="#orgdd59abc">DOCS</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
-<div id="outline-container-orgf531d56" class="outline-2">
-<h2 id="orgf531d56">Project Link</h2>
-<div class="outline-text-2" id="text-orgf531d56">
+
+<div id="outline-container-org884772e" class="outline-2">
+<h2 id="org884772e">Project Link</h2>
+<div class="outline-text-2" id="text-org884772e">
 <p>
 <a href="https://github.com/Airbus5717/rotate-cpp">https://github.com/Airbus5717/rotate-cpp</a>
 </p>
@@ -48,13 +56,13 @@
 </div>
 
 
-<div id="outline-container-org53799f3" class="outline-2">
-<h2 id="org53799f3">Basics</h2>
-<div class="outline-text-2" id="text-org53799f3">
+<div id="outline-container-org0622e8d" class="outline-2">
+<h2 id="org0622e8d">Basics</h2>
+<div class="outline-text-2" id="text-org0622e8d">
 </div>
-<div id="outline-container-org7256a1e" class="outline-3">
-<h3 id="org7256a1e">Hello World</h3>
-<div class="outline-text-3" id="text-org7256a1e">
+<div id="outline-container-org3dfa658" class="outline-3">
+<h3 id="org3dfa658">Hello World</h3>
+<div class="outline-text-3" id="text-org3dfa658">
 <div class="org-src-container">
 <pre class="src src-cpp"><span style="color: #ECBE7B;">fn</span> <span style="color: #c678dd;">main</span><span style="color: #51afef;">()</span> <span style="color: #ECBE7B;">void</span> <span style="color: #51afef;">{</span>
   @println<span style="color: #c678dd;">(</span><span style="color: #98be65;">"Hello World"</span><span style="color: #c678dd;">)</span>;
@@ -64,9 +72,9 @@
 </div>
 </div>
 
-<div id="outline-container-orge0afe89" class="outline-3">
-<h3 id="orge0afe89">Comments</h3>
-<div class="outline-text-3" id="text-orge0afe89">
+<div id="outline-container-org3db1267" class="outline-3">
+<h3 id="org3db1267">Comments</h3>
+<div class="outline-text-3" id="text-org3db1267">
 <div class="org-src-container">
 <pre class="src src-cpp"><span style="color: #5B6268;">// </span><span style="color: #5B6268;">for single line comments</span>
 
@@ -79,13 +87,13 @@
 </div>
 </div>
 
-<div id="outline-container-org9aea35f" class="outline-2">
-<h2 id="org9aea35f">Variables</h2>
-<div class="outline-text-2" id="text-org9aea35f">
+<div id="outline-container-orgfc91b21" class="outline-2">
+<h2 id="orgfc91b21">Variables</h2>
+<div class="outline-text-2" id="text-orgfc91b21">
 </div>
-<div id="outline-container-orgca224f7" class="outline-3">
-<h3 id="orgca224f7">Basic variables</h3>
-<div class="outline-text-3" id="text-orgca224f7">
+<div id="outline-container-orge635339" class="outline-3">
+<h3 id="orge635339">Basic variables</h3>
+<div class="outline-text-3" id="text-orge635339">
 <div class="org-src-container">
 <pre class="src src-cpp"><span style="color: #ECBE7B;">let</span> <span style="color: #dcaeea;">x</span>: <span style="color: #ECBE7B;">int</span> = <span style="color: #da8548; font-weight: bold;">1</span>;
 <span style="color: #ECBE7B;">let</span> <span style="color: #dcaeea;">y</span>: <span style="color: #ECBE7B;">float</span> = <span style="color: #da8548; font-weight: bold;">1.0</span>;
@@ -113,13 +121,13 @@ vector.d = <span style="color: #da8548; font-weight: bold;">3</span>;
 
 
 
-<div id="outline-container-orgfab1295" class="outline-2">
-<h2 id="orgfab1295">Language specification</h2>
-<div class="outline-text-2" id="text-orgfab1295">
+<div id="outline-container-orgf1418eb" class="outline-2">
+<h2 id="orgf1418eb">Language specification</h2>
+<div class="outline-text-2" id="text-orgf1418eb">
 </div>
-<div id="outline-container-orgc8005fb" class="outline-3">
-<h3 id="orgc8005fb">Types</h3>
-<div class="outline-text-3" id="text-orgc8005fb">
+<div id="outline-container-org037e51d" class="outline-3">
+<h3 id="org037e51d">Types</h3>
+<div class="outline-text-3" id="text-org037e51d">
 <ul class="org-ul">
 <li>int</li>
 <li>floats</li>
@@ -131,9 +139,9 @@ vector.d = <span style="color: #da8548; font-weight: bold;">3</span>;
 </div>
 
 
-<div id="outline-container-orgf1ff50c" class="outline-3">
-<h3 id="orgf1ff50c">Symbols</h3>
-<div class="outline-text-3" id="text-orgf1ff50c">
+<div id="outline-container-org09eb678" class="outline-3">
+<h3 id="org09eb678">Symbols</h3>
+<div class="outline-text-3" id="text-org09eb678">
 <ul class="org-ul">
 <li>equal equal <code>==</code></li>
 <li>equal <code>=</code></li>
@@ -164,9 +172,9 @@ vector.d = <span style="color: #da8548; font-weight: bold;">3</span>;
 <hr />
 </div>
 </div>
-<div id="outline-container-orge8abdeb" class="outline-3">
-<h3 id="orge8abdeb">Keywords</h3>
-<div class="outline-text-3" id="text-orge8abdeb">
+<div id="outline-container-org532623c" class="outline-3">
+<h3 id="org532623c">Keywords</h3>
+<div class="outline-text-3" id="text-org532623c">
 <ul class="org-ul">
 <li>if</li>
 <li>fn</li>
@@ -196,6 +204,34 @@ vector.d = <span style="color: #da8548; font-weight: bold;">3</span>;
 <li>import</li>
 <li>struct</li>
 <li>include</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org19328e3" class="outline-2">
+<h2 id="org19328e3"><span class="todo TODO">TODO</span> </h2>
+<div class="outline-text-2" id="text-org19328e3">
+</div>
+<div id="outline-container-org1b28024" class="outline-3">
+<h3 id="org1b28024">Compiler</h3>
+<div class="outline-text-3" id="text-org1b28024">
+<ul class="org-ul">
+<li>Parser</li>
+<li>TypeChecker &amp; Analysis</li>
+<li>Optimization</li>
+<li>CodeGen</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgdd59abc" class="outline-3">
+<h3 id="orgdd59abc">DOCS</h3>
+<div class="outline-text-3" id="text-orgdd59abc">
+<ul class="org-ul">
+<li>Add a copy button in HTML docs export</li>
+<li>Add automation to docs generation</li>
 </ul>
 </div>
 </div>

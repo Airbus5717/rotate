@@ -25,7 +25,7 @@ Lexer::~Lexer()
 void Lexer::save_log(FILE *output)
 {
     ASSERT_NULL(tokens, "Tokens var is null in save_log");
-    ASSERT(output && ((output == stderr) || (output == stdout)), "output is NULL");
+    ASSERT(output, "output is NULL");
     if (tokens->size() > 0)
     {
         auto size = tokens->size();
@@ -392,6 +392,7 @@ u8 Lexer::lex_symbols()
             }
             else if (p == '*')
             {
+                // TODO: Allow nested comments
                 bool end_comment = false;
                 while (!is_not_eof() && current() != '\0' && !end_comment)
                 {

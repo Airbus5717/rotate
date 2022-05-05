@@ -8,18 +8,12 @@ void print_version_and_exit()
 
 using namespace rotate;
 
-s32 main(const s32 argc, char **const argv) noexcept
+s32 main(const s32 argc, char **const argv)
 {
     if (argc > 1)
     {
-        auto comp_opt = compile_options(argv[1], false, false);
-        for (s32 i = 0; i < argc; i++)
-        {
-            if (strcasecmp(argv[i], "--log") == 0)
-            {
-                comp_opt.debug_info = true;
-            }
-        }
+        auto comp_opt = compile_options(argc, argv);
+
         u8 exit = compile(&comp_opt);
         if (exit == EXIT_FAILURE)
         {

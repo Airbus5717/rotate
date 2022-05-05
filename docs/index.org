@@ -1,6 +1,8 @@
 #+TITLE: Rotate Programming Language
 #+OPTIONS: num:nil html-style:nil timestamp:nil date:nil author:nil
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="stylesheet.css"/>
+#+HTML_HEAD: <script src="code.js"></script> 
+
 * Project Link
 [[https://github.com/Airbus5717/rotate-cpp]]
 
@@ -113,3 +115,15 @@ vector.d = 3;
 - import
 - struct
 - include
+
+
+* TODO 
+** Compiler
+- Parser
+- TypeChecker & Analysis
+- Optimization
+- CodeGen
+
+** DOCS
+- Add a copy button in HTML docs export 
+- Add automation to docs generation 

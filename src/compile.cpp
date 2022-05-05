@@ -7,6 +7,10 @@
 
 namespace rotate
 {
+void compile_options::log_error_unknown_flag(const char *str)
+{
+    fprintf(stderr, "[%sWARN%s] : Ignored Unknown flag: `%s`\n", LYELLOW, RESET, str);
+}
 
 int compile(compile_options *options) noexcept
 {

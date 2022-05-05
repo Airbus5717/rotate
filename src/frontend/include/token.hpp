@@ -102,7 +102,7 @@ enum error_type : u32
     END_OF_FILE,
     // forbidden token in global scope
     BAD_TOKEN_AT_GLOBAL,
-
+    NOT_CLOSED_COMMENT,
     IMPORT_NOT_SUPPORTED,
     // Global variables must not be mutable error,
     EXPECTED_IMPORT_ID,

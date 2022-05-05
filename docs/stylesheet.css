@@ -4,7 +4,7 @@ body {
   margin: 40px auto;
   max-width: 60rem;
   line-height: 1.6;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   background-color: #0f141b;
   padding: 0 10px;
   /* font-family: "Inter", sans-serif; */
@@ -43,9 +43,9 @@ pre {
   background-color: #181f27;
   margin: 1rem;
   padding: 1rem;
-  border-radius: 0.5rem;
+  border-radius: 1rem;
   counter-reset: line;
-  color: white;
+  color: #ededed;
   font-family: "Inconsolata", monospace;
 }
 

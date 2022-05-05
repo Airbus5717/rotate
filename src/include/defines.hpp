@@ -1,4 +1,4 @@
-#if !defined(ROTATE_DEFINE)
+#ifndef ROTATE_DEFINE
 #define ROTATE_DEFINE
 
 #include <vector>
