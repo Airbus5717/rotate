@@ -393,20 +393,14 @@ u8 Lexer::lex_symbols()
             {
                 advance();
                 // TODO: Allow nested comments
-                u16 nest = 1;
-                do
+                bool end_comment = false;
+                while (!is_not_eof() && current() != '\0' && !end_comment)
                 {
-                    if (current() == '/' && peek() == '*') nest++;
-                    if ((past() == '*' && current() == '/')) nest--;
-
+                    // end_comment will not break
+                    // because advancing is needed
+                    if ((past() == '*' && current() == '/')) end_comment = true;
                     advance();
-                    if (current() == '\0')
-                    {
-                        error = error_type::NOT_CLOSED_COMMENT;
-                        return EXIT_FAILURE;
-                    }
-
-                } while (is_not_eof() && nest > 0);
+                }
             }
             else
             {
