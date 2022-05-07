@@ -28,17 +28,9 @@ void Lexer::save_log(FILE *output)
     ASSERT(output, "output is NULL");
     if (tokens->size() > 0)
     {
-        auto size = tokens->size();
-        if (size > 128)
+        for (usize i = 0; i < tokens->size(); i++)
         {
-            log_info("Too many Tokens to display");
-        }
-        else
-        {
-            for (usize i = 0; i < size; i++)
-            {
-                log_token(output, file->contents, tokens->at(i));
-            }
+            log_token(output, file->contents, tokens->at(i));
         }
     }
 }

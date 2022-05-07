@@ -10,11 +10,26 @@ struct file_t
 {
     const char *name;
     const char *contents;
-    const usize length; // contents length
+    const usize length = 0; // contents length
 
     file_t(const char *name, const char *contents, const usize length)
         : name(name), contents(contents), length(length)
     {
+    }
+
+    void log_head_file(FILE *output)
+    {
+        if (length == 0) return;
+        ASSERT_NULL(contents, "contents is null");
+
+        if (length > 200)
+        {
+            fprintf(output, "%.*s.....\n", 200, contents);
+        }
+        else
+        {
+            fprintf(output, "%s\n", contents);
+        }
     }
 
     ~file_t()

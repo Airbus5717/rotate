@@ -3,3 +3,4 @@ build/
 *.vr
 *.swp
 *.tex
+*.log
