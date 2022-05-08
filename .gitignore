@@ -4,4 +4,4 @@ build/
 *.swp
 *.tex
 *.log
-docs/_minted_index/
+docs/_minted-index/*
