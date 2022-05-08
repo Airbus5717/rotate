@@ -544,7 +544,7 @@ u8 Lexer::report_error()
     _length -= low;
 
     // error msg
-    fprintf(stderr, " %s%s%s:%u:%u: %serror: %s %s%s\n", BOLD, WHITE, file->name, line, col, LRED,
+    fprintf(stderr, "> %s%s%s:%u:%u: %serror: %s%s%s\n", BOLD, WHITE, file->name, line, col, LRED,
             LBLUE, err_msgsfunc(error), RESET);
 
     // line from source code
@@ -569,7 +569,7 @@ u8 Lexer::report_error()
         fprintf(stderr, " %*c |%*c%s%s^^^---...\n", num_lin_digits, ' ', spaces, ' ', LRED, BOLD);
     }
     // error advice
-    fprintf(stderr, " Advice: %s%s\n", RESET, advice(error));
+    fprintf(stderr, "> Advice: %s%s\n", RESET, advice(error));
     return EXIT_FAILURE;
 }
 
