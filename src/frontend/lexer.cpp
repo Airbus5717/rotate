@@ -534,8 +534,6 @@ u8 Lexer::report_error()
     while (file->contents[low] != '\n' && low > 0)
         low--;
 
-    low++;
-
     //
     u32 _length = index;
     while (file->contents[_length] != '\n' && _length + 1 < file->length)
