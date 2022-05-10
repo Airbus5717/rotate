@@ -3,8 +3,39 @@
 
 #include "lexer.hpp"
 
-namespace rotate
+namespace rotate_parser
 {
+using namespace rotate;
+
+struct gl_import_t {
+};
+
+struct gl_var_t {
+};
+
+struct gl_struct_t {
+};
+
+struct gl_enum_t {
+};
+
+struct gl_function_t {
+};
+
+enum gl_stmt_type: u8 {
+   gl_import,
+   gl_var,
+   gl_function,
+   gl_struct,
+   gl_enum,
+};
+
+struct gl_stmt {
+  gl_stmt_type type;
+  union stmt {
+     
+  };
+};
 
 class Parser
 {
