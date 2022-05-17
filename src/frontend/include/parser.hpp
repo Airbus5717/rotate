@@ -6,6 +6,14 @@
 namespace rotate
 {
 
+struct literal_expr;
+struct unary_expr;
+struct binary_expr;
+struct expression;
+
+using namespace rotate;
+
+
 enum node_kind : u8
 {
     nd_literal, // str, num, nil etc.
@@ -14,20 +22,18 @@ enum node_kind : u8
     nd_group,   // ()
 };
 
-struct node
+enum binary_op : u8
 {
-    node_kind kind;
-    union el {
-    };
-};
-
-enum gl_stmt_kind : u8
-{
-    gl_import,
-    gl_var_const,
-    gl_function,
-    gl_struct,
-    gl_enum,
+    bp_plus,    // '+'
+    bp_minus,   // '-'
+    bp_star,    // '*'
+    bp_slash,   // '/'
+    bp_eql_eql, // '=='
+    bp_gr_eql,  // '>='
+    bp_ls_eql,  // '<='
+    bp_gr,      // '>'
+    bp_ls,      // '<'
+    bp_not_eql, // '!='
 };
 
 enum lc_stmt_kind : u8
@@ -39,6 +45,40 @@ enum lc_stmt_kind : u8
     lc_for_loop,
     lc_if_else_stmt,
     lc_reassign_variable,
+};
+
+enum unary_kind : u8
+{
+    negate_logic, // '!'
+    negate_sign,  // '-'
+};
+
+struct literal_expr
+{
+    u32 token_index;
+};
+
+struct binary_expr
+{
+    expression *left;
+    expression *right;
+    binary_op op;
+};
+
+struct unary_expr
+{
+    unary_kind kind;
+    expression *expr;
+};
+
+struct expression
+{
+    node_kind kind;
+    union elem {
+        literal_expr *expr;
+        binary_expr *expr;
+        unary_expr *expr;
+    };
 };
 
 struct stmt
@@ -56,6 +96,7 @@ struct gl_import_t
     u32 identifier_index;
 };
 
+// variables in global scope are constant
 struct gl_var_t
 {
     u32 type;
@@ -79,30 +120,24 @@ struct gl_function_t
     block blk;
 };
 
-struct gl_stmt
-{
-    gl_stmt_kind kind;
-    union stmt {
-        gl_function_t function;
-        gl_struct_t structure;
-        gl_var_t var_const;
-        gl_enum_t enumeration;
-        gl_import_t import_s;
-    };
-};
-
 class Parser
 {
-    // ptr to original lexer
-    Lexer *lexer;
-    std::vector<gl_stmt> gl_stmts;
+    // ptr to tokens from the lexer
+    std::vector<token> *tokens;
+    u32 index;
+    std::vector<gl_function_t> gl_functions;
+    std::vector<gl_struct_t> gl_structs;
+    std::vector<gl_enum_t> gl_enums;
+    std::vector<gl_import_t> gl_imports;
+    std::vector<gl_var_t> gl_vars;
 
   public:
     Parser(Lexer *lexer);
-    ~Parser() = default;
+    ~Parser(); // don't free lexer memory
 
     // parser starting point
-    u8 parse_lexer();
+    u8 parse();
+    u32 consume();
 
     // parser report errs
     u8 parser_report_error();
