@@ -1,15 +1,13 @@
 #include "include/parser.hpp"
 
-namespace rotate_parser
+namespace rotate
 {
-using namespace rotate;
+
 //
 Parser::Parser(Lexer *lexer) : lexer(lexer)
 {
-    UNUSED(lexer);
+    ASSERT_NULL(this->lexer, "lexer passed is null");
 }
 
-//
-Parser::~Parser() = default;
 
-} // namespace rotate_parser
+} // namespace rotate

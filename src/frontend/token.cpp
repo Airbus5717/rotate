@@ -106,8 +106,7 @@ const char *tkn_type_describe(const token_type type) noexcept
             return "str_word";
         case TknTypeBoolKeyword:
             return "bool_word";
-        case TknTypeAs:
-            return "as";
+
         case TknTypeEqualEqual:
             return "equality";
         case TknTypeBreak:
@@ -138,6 +137,22 @@ const char *tkn_type_describe(const token_type type) noexcept
             return "escaped_char";
         case TknTypeEOT:
             return "End OF Tokens";
+        case TknTypeINT_U8:
+            return "u8";
+        case TknTypeINT_U16:
+            return "u16";
+        case TknTypeINT_U32:
+            return "u32";
+        case TknTypeINT_U64:
+            return "u64";
+        case TknTypeINT_S8:
+            return "s8";
+        case TknTypeINT_S16:
+            return "s16";
+        case TknTypeINT_S32:
+            return "s32";
+        case TknTypeINT_S64:
+            return "s64";
         default:
             return "???";
     }
@@ -147,8 +162,7 @@ const char *get_keyword_or_type(const char *string, const token &tkn)
 {
     switch (tkn.type)
     {
-        case TknTypeAs:
-            return "as";
+
         case TknTypeFunction:
             return "fn";
         case TknTypeIf:
@@ -255,6 +269,22 @@ const char *get_keyword_or_type(const char *string, const token &tkn)
             return ",";
         case TknTypeEOT:
             return "end_of_tokens";
+        case TknTypeINT_U8:
+            return "u8";
+        case TknTypeINT_U16:
+            return "u16";
+        case TknTypeINT_U32:
+            return "u32";
+        case TknTypeINT_U64:
+            return "u64";
+        case TknTypeINT_S8:
+            return "s8";
+        case TknTypeINT_S16:
+            return "s16";
+        case TknTypeINT_S32:
+            return "s32";
+        case TknTypeINT_S64:
+            return "s64";
         default:
             return strndup(string + tkn.index, tkn.length);
     }

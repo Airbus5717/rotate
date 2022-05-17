@@ -39,6 +39,7 @@ int compile(compile_options *options) noexcept
     if (options->debug_info) fclose(output);
     delete lexer;
     delete file;
+
     return exit;
 }
 

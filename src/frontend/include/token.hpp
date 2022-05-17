@@ -19,7 +19,17 @@ enum token_type : u8
     TknTypeHexInteger,       // refers to Hexidecimal ints
     TknTypeBinaryInteger,    // refers to binary ints
     TknTypeIntKeyword,       // 'int'
+    TknTypeINT_U8,           // u8
+    TknTypeINT_U16,          // u16
+    TknTypeINT_U32,          // u32
+    TknTypeINT_U64,          // u64
+    TknTypeINT_S8,           // s8
+    TknTypeINT_S16,          // s16
+    TknTypeINT_S32,          // s32
+    TknTypeINT_S64,          // s64
     TknTypeFloat,            // refer to floats
+    TknTypeFLOAT_f32,        // f32
+    TknTypeFLOAT_f64,        // f64
     TknTypeFloatKeyword,     // 'float'
     TknTypeString,           // refer to strings
     TknTypeStringKeyword,    // 'str'
@@ -60,7 +70,6 @@ enum token_type : u8
     TknTypeComma,            // ,
     TknTypePublic,           // 'pub'
     TknTypeMatch,            // 'match'
-    TknTypeAs,               // 'as'
     TknTypeEnum,             // 'enum'
     TknTypeEqualEqual,       // ==
     TknTypeBreak,            // 'break'
