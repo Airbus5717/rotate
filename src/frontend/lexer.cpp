@@ -589,7 +589,7 @@ u8 Lexer::report_error()
 u8 Lexer::add_token(token_type type)
 {
     tokens->push_back(token(type, index, len));
-    advance_len_times();
+    index += len - 1;
     return EXIT_SUCCESS;
 }
 

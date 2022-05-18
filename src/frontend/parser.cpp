@@ -9,15 +9,16 @@ Parser::Parser(Lexer *lexer) : tokens(lexer->getTokens())
     ASSERT_NULL(this->tokens, "lexer passed is null");
 }
 
+// TODO: implementation
 Parser::~Parser() = default;
 
 u8 Parser::parse()
 {
-    auto *tkns = tokens;
-    u8 exit    = 0;
+    u8 exit = 0;
+
     for (;;)
     {
-        switch (tkns->at(index).type)
+        switch (tokens->at(index).type)
         {
             case TknTypeImport:
                 exit = parse_gl_imports();
@@ -34,6 +35,9 @@ u8 Parser::parse()
             case TknTypeEnum:
                 exit = parse_gl_enum();
                 break;
+            case TknTypeEOT:
+                return exit;
+                break;
             default:
                 return parser_report_error();
         }
@@ -41,6 +45,31 @@ u8 Parser::parse()
     }
 
     return EXIT_SUCCESS;
+}
+
+u8 Parser::consume(token_type _type)
+{
+    if (_type == tokens->at(index).type)
+    {
+        index++;
+        return EXIT_SUCCESS;
+    }
+    return EXIT_FAILURE;
+}
+
+void Parser::advance()
+{
+    index++;
+}
+
+token Parser::past()
+{
+    return tokens->at(index - 1);
+}
+
+token Parser::peek()
+{
+    return tokens->at(index + 1);
 }
 
 u8 Parser::parse_gl_imports()
@@ -69,7 +98,8 @@ u8 Parser::parse_gl_struct()
 
 u8 Parser::parse_gl_enum()
 {
-    TODO("enums parser implementation");
+    advance();
+    TODO("enum parser implementation");
     return EXIT_FAILURE;
 }
 

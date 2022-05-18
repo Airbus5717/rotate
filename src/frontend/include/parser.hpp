@@ -10,13 +10,41 @@ struct literal_expr;
 struct unary_expr;
 struct binary_expr;
 struct expression;
+struct type;
+struct token;
 
-using namespace rotate;
+// clang-format off
+enum type_kind : u8 
+{
+    f32, f64,
+    uint8, uint16, uint32, uint64,
+    sint8, sint16, sint32, sint64,
+    chr, boolean, structure, enumeration,
+    array, // strings are char arrays (only ascii) (other unicodes won't be supported)
+    dynamic_array, // length stored in runtime
+};
 
+struct struct_type { std::vector<type> fields_types; };
+// clang-format on
+
+struct array_type
+{
+    u32 size;
+    type *child;
+};
+
+struct type
+{
+    type_kind kind;
+    union type_meta {
+        struct_type _struct;
+        array_type array;
+    };
+};
 
 enum node_kind : u8
 {
-    nd_literal, // str, num, nil etc.
+    nd_literal, // str, num, nil, id etc.
     nd_binary,  // `1 + 2` or `2 == 2`
     nd_unary,   // - or !
     nd_group,   // ()
@@ -34,17 +62,6 @@ enum binary_op : u8
     bp_gr,      // '>'
     bp_ls,      // '<'
     bp_not_eql, // '!='
-};
-
-enum lc_stmt_kind : u8
-{
-    lc_var_decl,
-    lc_var_const_decl,
-    lc_var_mut_decl,
-    lc_while_loop,
-    lc_for_loop,
-    lc_if_else_stmt,
-    lc_reassign_variable,
 };
 
 enum unary_kind : u8
@@ -73,12 +90,50 @@ struct unary_expr
 
 struct expression
 {
+    type _type;
     node_kind kind;
-    union elem {
-        literal_expr *expr;
-        binary_expr *expr;
-        unary_expr *expr;
+    union value {
+        binary_expr *binary;
+        unary_expr *unary;
+        literal_expr *literal;
     };
+};
+
+enum lc_stmt_kind : u8
+{
+    lc_var_decl,
+    lc_var_const_decl,
+    lc_var_mut_decl,
+    lc_while_loop,
+    lc_for_loop,
+    lc_if_else_stmt,
+    lc_mutate_var,
+};
+
+struct lc_reassign_var
+{
+    u32 id;
+    expression *val;
+};
+
+struct lc_var_decl
+{
+};
+
+struct lc_let_var_decl
+{
+};
+
+struct lc_while_loop
+{
+};
+
+struct lc_for_loop
+{
+};
+
+struct lc_if_else_stmt
+{
 };
 
 struct stmt
@@ -99,24 +154,25 @@ struct gl_import_t
 // variables in global scope are constant
 struct gl_var_t
 {
-    u32 type;
+    type _type;
+    expression val;
 };
 
 struct gl_struct_t
 {
-    u32 type;
     std::vector<gl_var_t> inner_vars;
 };
 
 struct gl_enum_t
 {
     // number is the index
-    std::vector<token> ids;
+    token *id;
+    std::vector<token *> ids;
 };
 
 struct gl_function_t
 {
-    // TODO type type;
+    type _type;
     block blk;
 };
 
@@ -134,6 +190,11 @@ class Parser
   public:
     Parser(Lexer *lexer);
     ~Parser(); // don't free lexer memory
+    void advance();
+    u8 consume(token_type _type);
+    token past();
+    token peek();
+    token next();
 
     // parser starting point
     u8 parse();

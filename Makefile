@@ -4,10 +4,10 @@ ARG :=
 
 CXX ?= clang++
 CFLAGS := -Wall -Wextra -ffast-math
-CFLAGS += -ftree-vectorize -march=native 
+CFLAGS += -ftree-vectorize -march=native -mtune=native	
 
 SRC = $(wildcard src/*.cpp)
-SRC += $(wildcard src/frontend/*.cpp)
+SRC += $(wildcard src/**/*.cpp)
 SRC_C_H = src/**/*.cpp src/**/*.hpp
 
 
@@ -45,7 +45,7 @@ scan:
 	@scan-view ./output/*
 
 fast:
-	$(CXX) $(SRC) -o $(BIN) $(CFLAGS) $(ANALYZE) $(CSTD) $(LIB) -Ofast -O3
+	$(CXX) $(SRC) -o $(BIN) $(CFLAGS) $(ANALYZE) $(CSTD) $(LIB) -Ofast
 
 afl:
 	afl-$(CXX) $(SRC) -o $(BIN) $(CFLAGS) $(DEBUG) $(CSTD) $(LIB)
