@@ -1,4 +1,5 @@
 #include "include/lexer.hpp"
+#include "include/token.hpp"
 
 namespace rotate
 {
@@ -13,25 +14,18 @@ Lexer::Lexer(file_t *file)
     this->is_done     = false;
     this->error       = error_type::UNKNOWN;
     this->file_length = file->length;
-    this->tokens      = new std::vector<token>();
-    ASSERT_NULL(tokens, "Tokens vector initialization failure");
+    this->tokens      = new Vector<token>();
 }
 
-Lexer::~Lexer()
-{
-    delete tokens;
-}
+Lexer::~Lexer() = default;
 
 void Lexer::save_log(FILE *output)
 {
-    ASSERT_NULL(tokens, "Tokens var is null in save_log");
-    ASSERT(output, "output is NULL");
-    if (tokens->size() > 0)
+    // ASSERT(output, "output is NULL");
+    // ASSERT_NULL(tokens.getElements(), "Tokens array is null");
+    for (usize i = 0; i < tokens.size(); i++)
     {
-        for (usize i = 0; i < tokens->size(); i++)
-        {
-            log_token(output, file->contents, tokens->at(i));
-        }
+        log_token(output, tokens.at(i), file->contents);
     }
 }
 
@@ -40,7 +34,6 @@ u8 Lexer::lex()
     index = 0;
     do
     {
-        skip_whitespace();
         switch (lex_director())
         {
             case EXIT_SUCCESS:
@@ -83,9 +76,9 @@ u8 Lexer::lex_director()
     return lex_symbols();
 }
 
-std::vector<token> *Lexer::getTokens()
+Vector<token> *Lexer::getTokens()
 {
-    return tokens;
+    return &tokens;
 }
 
 u8 Lexer::lex_identifiers()
@@ -397,6 +390,7 @@ u8 Lexer::lex_symbols()
             }
             else if (p == '/')
             {
+                //
                 while (is_not_eof() && current() != '\n')
                 {
                     advance();
@@ -409,6 +403,8 @@ u8 Lexer::lex_symbols()
                 bool end_comment = false;
                 while (is_not_eof() && !end_comment)
                 {
+                    /*
+                     */
                     // end_comment will not break
                     // because advancing is needed
                     if ((past() != '/' && current() == '*' && peek() == '/'))
@@ -588,7 +584,7 @@ u8 Lexer::report_error()
 
 u8 Lexer::add_token(token_type type)
 {
-    tokens->push_back(token(type, index, len));
+    tokens.push_back(token(type, index, len));
     index += len - 1;
     return EXIT_SUCCESS;
 }

@@ -140,8 +140,6 @@ struct token
     token(token_type type, u32 index, u32 length) : type(type), index(index), length(length)
     {
     }
-
-    ~token() = default;
 };
 
 const char *tkn_type_describe(const token_type type) noexcept;

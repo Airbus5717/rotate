@@ -3,8 +3,8 @@
 ARG := 
 
 CXX ?= clang++
-CFLAGS := -Wall -Wextra -ffast-math
-CFLAGS += -ftree-vectorize -march=native -mtune=native	
+CFLAGS := -Wall -Wextra -fno-exceptions
+CFLAGS += -march=native -mtune=native	
 
 SRC = $(wildcard src/*.cpp)
 SRC += $(wildcard src/**/*.cpp)
@@ -33,7 +33,7 @@ all: format
 	@cmake --build build
 
 
-redo: clean gen build
+redo: clean gen build all
 	@echo done
 
 gen:

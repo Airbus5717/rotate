@@ -3,6 +3,17 @@
 namespace rotate
 {
 
+enum compilation_state : u8
+{
+    cs_begin,
+    cs_file_read,
+    cs_lexer,
+    cs_parser,
+    cs_type_checker,
+    cs_end,
+    // TODO (other)
+};
+
 struct compile_options
 {
     const s32 argc;
@@ -45,6 +56,6 @@ struct compile_options
 };
 
 //
-int compile(compile_options *options) noexcept;
+int compile(compile_options *options, compilation_state *state) noexcept;
 
 } // namespace rotate

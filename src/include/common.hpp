@@ -21,16 +21,16 @@ void log_info(const char *str);
 u32 get_digits_from_number(u32 v);
 
 // TODO: Implement alternative to libc++ vector
-template <typename T> class Vector
+template <typename T> struct Vector
 {
+    T *arr;
     usize index    = 0;
     usize capacity = 0;
-    T *arr;
 
+  public:
     // TODO: growth rate optimizer
     static const usize growth_rate = 2;
 
-  public:
     Vector()
     {
         this->index    = 0;
@@ -59,13 +59,15 @@ template <typename T> class Vector
 
     u8 push_back(T elem)
     {
-        ASSERT(capacity < UINT32_MAX, "too large vector");
+        /*
+         * 9223372036854775807LL == (ULONG_LONG_MAX / 2) - 1;
+         */
+        ASSERT(capacity < 9223372036854775807LL, "too large vector");
         if (index + 1 == capacity)
         {
-            T *tmp = (T *)realloc(arr, growth_rate * capacity);
-            if (tmp == NULL) return EXIT_FAILURE;
+            arr = (T *)realloc(arr, growth_rate * capacity);
+            if (arr == NULL) return EXIT_FAILURE;
             capacity *= growth_rate;
-            arr = tmp;
         }
 
         arr[index++] = elem;
@@ -74,8 +76,7 @@ template <typename T> class Vector
 
     const T &operator[](usize i)
     {
-        ASSERT(i < index, "out of bounds");
-        return arr[i];
+        return at(i);
     }
 
     const T &at(usize i)
@@ -92,11 +93,6 @@ template <typename T> class Vector
     T *getElements()
     {
         return arr;
-    }
-
-    usize getGrowthRate()
-    {
-        return growth_rate;
     }
 };
 

@@ -1,19 +1,18 @@
 #ifndef ROTATE_DEFINE
 #define ROTATE_DEFINE
 
-#include <vector>
-
 // c stdlib
-#include <ctype.h>
-#include <limits.h>
-#include <stdbool.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cctype>
+#include <climits>
+#include <cstdbool>
+#include <cstdint>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 namespace rotate
 {
+
 #define VERSION "0.0.1"
 typedef int8_t s8;
 typedef int16_t s16;
@@ -25,8 +24,8 @@ typedef uint16_t u16;
 typedef uint32_t u32;
 typedef uint64_t u64;
 
-typedef unsigned long int usize;
-typedef signed long int isize;
+typedef unsigned long long int usize;
+typedef signed long long int isize;
 
 #define ASSERT(expr, msg)                                                                          \
     if (!(expr))                                                                                   \
@@ -62,7 +61,7 @@ typedef signed long int isize;
 
 #define TODO(string1)                                                                              \
     fprintf(stderr, "%sTODO: %s\n@file: %s:%d%s\n", YELLOW, string1, __FILE__, __LINE__, RESET);   \
-    exit(1)
+    exit(1);
 
 #define UNUSED(x) (void)(x)
 // clang-format off

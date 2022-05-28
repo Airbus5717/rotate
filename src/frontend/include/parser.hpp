@@ -16,30 +16,51 @@ struct token;
 // clang-format off
 enum type_kind : u8 
 {
+    invalid,
     f32, f64,
     uint8, uint16, uint32, uint64,
     sint8, sint16, sint32, sint64,
-    chr, boolean, structure, enumeration,
-    array, // strings are char arrays (only ascii) (other unicodes won't be supported)
+    chr, boolean,
+
+    enumeration,
+
+    structure,
+    // strings are char arrays (only ascii) (other unicodes won't be supported)
+    arr, 
     dynamic_array, // length stored in runtime
 };
-
-struct struct_type { std::vector<type> fields_types; };
 // clang-format on
-
-struct array_type
-{
-    u32 size;
-    type *child;
-};
 
 struct type
 {
     type_kind kind;
-    union type_meta {
-        struct_type _struct;
-        array_type array;
-    };
+
+    type(type_kind kind) : kind(kind)
+    {
+    }
+};
+
+struct array_type : type
+{
+    u32 size; // must not be a dynamic array
+
+    array_type(type child, u32 size) : type(child), size(size)
+    {
+    }
+};
+
+struct struct_type : type
+{
+    Vector<type> fields_types;
+
+    struct_type(type first_type) : type(first_type)
+    {
+    }
+
+    void add_field_type(type _type)
+    {
+        fields_types.push_back(_type);
+    }
 };
 
 enum node_kind : u8
@@ -84,6 +105,8 @@ struct binary_expr
 
 struct unary_expr
 {
+
+    //* !s or -2
     unary_kind kind;
     expression *expr;
 };
@@ -107,7 +130,7 @@ enum lc_stmt_kind : u8
     lc_while_loop,
     lc_for_loop,
     lc_if_else_stmt,
-    lc_mutate_var,
+    lc_mutable_var,
 };
 
 struct lc_reassign_var
@@ -143,7 +166,7 @@ struct stmt
 
 struct block
 {
-    std::vector<stmt> stmts;
+    Vector<stmt> stmts;
 };
 
 struct gl_import_t
@@ -160,14 +183,14 @@ struct gl_var_t
 
 struct gl_struct_t
 {
-    std::vector<gl_var_t> inner_vars;
+    Vector<gl_var_t> inner_vars;
 };
 
 struct gl_enum_t
 {
     // number is the index
     token *id;
-    std::vector<token *> ids;
+    Vector<token *> ids;
 };
 
 struct gl_function_t
@@ -179,22 +202,28 @@ struct gl_function_t
 class Parser
 {
     // ptr to tokens from the lexer
-    std::vector<token> *tokens;
+    Vector<token> *tokens;
     u32 index;
-    std::vector<gl_function_t> gl_functions;
-    std::vector<gl_struct_t> gl_structs;
-    std::vector<gl_enum_t> gl_enums;
-    std::vector<gl_import_t> gl_imports;
-    std::vector<gl_var_t> gl_vars;
+    Vector<gl_function_t> gl_functions;
+    Vector<gl_struct_t> gl_structs;
+    Vector<gl_enum_t> gl_enums;
+    Vector<gl_import_t> gl_imports;
+    Vector<gl_var_t> gl_vars;
 
   public:
     Parser(Lexer *lexer);
     ~Parser(); // don't free lexer memory
-    void advance();
-    u8 consume(token_type _type);
-    token past();
-    token peek();
-    token next();
+
+    //
+    void save_log();
+
+    //
+    u8 expect(token_type _type);
+    inline void advance();
+    inline token current();
+    inline token past();
+    inline token peek();
+    inline token next();
 
     // parser starting point
     u8 parse();
@@ -209,6 +238,8 @@ class Parser
     u8 parse_gl_var_const();
     u8 parse_gl_struct();
     u8 parse_gl_enum();
+
+    type parse_type();
 };
 
 } // namespace rotate
