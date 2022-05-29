@@ -1,6 +1,8 @@
 #ifndef ROTATE_DEFINE
 #define ROTATE_DEFINE
 
+#include <vector>
+
 // c stdlib
 #include <cctype>
 #include <climits>
@@ -64,18 +66,19 @@ typedef signed long long int isize;
     exit(1);
 
 #define UNUSED(x) (void)(x)
-// clang-format off
-#define GREEN    "\x1b[32m"
-#define YELLOW   "\x1b[33m"
-#define BLUE     "\x1b[34m"
-#define PINK     "\x1b[35m"
-#define CYAN     "\x1b[36m"
+#define EXIT_DONE 3
 
+// terminal colors
+#define GREEN  "\x1b[32m"
+#define YELLOW "\x1b[33m"
+#define BLUE   "\x1b[34m"
+#define PINK   "\x1b[35m"
+#define CYAN   "\x1b[36m"
 //
-#define RESET    "\x1b[0m"
+#define RESET "\x1b[0m"
 //
-#define BOLD     "\x1b[1m"
-#define FAINT    "\x1b[2m"
+#define BOLD  "\x1b[1m"
+#define FAINT "\x1b[2m"
 //
 #define BLACK    "\x1b[30m"
 #define WHITE    "\x1b[37m"
@@ -88,7 +91,6 @@ typedef signed long long int isize;
 #define LMAGENTA "\x1b[95m"
 #define LCYAN    "\x1b[96m"
 #define LWHITE   "\x1b[97m"
-// clang-format on
 
 } // namespace rotate
 

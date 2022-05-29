@@ -17,7 +17,6 @@ s32 main(const s32 argc, char **const argv)
         u8 _exit = compile(&comp_opt, &state);
         if (_exit == EXIT_FAILURE)
         {
-            log_error("FAILURE");
             switch (state)
             {
                 case cs_begin:
@@ -36,6 +35,7 @@ s32 main(const s32 argc, char **const argv)
                     TODO("implement error state catch");
                 }
             }
+            log_error("FAILURE");
         }
         else if (_exit == EXIT_SUCCESS)
         {

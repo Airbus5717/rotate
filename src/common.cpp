@@ -7,7 +7,7 @@
 namespace rotate
 {
 
-bool is_space_rotate(char i)
+bool is_space_rotate(const char i)
 {
     return i == ' ' || i == '\n';
 }
@@ -58,14 +58,14 @@ bool is_token_type_length_variable(token_type type)
 {
     switch (type)
     {
-        case TknTypeInteger:
-        case TknTypeHexInteger:
-        case TknTypeBinaryInteger:
-        case TknTypeFloat:
-        case TknTypeBuiltinFunc:
-        case TknTypeIdentifier:
-        case TknTypeString:
-        case TknTypeChar:
+        case Integer:
+        case HexInteger:
+        case BinaryInteger:
+        case Float:
+        case BuiltinFunc:
+        case Identifier:
+        case String:
+        case Char:
             return true;
         default:
             return false;

@@ -202,7 +202,7 @@ struct gl_function_t
 class Parser
 {
     // ptr to tokens from the lexer
-    Vector<token> *tokens;
+    std::vector<token> *tokens;
     u32 index;
     Vector<gl_function_t> gl_functions;
     Vector<gl_struct_t> gl_structs;

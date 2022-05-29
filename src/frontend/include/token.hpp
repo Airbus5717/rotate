@@ -9,80 +9,80 @@ namespace rotate
 
 enum token_type : u8
 {
-    TknTypeIdentifier,       // ids
-    TknTypeBuiltinFunc,      // @ids
-    TknTypeEqual,            // =
-    TknTypeLet,              // 'let'
-    TknTypeVar,              // 'var'
-    TknTypeConst,            // 'const'
-    TknTypeInteger,          // refers to 10 digits ints
-    TknTypeHexInteger,       // refers to Hexidecimal ints
-    TknTypeBinaryInteger,    // refers to binary ints
-    TknTypeIntKeyword,       // 'int'
-    TknTypeINT_U8,           // u8
-    TknTypeINT_U16,          // u16
-    TknTypeINT_U32,          // u32
-    TknTypeINT_U64,          // u64
-    TknTypeINT_S8,           // s8
-    TknTypeINT_S16,          // s16
-    TknTypeINT_S32,          // s32
-    TknTypeINT_S64,          // s64
-    TknTypeFloat,            // refer to floats
-    TknTypeFLOAT_f32,        // f32
-    TknTypeFLOAT_f64,        // f64
-    TknTypeFloatKeyword,     // 'float'
-    TknTypeString,           // refer to strings
-    TknTypeStringKeyword,    // 'str'
-    TknTypeChar,             // refers to chars
-    TknTypeEscapedChar,      // '\{}' chars i.e. '\n'
-    TknTypeCharKeyword,      // 'char'
-    TknTypeTrue,             // 'true'
-    TknTypeFalse,            // 'false'
-    TknTypeBoolKeyword,      // 'bool'
-    TknTypeSemiColon,        // ;
-    TknTypeColon,            // :
-    TknTypeFunction,         // 'fn'
-    TknTypePLUS,             // +
-    TknTypeMINUS,            // -
-    TknTypeStar,             // *
-    TknTypeDIV,              // /
-    TknTypeLeftParen,        // (
-    TknTypeRightParen,       // )
-    TknTypeLeftCurly,        // {
-    TknTypeRightCurly,       // }
-    TknTypeLeftSQRBrackets,  // [
-    TknTypeRightSQRBrackets, // ]
-    TknTypeReturn,           // 'return'
-    TknTypeImport,           // 'import'
-    TknTypeIf,               // 'if'
-    TknTypeElse,             // 'else'
-    TknTypeFor,              // 'for'
-    TknTypeWhile,            // 'while'
-    TknTypeGreater,          // >
-    TknTypeLess,             // <
-    TknTypeDot,              // .
-    TknTypeNot,              // "!"
-    TknTypeNotEqual,         // "!="
-    TknTypeAnd,              // 'and'
-    TknTypeOr,               // 'or'
-    TknTypeDoubleQuotes,     // "
-    TknTypeQuote,            // '
-    TknTypeComma,            // ,
-    TknTypePublic,           // 'pub'
-    TknTypeMatch,            // 'match'
-    TknTypeEnum,             // 'enum'
-    TknTypeEqualEqual,       // ==
-    TknTypeBreak,            // 'break'
-    TknTypeAddEqual,         // +=
-    TknTypeSubEqual,         // -=
-    TknTypeMultEqual,        // *=
-    TknTypeDivEqual,         // /=
-    TknTypeStruct,           // 'struct'
-    TknTypeRef,              // 'ref'
-    TknTypeVoid,             // 'void'
-    TknTypeInclude,          // 'include'
-    TknTypeNil,              // `nil` basically null
-    TknTypeEOT,              // EOT - END OF TOKENS
+    Identifier,       // ids
+    BuiltinFunc,      // @ids
+    Equal,            // =
+    Let,              // 'let'
+    Var,              // 'var'
+    Const,            // 'const'
+    Integer,          // refers to 10 digits ints
+    HexInteger,       // refers to Hexidecimal ints
+    BinaryInteger,    // refers to binary ints
+    IntKeyword,       // 'int'
+    INT_U8,           // u8
+    INT_U16,          // u16
+    INT_U32,          // u32
+    INT_U64,          // u64
+    INT_S8,           // s8
+    INT_S16,          // s16
+    INT_S32,          // s32
+    INT_S64,          // s64
+    Float,            // refer to floats
+    FLOAT_f32,        // f32
+    FLOAT_f64,        // f64
+    FloatKeyword,     // 'float'
+    String,           // refer to strings
+    StringKeyword,    // 'str'
+    Char,             // refers to chars
+    EscapedChar,      // '\{}' chars i.e. '\n'
+    CharKeyword,      // 'char'
+    True,             // 'true'
+    False,            // 'false'
+    BoolKeyword,      // 'bool'
+    SemiColon,        // ;
+    Colon,            // :
+    Function,         // 'fn'
+    PLUS,             // +
+    MINUS,            // -
+    Star,             // *
+    DIV,              // /
+    OpenParen,        // (
+    CloseParen,       // )
+    OpenCurly,        // {
+    CloseCurly,       // }
+    OpenSQRBrackets,  // [
+    CloseSQRBrackets, // ]
+    Return,           // 'return'
+    Import,           // 'import'
+    If,               // 'if'
+    Else,             // 'else'
+    For,              // 'for'
+    While,            // 'while'
+    Greater,          // >
+    Less,             // <
+    Dot,              // .
+    Not,              // "!"
+    NotEqual,         // "!="
+    And,              // 'and'
+    Or,               // 'or'
+    DoubleQuotes,     // "
+    Quote,            // '
+    Comma,            // ,
+    Public,           // 'pub'
+    Match,            // 'match'
+    Enum,             // 'enum'
+    EqualEqual,       // ==
+    Break,            // 'break'
+    AddEqual,         // +=
+    SubEqual,         // -=
+    MultEqual,        // *=
+    DivEqual,         // /=
+    Struct,           // 'struct'
+    Ref,              // 'ref'
+    Void,             // 'void'
+    Include,          // 'include'
+    Nil,              // `nil` basically null
+    EOT,              // EOT - END OF TOKENS
 };
 
 enum error_type : u32
@@ -124,8 +124,8 @@ enum error_type : u32
     SEMICOLON_END_REQUIREMENT,
     UNSUPPORTED,
     EXPECTED_ID_FOR_FN,
-    EXPECT_LEFT_PAREN_AFTER_FN_ID,
-    EXPECT_RIGHT_PAREN_AFTER_LEFT_PAREN,
+    EXPECT_OPEN_PAREN_AFTER_FN_ID,
+    EXPECT_CLOSE_PAREN_AFTER_OPEN_PAREN,
     EXPECTED_ARROW_OR_BLOCK,
     INVALID_EXPORT_DIR,
     FN_TYPE_REQUIRED,

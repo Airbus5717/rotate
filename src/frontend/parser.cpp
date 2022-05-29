@@ -22,22 +22,22 @@ u8 Parser::parse()
     {
         switch (tkns->at(index).type)
         {
-            case TknTypeImport:
+            case Import:
                 exit = parse_gl_imports();
                 break;
-            case TknTypeFunction:
+            case Function:
                 exit = parse_gl_function();
                 break;
-            case TknTypeConst:
+            case Const:
                 exit = parse_gl_var_const();
                 break;
-            case TknTypeStruct:
+            case Struct:
                 exit = parse_gl_struct();
                 break;
-            case TknTypeEnum:
+            case Enum:
                 exit = parse_gl_enum();
                 break;
-            case TknTypeEOT:
+            case EOT:
                 return exit;
                 break;
             default:
@@ -130,34 +130,39 @@ type Parser::parse_type()
 
     enumeration,
     arr, struct,
+    type_identifier,
     */
     switch (current().type)
     {
-        case TknTypeFLOAT_f32:
+        case FLOAT_f32:
             return type(f32);
-        case TknTypeFLOAT_f64:
+        case FLOAT_f64:
             return type(f64);
-        case TknTypeINT_U8:
+        case INT_U8:
             return type(uint8);
-        case TknTypeINT_U16:
+        case INT_U16:
             return type(uint16);
-        case TknTypeINT_U32:
+        case INT_U32:
             return type(uint32);
-        case TknTypeINT_U64:
+        case INT_U64:
             return type(uint64);
-        case TknTypeINT_S8:
+        case INT_S8:
             return type(sint8);
-        case TknTypeINT_S16:
+        case INT_S16:
             return type(sint16);
-        case TknTypeINT_S32:
+        case INT_S32:
             return type(sint32);
-        case TknTypeINT_S64:
+        case INT_S64:
             return type(sint64);
-        case TknTypeCharKeyword:
+        case CharKeyword:
             return type(chr);
-        case TknTypeBoolKeyword:
+        case BoolKeyword:
             return type(boolean);
-
+        case OpenSQRBrackets:
+            TODO("arr type parse");
+            return array_type(dynamic_array, 3);
+        case Identifier:
+            return type(structure);
         default: {
             /*
                 Arrays, structures and enums

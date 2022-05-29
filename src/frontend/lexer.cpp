@@ -4,34 +4,29 @@
 namespace rotate
 {
 
-#define EXIT_DONE 3
-
 // file must not be null
 Lexer::Lexer(file_t *file)
+    : index(0), len(0), line(1), file(file), file_length(file ? file->length : 0), is_done(false),
+      error(UNKNOWN), tokens(new std::vector<token>())
 {
     ASSERT_NULL(file, "Lexer File init failure");
-    this->file        = file;
-    this->is_done     = false;
-    this->error       = error_type::UNKNOWN;
-    this->file_length = file->length;
-    this->tokens      = new Vector<token>();
 }
 
-Lexer::~Lexer() = default;
+Lexer::~Lexer()
+{
+    tokens->clear();
+}
 
 void Lexer::save_log(FILE *output)
 {
-    // ASSERT(output, "output is NULL");
-    // ASSERT_NULL(tokens.getElements(), "Tokens array is null");
-    for (usize i = 0; i < tokens.size(); i++)
+    for (usize i = 0; i < tokens->size(); i++)
     {
-        log_token(output, tokens.at(i), file->contents);
+        log_token(output, tokens->at(i), file->contents);
     }
 }
 
 u8 Lexer::lex()
 {
-    index = 0;
     do
     {
         switch (lex_director())
@@ -39,28 +34,44 @@ u8 Lexer::lex()
             case EXIT_SUCCESS:
                 break;
             case EXIT_DONE:
-                add_token(token_type::TknTypeEOT);
+                len = 0;
+                add_token(token_type::EOT);
                 return EXIT_SUCCESS;
             case EXIT_FAILURE:
                 return report_error();
         }
-        advance();
     } while (true);
     return EXIT_SUCCESS;
 }
 
 void Lexer::skip_whitespace() noexcept
 {
-    while (is_space_rotate(current()))
+    while (true)
     {
-        advance();
+        const char c = current();
+        if (c == '\n')
+        {
+            index++;
+            line++;
+        }
+        else if (c == ' ')
+        {
+            index++;
+        }
+        else
+        {
+            break;
+        }
     }
 }
 
 u8 Lexer::lex_director()
 {
-    len = 0;
     skip_whitespace();
+    len = 0;
+#ifdef DEBUG
+    printf("index: %u, current: %c\n", index, current());
+#endif
     const char c = current();
 
     if (isdigit(c)) return lex_numbers();
@@ -73,12 +84,20 @@ u8 Lexer::lex_director()
     if (c == '_' || isalpha(c)) return lex_identifiers();
     if (c == '@') return lex_builtin_funcs();
 
+#ifdef DEBUG
+    printf("its a symbol\n");
+#endif
     return lex_symbols();
 }
 
-Vector<token> *Lexer::getTokens()
+std::vector<token> *Lexer::getTokens()
 {
-    return &tokens;
+    return tokens;
+}
+
+file_t *Lexer::getFile()
+{
+    return file;
 }
 
 u8 Lexer::lex_identifiers()
@@ -89,98 +108,98 @@ u8 Lexer::lex_identifiers()
         advance_len_inc();
     }
     index -= len;
-
+    token_type _type = Identifier;
     switch (len)
     {
         case 2: {
             if (keyword_match("fn", 2))
-                return add_token(TknTypeFunction);
+                _type = Function;
             else if (keyword_match("if", 2))
-                return add_token(TknTypeIf);
+                _type = If;
             else if (keyword_match("or", 2))
-                return add_token(TknTypeOr);
+                _type = Or;
             //
             else if (keyword_match("u8", 2))
-                return add_token(TknTypeINT_U8);
+                _type = INT_U8;
             else if (keyword_match("s8", 2))
-                return add_token(TknTypeINT_S8);
+                _type = INT_S8;
             break;
         }
         case 3: {
             if (keyword_match("for", 3))
-                return add_token(TknTypeFor);
+                _type = For;
             else if (keyword_match("let", 3))
-                return add_token(TknTypeLet);
+                _type = Let;
             else if (keyword_match("pub", 3))
-                return add_token(TknTypePublic);
+                _type = Public;
             else if (keyword_match("str", 3))
-                return add_token(TknTypeStringKeyword);
+                _type = StringKeyword;
             else if (keyword_match("int", 3))
-                return add_token(TknTypeIntKeyword);
+                _type = IntKeyword;
             else if (keyword_match("ref", 3))
-                return add_token(TknTypeRef);
+                _type = Ref;
             else if (keyword_match("and", 3))
-                return add_token(TknTypeAnd);
+                _type = And;
             else if (keyword_match("nil", 3))
-                return add_token(TknTypeNil);
+                _type = Nil;
             else if (keyword_match("var", 3))
-                return add_token(TknTypeVar);
+                _type = Var;
             //
             else if (keyword_match("u16", 3))
-                return add_token(TknTypeINT_U16);
+                _type = INT_U16;
             else if (keyword_match("u32", 3))
-                return add_token(TknTypeINT_U32);
+                _type = INT_U32;
             else if (keyword_match("u64", 3))
-                return add_token(TknTypeINT_U64);
+                _type = INT_U64;
             else if (keyword_match("s16", 3))
-                return add_token(TknTypeINT_S16);
+                _type = INT_S16;
             else if (keyword_match("s32", 3))
-                return add_token(TknTypeINT_S32);
+                _type = INT_S32;
             else if (keyword_match("s64", 3))
-                return add_token(TknTypeINT_S64);
+                _type = INT_S64;
             break;
         }
         case 4: {
             if (keyword_match("else", 4))
-                return add_token(TknTypeElse);
+                _type = Else;
             else if (keyword_match("true", 4))
-                return add_token(TknTypeTrue);
+                _type = True;
             else if (keyword_match("enum", 4))
-                return add_token(TknTypeEnum);
+                _type = Enum;
             else if (keyword_match("char", 4))
-                return add_token(TknTypeCharKeyword);
+                _type = CharKeyword;
             else if (keyword_match("bool", 4))
-                return add_token(TknTypeBoolKeyword);
+                _type = BoolKeyword;
             else if (keyword_match("void", 4))
-                return add_token(TknTypeVoid);
+                _type = Void;
             break;
         }
         case 5: {
             if (keyword_match("while", 5))
-                return add_token(TknTypeWhile);
+                _type = While;
             else if (keyword_match("false", 5))
-                return add_token(TknTypeFalse);
+                _type = False;
             else if (keyword_match("match", 5))
-                return add_token(TknTypeMatch);
+                _type = Match;
             else if (keyword_match("break", 5))
-                return add_token(TknTypeBreak);
+                _type = Break;
             else if (keyword_match("const", 5))
-                return add_token(TknTypeConst);
+                _type = Const;
             else if (keyword_match("float", 5))
-                return add_token(TknTypeFloatKeyword);
+                _type = FloatKeyword;
             break;
         }
         case 6: {
             if (keyword_match("return", 6))
-                return add_token(TknTypeReturn);
+                _type = Return;
             else if (keyword_match("import", 6))
-                return add_token(TknTypeImport);
+                _type = Import;
             else if (keyword_match("struct", 6))
-                return add_token(TknTypeStruct);
+                _type = Struct;
             break;
         }
         case 7: {
-            if (keyword_match("include", 7)) return add_token(TknTypeInclude);
+            if (keyword_match("include", 7)) _type = Include;
             break;
         }
         default:
@@ -193,7 +212,7 @@ u8 Lexer::lex_identifiers()
         return EXIT_FAILURE;
     }
 
-    return add_token(TknTypeIdentifier);
+    return add_token(_type);
 }
 
 u8 Lexer::lex_numbers()
@@ -219,8 +238,7 @@ u8 Lexer::lex_numbers()
         log_error("number digits length is above 100");
         return EXIT_FAILURE;
     }
-    index -= len;
-    return add_token(reached_dot ? TknTypeFloat : TknTypeInteger);
+    return add_token(reached_dot ? Float : Integer);
 }
 
 u8 Lexer::lex_hex_numbers()
@@ -237,8 +255,7 @@ u8 Lexer::lex_hex_numbers()
     {
         log_error("hex number digits length is above 64");
     }
-    index -= len;
-    return add_token(token_type::TknTypeHexInteger);
+    return add_token(token_type::HexInteger);
 }
 
 u8 Lexer::lex_binary_numbers()
@@ -255,8 +272,7 @@ u8 Lexer::lex_binary_numbers()
     {
         log_error("binary number digits length is above 128");
     }
-    index -= len;
-    return add_token(token_type::TknTypeBinaryInteger);
+    return add_token(token_type::BinaryInteger);
 }
 
 u8 Lexer::lex_strings()
@@ -267,18 +283,19 @@ u8 Lexer::lex_strings()
         if (current() == '\0')
         {
             error = error_type::NOT_CLOSED_STRING;
-            index -= len;
             return EXIT_FAILURE;
         }
         advance_len_inc();
     }
+
     advance_len_inc();
+
     if (len > UINT16_MAX)
     {
         log_error("Too long string");
     }
     index -= len;
-    return add_token(TknTypeString);
+    return add_token(String);
 }
 
 u8 Lexer::lex_chars()
@@ -289,7 +306,7 @@ u8 Lexer::lex_chars()
         advance_len_inc();
         advance_len_inc();
         index -= len;
-        return add_token(TknTypeChar);
+        return add_token(Char);
     }
     else if (current() == '\\')
     {
@@ -313,7 +330,7 @@ u8 Lexer::lex_chars()
         {
             advance_len_inc();
             index -= len;
-            return add_token(TknTypeEscapedChar);
+            return add_token(EscapedChar);
         }
         else
         {
@@ -333,68 +350,66 @@ u8 Lexer::lex_symbols()
     switch (c)
     {
         // clang-format off
-        case '{': return add_token(token_type::TknTypeLeftCurly);
-        case '}': return add_token(token_type::TknTypeRightCurly);
-        case '(': return add_token(token_type::TknTypeLeftParen);
-        case ')': return add_token(token_type::TknTypeRightParen);
-        case '[': return add_token(token_type::TknTypeLeftSQRBrackets);
-        case ']': return add_token(token_type::TknTypeRightSQRBrackets);
-        case ';': return add_token(token_type::TknTypeSemiColon);
-        case '>': return add_token(token_type::TknTypeGreater);
-        case '<': return add_token(token_type::TknTypeLess);
-        case '.': return add_token(token_type::TknTypeDot);
-        case ',': return add_token(token_type::TknTypeComma);
-        case ':': return add_token(token_type::TknTypeColon);
+        case '{': return add_token(token_type::OpenCurly);
+        case '}': return add_token(token_type::CloseCurly);
+        case '(': return add_token(token_type::OpenParen);
+        case ')': return add_token(token_type::CloseParen);
+        case '[': return add_token(token_type::OpenSQRBrackets);
+        case ']': return add_token(token_type::CloseSQRBrackets);
+        case ';': return add_token(token_type::SemiColon);
+        case '>': return add_token(token_type::Greater);
+        case '<': return add_token(token_type::Less);
+        case '.': return add_token(token_type::Dot);
+        case ',': return add_token(token_type::Comma);
+        case ':': return add_token(token_type::Colon);
         // clang-format on
         case '=': {
             if (p == '=')
             {
                 len++;
-                return add_token(token_type::TknTypeEqualEqual);
+                return add_token(token_type::EqualEqual);
             }
             else
-                return add_token(token_type::TknTypeEqual);
+                return add_token(token_type::Equal);
         }
         case '+': {
             if (p == '=')
             {
                 len++;
-                return add_token(token_type::TknTypeAddEqual);
+                return add_token(token_type::AddEqual);
             }
             else
-                return add_token(token_type::TknTypePLUS);
+                return add_token(token_type::PLUS);
         }
         case '-': {
             if (p == '=')
             {
                 len++;
-                return add_token(token_type::TknTypeSubEqual);
+                return add_token(token_type::SubEqual);
             }
             else
-                return add_token(token_type::TknTypeMINUS);
+                return add_token(token_type::MINUS);
         }
         case '*': {
             if (p == '=')
             {
                 len++;
-                return add_token(token_type::TknTypeMultEqual);
+                return add_token(token_type::MultEqual);
             }
             else
-                return add_token(token_type::TknTypeStar);
+                return add_token(token_type::Star);
         }
         case '/': {
             if (p == '=')
             {
                 len++;
-                return add_token(token_type::TknTypeDivEqual);
+                return add_token(token_type::DivEqual);
             }
             else if (p == '/')
             {
                 //
                 while (is_not_eof() && current() != '\n')
-                {
                     advance();
-                }
             }
             else if (p == '*')
             {
@@ -403,10 +418,6 @@ u8 Lexer::lex_symbols()
                 bool end_comment = false;
                 while (is_not_eof() && !end_comment)
                 {
-                    /*
-                     */
-                    // end_comment will not break
-                    // because advancing is needed
                     if ((past() != '/' && current() == '*' && peek() == '/'))
                     {
                         advance();
@@ -417,7 +428,7 @@ u8 Lexer::lex_symbols()
             }
             else
             {
-                return add_token(token_type::TknTypeDIV);
+                return add_token(token_type::DIV);
             }
             break;
         }
@@ -425,9 +436,9 @@ u8 Lexer::lex_symbols()
             if (p == '=')
             {
                 len++;
-                return add_token(token_type::TknTypeNotEqual);
+                return add_token(token_type::NotEqual);
             }
-            return add_token(token_type::TknTypeNot);
+            return add_token(token_type::Not);
         }
         default: {
             switch (c)
@@ -444,42 +455,56 @@ u8 Lexer::lex_symbols()
                 default:
                     this->error = LEXER_INVALID_CHAR;
             }
-            return EXIT_FAILURE;
         }
     }
-    return EXIT_SUCCESS;
+    return EXIT_FAILURE;
 }
 
 u8 Lexer::lex_builtin_funcs()
 {
-    advance();
-    while (isalpha(current()) || current() == '_')
+    advance(); // skip '@'
+    while (isalpha(current()))
     {
         advance_len_inc();
     }
-
     index -= len;
 
     switch (len)
     {
         case 3: {
-            if (keyword_match("col", 3)) return add_token(TknTypeBuiltinFunc);
+            if (keyword_match("col", 3))
+            {
+
+                return add_token(BuiltinFunc);
+            }
             break;
         }
         case 4: {
             if (keyword_match("line", 4))
-                return add_token(TknTypeBuiltinFunc);
+            {
+
+                return add_token(BuiltinFunc);
+            }
             else if (keyword_match("file", 4))
-                return add_token(TknTypeBuiltinFunc);
+            {
+
+                return add_token(BuiltinFunc);
+            }
             break;
         }
         case 7: {
-            if (keyword_match("println", 7)) return add_token(TknTypeBuiltinFunc);
+            if (keyword_match("println", 7))
+            {
+
+                return add_token(BuiltinFunc);
+            }
             break;
         }
         default: {
+            break;
         }
     }
+
     error = error_type::LEXER_INVALID_BUILTN_FN;
     return reverse_len_for_error();
 }
@@ -493,7 +518,17 @@ void Lexer::advance()
 
 void Lexer::advance_len_times()
 {
-    index += len - 1;
+    index += len;
+}
+
+void Lexer::advance_len_times_plus_one()
+{
+    index += len + 1;
+}
+
+void Lexer::advance_len_times_minus_one()
+{
+    index += len + 1;
 }
 
 void Lexer::advance_len_inc()
@@ -506,12 +541,12 @@ void Lexer::advance_len_inc()
 
 char Lexer::peek() const
 {
-    return (index + 1 < file_length) ? file->contents[index + 1] : '\0';
+    return file->contents[index + 1];
 }
 
 char Lexer::current() const
 {
-    return (is_not_eof()) ? file->contents[index] : '\0';
+    return file->contents[index];
 }
 
 char Lexer::past() const
@@ -544,6 +579,7 @@ u8 Lexer::report_error()
         low--;
         col++;
     }
+    low++;
 
     //
     u32 _length = index;
@@ -566,7 +602,7 @@ u8 Lexer::report_error()
     if (len < 101)
     {
         char *arrows = (char *)malloc(len + 1);
-        if (!arrows) exit_error("couldn't display error message");
+        if (!arrows) exit_error("could not display error message");
         memset(arrows, '^', len);
         arrows[len] = '\0';
 
@@ -584,8 +620,13 @@ u8 Lexer::report_error()
 
 u8 Lexer::add_token(token_type type)
 {
-    tokens.push_back(token(type, index, len));
-    index += len - 1;
+    // index at the end of the token
+    tokens->push_back(token(type, index, len));
+    for (u32 i = 0; i < len; i++)
+        advance();
+#ifdef DEBUG
+    printf("added token: char now: %c, index: %u\n", current(), index);
+#endif
     return EXIT_SUCCESS;
 }
 

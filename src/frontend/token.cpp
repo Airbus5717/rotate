@@ -8,150 +8,150 @@ const char *tkn_type_describe(const token_type type) noexcept
 {
     switch (type)
     {
-        case TknTypeIdentifier:
+        case Identifier:
             return "identifier";
-        case TknTypeBuiltinFunc:
+        case BuiltinFunc:
             return "builtin_func";
-        case TknTypeEqual:
+        case Equal:
             return "assign'='";
-        case TknTypeInteger:
+        case Integer:
             return "integer";
-        case TknTypeBinaryInteger:
+        case BinaryInteger:
             return "binary int";
-        case TknTypeHexInteger:
+        case HexInteger:
             return "Hex int";
-        case TknTypeSemiColon:
+        case SemiColon:
             return "semicolon';'";
-        case TknTypeColon:
+        case Colon:
             return "colon':'";
-        case TknTypeString:
+        case String:
             return "string";
-        case TknTypeFunction:
+        case Function:
             return "function'fn'";
-        case TknTypePLUS:
+        case PLUS:
             return "plus'+'";
-        case TknTypeMINUS:
+        case MINUS:
             return "minus'-'";
-        case TknTypeStar:
+        case Star:
             return "star'*'";
-        case TknTypeDIV:
+        case DIV:
             return "divide'/'";
-        case TknTypeLeftParen:
-            return "leftparen'('";
-        case TknTypeRightParen:
-            return "rightparen')'";
-        case TknTypeLeftCurly:
-            return "leftcurlybrkt'{'";
-        case TknTypeRightCurly:
-            return "rightcurlybrkt'}'";
-        case TknTypeLeftSQRBrackets:
-            return "leftsqrbrkt']'";
-        case TknTypeRightSQRBrackets:
-            return "rightsqrbrkt'['";
-        case TknTypeChar:
+        case OpenParen:
+            return "openparen'('";
+        case CloseParen:
+            return "closeparen')'";
+        case OpenCurly:
+            return "opencurlybrkt'{'";
+        case CloseCurly:
+            return "closecurlybrkt'}'";
+        case OpenSQRBrackets:
+            return "opensqrbrkt']'";
+        case CloseSQRBrackets:
+            return "closesqrbrkt'['";
+        case Char:
             return "char";
-        case TknTypeReturn:
+        case Return:
             return "return";
-        case TknTypeImport:
+        case Import:
             return "import";
-        case TknTypeIf:
+        case If:
             return "if";
-        case TknTypeElse:
+        case Else:
             return "else";
-        case TknTypeFor:
+        case For:
             return "for";
-        case TknTypeWhile:
+        case While:
             return "while";
-        case TknTypeGreater:
+        case Greater:
             return "greater'>'";
-        case TknTypeLess:
+        case Less:
             return "less'<'";
-        case TknTypeTrue:
+        case True:
             return "bool:true";
-        case TknTypeFalse:
+        case False:
             return "bool:false";
-        case TknTypeDot:
+        case Dot:
             return "dot";
-        case TknTypeNot:
+        case Not:
             return "not'!'";
-        case TknTypeAnd:
+        case And:
             return "and";
-        case TknTypeOr:
+        case Or:
             return "or";
-        case TknTypeDoubleQuotes:
+        case DoubleQuotes:
             return "double quotes";
-        case TknTypeQuote:
+        case Quote:
             return "quote";
-        case TknTypeFloat:
+        case Float:
             return "float";
-        case TknTypeLet:
+        case Let:
             return "let";
-        case TknTypeComma:
+        case Comma:
             return "comma','";
-        case TknTypePublic:
+        case Public:
             return "public";
-        case TknTypeNotEqual:
+        case NotEqual:
             return "`!=` not eql";
-        case TknTypeConst:
+        case Const:
             return "const";
-        case TknTypeCharKeyword:
+        case CharKeyword:
             return "char_word";
-        case TknTypeFloatKeyword:
+        case FloatKeyword:
             return "float_word";
-        case TknTypeIntKeyword:
+        case IntKeyword:
             return "int_word";
-        case TknTypeMatch:
+        case Match:
             return "match";
-        case TknTypeStringKeyword:
+        case StringKeyword:
             return "str_word";
-        case TknTypeBoolKeyword:
+        case BoolKeyword:
             return "bool_word";
 
-        case TknTypeEqualEqual:
+        case EqualEqual:
             return "equality";
-        case TknTypeBreak:
+        case Break:
             return "break";
-        case TknTypeAddEqual:
+        case AddEqual:
             return "add_equal";
-        case TknTypeDivEqual:
+        case DivEqual:
             return "divide_equal";
-        case TknTypeMultEqual:
+        case MultEqual:
             return "multiply_equal";
-        case TknTypeSubEqual:
+        case SubEqual:
             return "subtract_equal";
-        case TknTypeStruct:
+        case Struct:
             return "struct";
-        case TknTypeRef:
+        case Ref:
             return "ref";
-        case TknTypeVoid:
+        case Void:
             return "void";
-        case TknTypeInclude:
+        case Include:
             return "include";
-        case TknTypeEnum:
+        case Enum:
             return "enum";
-        case TknTypeNil:
+        case Nil:
             return "nil (null)";
-        case TknTypeVar:
+        case Var:
             return "var";
-        case TknTypeEscapedChar:
+        case EscapedChar:
             return "escaped_char";
-        case TknTypeEOT:
+        case EOT:
             return "End OF Tokens";
-        case TknTypeINT_U8:
+        case INT_U8:
             return "u8";
-        case TknTypeINT_U16:
+        case INT_U16:
             return "u16";
-        case TknTypeINT_U32:
+        case INT_U32:
             return "u32";
-        case TknTypeINT_U64:
+        case INT_U64:
             return "u64";
-        case TknTypeINT_S8:
+        case INT_S8:
             return "s8";
-        case TknTypeINT_S16:
+        case INT_S16:
             return "s16";
-        case TknTypeINT_S32:
+        case INT_S32:
             return "s32";
-        case TknTypeINT_S64:
+        case INT_S64:
             return "s64";
         default:
             return "???";
@@ -163,127 +163,127 @@ const char *get_keyword_or_type(const char *string, const token &tkn)
     switch (tkn.type)
     {
 
-        case TknTypeFunction:
+        case Function:
             return "fn";
-        case TknTypeIf:
+        case If:
             return "if";
-        case TknTypeOr:
+        case Or:
             return "or";
-        case TknTypeFor:
+        case For:
             return "for";
-        case TknTypeLet:
+        case Let:
             return "let";
-        case TknTypePublic:
+        case Public:
             return "pub";
-        case TknTypeConst:
+        case Const:
             return "const";
-        case TknTypeStringKeyword:
+        case StringKeyword:
             return "str";
-        case TknTypeIntKeyword:
+        case IntKeyword:
             return "int";
-        case TknTypeRef:
+        case Ref:
             return "ref";
-        case TknTypeAnd:
+        case And:
             return "and";
-        case TknTypeNil:
+        case Nil:
             return "nil";
-        case TknTypeVar:
+        case Var:
             return "var";
-        case TknTypeEnum:
+        case Enum:
             return "enum";
-        case TknTypeElse:
+        case Else:
             return "else";
-        case TknTypeTrue:
+        case True:
             return "true";
-        case TknTypeCharKeyword:
+        case CharKeyword:
             return "char";
-        case TknTypeBoolKeyword:
+        case BoolKeyword:
             return "bool";
-        case TknTypeVoid:
+        case Void:
             return "void";
-        case TknTypeWhile:
+        case While:
             return "while";
-        case TknTypeFalse:
+        case False:
             return "false";
-        case TknTypeMatch:
+        case Match:
             return "match";
-        case TknTypeBreak:
+        case Break:
             return "break";
-        case TknTypeReturn:
+        case Return:
             return "return";
-        case TknTypeImport:
+        case Import:
             return "import";
-        case TknTypeFloatKeyword:
+        case FloatKeyword:
             return "float";
-        case TknTypeStruct:
+        case Struct:
             return "struct";
 
         // symbols
-        case TknTypeEqualEqual:
+        case EqualEqual:
             return "==";
-        case TknTypeEqual:
+        case Equal:
             return "=";
-        case TknTypeColon:
+        case Colon:
             return ":";
-        case TknTypeSemiColon:
+        case SemiColon:
             return ";";
-        case TknTypeAddEqual:
+        case AddEqual:
             return "+=";
-        case TknTypeSubEqual:
+        case SubEqual:
             return "-=";
-        case TknTypeMultEqual:
+        case MultEqual:
             return "*=";
-        case TknTypeDivEqual:
+        case DivEqual:
             return "/=";
-        case TknTypePLUS:
+        case PLUS:
             return "+";
-        case TknTypeMINUS:
+        case MINUS:
             return "-";
-        case TknTypeStar:
+        case Star:
             return "*";
-        case TknTypeDIV:
+        case DIV:
             return "/";
-        case TknTypeLeftParen:
+        case OpenParen:
             return "(";
-        case TknTypeRightParen:
+        case CloseParen:
             return ")";
-        case TknTypeLeftCurly:
+        case OpenCurly:
             return "{";
-        case TknTypeRightCurly:
+        case CloseCurly:
             return "}";
-        case TknTypeLeftSQRBrackets:
+        case OpenSQRBrackets:
             return "[";
-        case TknTypeRightSQRBrackets:
+        case CloseSQRBrackets:
             return "]";
-        case TknTypeGreater:
+        case Greater:
             return ">";
-        case TknTypeLess:
+        case Less:
             return "<";
-        case TknTypeDot:
+        case Dot:
             return ".";
-        case TknTypeNotEqual:
+        case NotEqual:
             return "!=";
-        case TknTypeNot:
+        case Not:
             return "!";
-        case TknTypeComma:
+        case Comma:
             return ",";
-        case TknTypeEOT:
+        case EOT:
             return "end_of_tokens";
-        case TknTypeINT_U8:
+        case INT_U8:
             return "u8";
-        case TknTypeINT_U16:
+        case INT_U16:
             return "u16";
-        case TknTypeINT_U32:
+        case INT_U32:
             return "u32";
-        case TknTypeINT_U64:
+        case INT_U64:
             return "u64";
-        case TknTypeINT_S8:
+        case INT_S8:
             return "s8";
-        case TknTypeINT_S16:
+        case INT_S16:
             return "s16";
-        case TknTypeINT_S32:
+        case INT_S32:
             return "s32";
-        case TknTypeINT_S64:
+        case INT_S64:
             return "s64";
         default:
             return strndup(string + tkn.index, tkn.length);
@@ -332,9 +332,9 @@ const char *err_msgsfunc(const error_type error) noexcept
             return "Variable type and value's type do not match";
         case SEMICOLON_END_REQUIREMENT:
             return "Semicolon required at the end of the statement";
-        case EXPECT_LEFT_PAREN_AFTER_FN_ID:
+        case EXPECT_OPEN_PAREN_AFTER_FN_ID:
             return "Parentheses required after function identifier";
-        case EXPECT_RIGHT_PAREN_AFTER_LEFT_PAREN:
+        case EXPECT_CLOSE_PAREN_AFTER_OPEN_PAREN:
             return "Closing parentheses required after opening one";
         case EXPECTED_ARROW_OR_BLOCK:
             return "Expected Arrow or Block";
@@ -358,7 +358,7 @@ const char *advice(const error_type error) noexcept
 {
     switch (error)
     {
-        case EXPECT_LEFT_PAREN_AFTER_FN_ID:
+        case EXPECT_OPEN_PAREN_AFTER_FN_ID:
             return "Add parentheses after function identifier";
         case LEXER_INVALID_CHAR:
             return "remove this character";
@@ -400,8 +400,8 @@ const char *advice(const error_type error) noexcept
             return "Add a semicolon after the expression";
         case INVALID_EXPORT_DIR:
             return "Directory specified after '-o' flag is invalid";
-        case EXPECT_RIGHT_PAREN_AFTER_LEFT_PAREN:
-            return "Function parameters unsupported right now";
+        case EXPECT_CLOSE_PAREN_AFTER_OPEN_PAREN:
+            return "Function parameters unsupported CLOSE now";
         case FN_TYPE_REQUIRED:
             return "Add return type to function";
         case TABS:
@@ -409,7 +409,7 @@ const char *advice(const error_type error) noexcept
         default:
             break;
     }
-    return "Error message unimplemented";
+    return (LYELLOW "TODO: error msg implementation." RESET);
 }
 
 } // namespace rotate

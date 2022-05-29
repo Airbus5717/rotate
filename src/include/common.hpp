@@ -9,7 +9,7 @@ namespace rotate
 /*
  *  Utilites
  */
-bool is_space_rotate(char i);
+bool is_space_rotate(const char i);
 
 //
 void log_error(const char *str);
@@ -21,7 +21,7 @@ void log_info(const char *str);
 u32 get_digits_from_number(u32 v);
 
 // TODO: Implement alternative to libc++ vector
-template <typename T> struct Vector
+template <typename T> class Vector
 {
     T *arr;
     usize index    = 0;
@@ -31,28 +31,25 @@ template <typename T> struct Vector
     // TODO: growth rate optimizer
     static const usize growth_rate = 2;
 
-    Vector()
+    Vector() : arr((T *)calloc(sizeof(T), 10)), index(0), capacity(10)
     {
-        this->index    = 0;
-        this->capacity = 10;
-
-        arr = (T *)calloc(sizeof(T), capacity);
         ASSERT_NULL(arr, "Vector init failure");
     }
 
     ~Vector()
     {
-        if (capacity > 0 && arr) free((void *)arr);
+        if (capacity > 0 && arr != NULL) free((void *)arr);
         capacity = 0;
     }
 
-    // void check()
-    // {
-    //     if (!arr) log_error("Vector is null");
-    //     if (index > capacity) log_error("out of bounds");
-    // }
+    void clear()
+    {
+        if (capacity > 0 && arr != NULL) free((void *)arr);
+        capacity = 0;
+        arr      = NULL;
+    }
 
-    usize size()
+    usize size() const
     {
         return index;
     }
@@ -74,12 +71,12 @@ template <typename T> struct Vector
         return EXIT_SUCCESS;
     }
 
-    const T &operator[](usize i)
+    const T &operator[](usize i) const
     {
         return at(i);
     }
 
-    const T &at(usize i)
+    const T &at(usize i) const
     {
         ASSERT(i < index, "out of bounds");
         return arr[i];
@@ -90,7 +87,7 @@ template <typename T> struct Vector
         return this;
     }
 
-    T *getElements()
+    T *getElements() const
     {
         return arr;
     }

@@ -56,6 +56,6 @@ struct compile_options
 };
 
 //
-int compile(compile_options *options, compilation_state *state) noexcept;
+u8 compile(compile_options *options, compilation_state *state) noexcept;
 
 } // namespace rotate
