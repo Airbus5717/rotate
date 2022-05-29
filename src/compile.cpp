@@ -20,7 +20,7 @@ void log_compilation(FILE *file, Lexer &lexer)
     for (usize i = 0; i < tokens->size(); i++)
     {
         const token &tkn = tokens->at(i);
-        fprintf(stdout, "[TOKEN]: idx: %u, len: %u, type: %s, val: `%.*s`\n", tkn.index, tkn.length,
+        fprintf(file, "[TOKEN]: idx: %u, len: %u, type: %s, val: `%.*s`\n", tkn.index, tkn.length,
                 tkn_type_describe(tkn.type), tkn.length, lexer.getFile()->contents + tkn.index);
     }
 }

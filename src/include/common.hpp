@@ -34,6 +34,7 @@ template <typename T> class Vector
     Vector() : arr((T *)calloc(sizeof(T), 10)), index(0), capacity(10)
     {
         ASSERT_NULL(arr, "Vector init failure");
+        TODO("FIX BUGS RELATED TO THE VECTOR");
     }
 
     ~Vector()

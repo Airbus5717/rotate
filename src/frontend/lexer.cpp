@@ -69,9 +69,7 @@ u8 Lexer::lex_director()
 {
     skip_whitespace();
     len = 0;
-#ifdef DEBUG
-    printf("index: %u, current: %c\n", index, current());
-#endif
+
     const char c = current();
 
     if (isdigit(c)) return lex_numbers();
@@ -84,9 +82,6 @@ u8 Lexer::lex_director()
     if (c == '_' || isalpha(c)) return lex_identifiers();
     if (c == '@') return lex_builtin_funcs();
 
-#ifdef DEBUG
-    printf("its a symbol\n");
-#endif
     return lex_symbols();
 }
 
@@ -624,9 +619,7 @@ u8 Lexer::add_token(token_type type)
     tokens->push_back(token(type, index, len));
     for (u32 i = 0; i < len; i++)
         advance();
-#ifdef DEBUG
-    printf("added token: char now: %c, index: %u\n", current(), index);
-#endif
+
     return EXIT_SUCCESS;
 }
 
