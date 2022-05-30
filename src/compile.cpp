@@ -8,13 +8,15 @@ namespace rotate
 
 void compile_options::log_error_unknown_flag(const char *str)
 {
-    fprintf(stderr, "[%sWARN%s] : Ignored Unknown flag: `%s`\n", LYELLOW, RESET, str);
+    fprintf(stderr, "[%sWARN%s] : Ignored flag: `%s`\n", LYELLOW, RESET, str);
 }
 
 void log_compilation(FILE *file, Lexer &lexer)
 {
+    fprintf(file, "===META===\n");
     fprintf(file, "filename: %s\n\n", lexer.getFile()->name);
-    fprintf(file, "%s\n", lexer.getFile()->contents);
+    fprintf(file, "===FILE===\n");
+    fprintf(file, "%s", lexer.getFile()->contents);
     fprintf(file, "===TOKENS===\n");
     const auto *tokens = lexer.getTokens();
     for (usize i = 0; i < tokens->size(); i++)
@@ -23,6 +25,7 @@ void log_compilation(FILE *file, Lexer &lexer)
         fprintf(file, "[TOKEN]: idx: %u, len: %u, type: %s, val: `%.*s`\n", tkn.index, tkn.length,
                 tkn_type_describe(tkn.type), tkn.length, lexer.getFile()->contents + tkn.index);
     }
+    fprintf(file, "===TODO: Parser Abstract Syntax Tree===\n");
 }
 
 u8 compile(compile_options *options, compilation_state *state) noexcept

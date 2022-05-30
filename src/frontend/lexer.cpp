@@ -1,5 +1,6 @@
 #include "include/lexer.hpp"
 #include "include/token.hpp"
+#include <cstdlib>
 
 namespace rotate
 {
@@ -14,7 +15,7 @@ Lexer::Lexer(file_t *file)
 
 Lexer::~Lexer()
 {
-    tokens->clear();
+    delete tokens;
 }
 
 void Lexer::save_log(FILE *output)
@@ -44,7 +45,7 @@ u8 Lexer::lex()
     return EXIT_SUCCESS;
 }
 
-void Lexer::skip_whitespace() noexcept
+inline void Lexer::skip_whitespace() noexcept
 {
     while (true)
     {
@@ -59,9 +60,7 @@ void Lexer::skip_whitespace() noexcept
             index++;
         }
         else
-        {
             break;
-        }
     }
 }
 
@@ -405,6 +404,7 @@ u8 Lexer::lex_symbols()
                 //
                 while (is_not_eof() && current() != '\n')
                     advance();
+                return EXIT_SUCCESS;
             }
             else if (p == '*')
             {
@@ -420,6 +420,7 @@ u8 Lexer::lex_symbols()
                     }
                     advance();
                 }
+                return EXIT_SUCCESS;
             }
             else
             {
@@ -504,29 +505,19 @@ u8 Lexer::lex_builtin_funcs()
     return reverse_len_for_error();
 }
 
-void Lexer::advance()
+inline void Lexer::advance()
 {
     const char c = current();
     index++;
     if (c == '\n') line++;
 }
 
-void Lexer::advance_len_times()
+inline void Lexer::advance_len_times()
 {
     index += len;
 }
 
-void Lexer::advance_len_times_plus_one()
-{
-    index += len + 1;
-}
-
-void Lexer::advance_len_times_minus_one()
-{
-    index += len + 1;
-}
-
-void Lexer::advance_len_inc()
+inline void Lexer::advance_len_inc()
 {
     const char c = current();
     index++;
@@ -534,27 +525,27 @@ void Lexer::advance_len_inc()
     if (c == '\n') line++;
 }
 
-char Lexer::peek() const
+inline char Lexer::peek() const
 {
     return file->contents[index + 1];
 }
 
-char Lexer::current() const
+inline char Lexer::current() const
 {
     return file->contents[index];
 }
 
-char Lexer::past() const
+inline char Lexer::past() const
 {
     return file->contents[index - 1];
 }
 
-bool Lexer::is_not_eof() const
+inline bool Lexer::is_not_eof() const
 {
     return index < file_length;
 }
 
-bool Lexer::keyword_match(const char *string, u32 length)
+inline bool Lexer::keyword_match(const char *string, u32 length)
 {
     return strncmp(file->contents + index, string, length) == 0;
 }
@@ -617,6 +608,7 @@ u8 Lexer::add_token(token_type type)
 {
     // index at the end of the token
     tokens->push_back(token(type, index, len));
+
     for (u32 i = 0; i < len; i++)
         advance();
 

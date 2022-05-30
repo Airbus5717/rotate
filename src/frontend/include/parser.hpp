@@ -6,10 +6,6 @@
 namespace rotate
 {
 
-struct literal_expr;
-struct unary_expr;
-struct binary_expr;
-struct expression;
 struct type;
 struct token;
 
@@ -51,7 +47,7 @@ struct array_type : type
 
 struct struct_type : type
 {
-    Vector<type> fields_types;
+    std::vector<type> fields_types;
 
     struct_type(type first_type) : type(first_type)
     {
@@ -63,156 +59,15 @@ struct struct_type : type
     }
 };
 
-enum node_kind : u8
-{
-    nd_literal, // str, num, nil, id etc.
-    nd_binary,  // `1 + 2` or `2 == 2`
-    nd_unary,   // - or !
-    nd_group,   // ()
-};
-
-enum binary_op : u8
-{
-    bp_plus,    // '+'
-    bp_minus,   // '-'
-    bp_star,    // '*'
-    bp_slash,   // '/'
-    bp_eql_eql, // '=='
-    bp_gr_eql,  // '>='
-    bp_ls_eql,  // '<='
-    bp_gr,      // '>'
-    bp_ls,      // '<'
-    bp_not_eql, // '!='
-};
-
-enum unary_kind : u8
-{
-    negate_logic, // '!'
-    negate_sign,  // '-'
-};
-
-struct literal_expr
-{
-    u32 token_index;
-};
-
-struct binary_expr
-{
-    expression *left;
-    expression *right;
-    binary_op op;
-};
-
-struct unary_expr
-{
-
-    //* !s or -2
-    unary_kind kind;
-    expression *expr;
-};
-
-struct expression
-{
-    type _type;
-    node_kind kind;
-    union value {
-        binary_expr *binary;
-        unary_expr *unary;
-        literal_expr *literal;
-    };
-};
-
-enum lc_stmt_kind : u8
-{
-    lc_var_decl,
-    lc_var_const_decl,
-    lc_var_mut_decl,
-    lc_while_loop,
-    lc_for_loop,
-    lc_if_else_stmt,
-    lc_mutable_var,
-};
-
-struct lc_reassign_var
-{
-    u32 id;
-    expression *val;
-};
-
-struct lc_var_decl
-{
-};
-
-struct lc_let_var_decl
-{
-};
-
-struct lc_while_loop
-{
-};
-
-struct lc_for_loop
-{
-};
-
-struct lc_if_else_stmt
-{
-};
-
-struct stmt
-{
-    lc_stmt_kind kind;
-};
-
-struct block
-{
-    Vector<stmt> stmts;
-};
-
-struct gl_import_t
-{
-    u32 identifier_index;
-};
-
-// variables in global scope are constant
-struct gl_var_t
-{
-    type _type;
-    expression val;
-};
-
-struct gl_struct_t
-{
-    Vector<gl_var_t> inner_vars;
-};
-
-struct gl_enum_t
-{
-    // number is the index
-    token *id;
-    Vector<token *> ids;
-};
-
-struct gl_function_t
-{
-    type _type;
-    block blk;
-};
-
 class Parser
 {
     // ptr to tokens from the lexer
     std::vector<token> *tokens;
     u32 index;
-    Vector<gl_function_t> gl_functions;
-    Vector<gl_struct_t> gl_structs;
-    Vector<gl_enum_t> gl_enums;
-    Vector<gl_import_t> gl_imports;
-    Vector<gl_var_t> gl_vars;
 
   public:
     Parser(Lexer *lexer);
-    ~Parser(); // don't free lexer memory
+    ~Parser(); // don't free lexer 
 
     //
     void save_log();

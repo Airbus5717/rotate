@@ -14,6 +14,12 @@ enum compilation_state : u8
     // TODO (other)
 };
 
+static void print_version_and_exit()
+{
+    fprintf(stdout, "Rotate Compiler \nVersion: %s\n", VERSION);
+    exit(0);
+}
+
 struct compile_options
 {
     const s32 argc;
@@ -34,6 +40,10 @@ struct compile_options
             if (strcmp(string, "--log") == 0)
             {
                 debug_info = true;
+            }
+            else if (!strcmp(string, "--version") || !strcmp(string, "-v"))
+            {
+                print_version_and_exit();
             }
             else if (strcmp(string, "--timer") == 0)
             {

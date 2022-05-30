@@ -3,8 +3,7 @@
 ARG := 
 
 CXX ?= clang++
-CFLAGS := -Wall -Wextra -fno-exceptions
-CFLAGS += -march=native -mtune=native	
+CFLAGS := -Wall -Wextra -Wpedantic -fshort-enums -ffast-math -Wno-unused -finline-functions -fno-strict-aliasing -funroll-loops -ftree-vectorize -march=native -mtune=native -Wwrite-strings -Wno-builtin-macro-redefined  -Winline -pedantic-errors  -Wcast-align=strict -Wcast-function-type -fno-exceptions	
 
 SRC = $(wildcard src/*.cpp)
 SRC += $(wildcard src/**/*.cpp)
@@ -64,7 +63,7 @@ clean:
 
 
 memcheck: debug
-	@valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes -s ./$(BIN) ./main.vr
+	@valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes -s $(BIN) ./main.vr
 
 lint:
 	@cppcheck  $(SRC_C_H) $(CSTD_LINT) --enable=all --check-config --quiet

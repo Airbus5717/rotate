@@ -38,8 +38,6 @@ class Lexer
     void advance();
     void advance_len_inc();
     void advance_len_times();
-    void advance_len_times_plus_one();
-    void advance_len_times_minus_one();
     char peek() const;
     char past() const;
     char current() const;

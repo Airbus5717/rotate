@@ -2,10 +2,7 @@
 #include "include/compile.hpp"
 
 using namespace rotate;
-void print_version_and_exit()
-{
-    fprintf(stdout, "Rotate Compiler \nVersion: %s\n", VERSION);
-}
+
 
 s32 main(const s32 argc, char **const argv)
 {
