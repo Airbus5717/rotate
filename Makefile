@@ -3,7 +3,7 @@
 ARG := 
 
 CXX ?= clang++
-CFLAGS := -Wall -Wextra -Wpedantic -fshort-enums -ffast-math -Wno-unused -finline-functions -fno-strict-aliasing -funroll-loops -ftree-vectorize -march=native -mtune=native -Wwrite-strings -Wno-builtin-macro-redefined  -Winline -pedantic-errors  -Wcast-align=strict -Wcast-function-type -fno-exceptions	
+CFLAGS := -Wall -Wextra -Wpedantic -fshort-enums -ffast-math -Wno-unused -finline-functions -fno-strict-aliasing -funroll-loops -ftree-vectorize -march=native -mtune=native -Wwrite-strings -Wno-builtin-macro-redefined  -Winline -pedantic-errors -Wcast-function-type -fno-exceptions	
 
 SRC = $(wildcard src/*.cpp)
 SRC += $(wildcard src/**/*.cpp)
@@ -13,9 +13,10 @@ SRC_C_H = src/**/*.cpp src/**/*.hpp
 ANALYZE := 
 ifeq ($(CXX), gcc)
 ANALYZE = -fanalyzer
+CFLAGS += -Wcast-align=strict
 else ifeq ($(CXX), clang++)
 ANALYZE = -Xanalyzer
-CFLAGS += 
+CFLAGS += -Wcast-align
 else
 CFLAGS += 
 endif

@@ -1,9 +1,13 @@
 #ifndef ROTATE_DEFINE
 #define ROTATE_DEFINE
 
+// C++ standard library
+#include <algorithm>
+#include <memory>
 #include <vector>
 
-// c stdlib
+// C standard library
+#include <cassert>
 #include <cctype>
 #include <climits>
 #include <cstdbool>
@@ -11,6 +15,10 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <ctime>
+
+// header for stack allocation
+#include <alloca.h>
 
 namespace rotate
 {

@@ -34,7 +34,7 @@ struct file_t
 
     ~file_t()
     {
-        free((void *)contents);
+        delete contents;
     };
 };
 

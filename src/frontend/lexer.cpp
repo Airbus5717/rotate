@@ -1,21 +1,22 @@
 #include "include/lexer.hpp"
 #include "include/token.hpp"
-#include <cstdlib>
 
 namespace rotate
 {
 
-// file must not be null
+// file must not be null and lexer owns the ile ptr
 Lexer::Lexer(file_t *file)
     : index(0), len(0), line(1), file(file), file_length(file ? file->length : 0), is_done(false),
       error(UNKNOWN), tokens(new std::vector<token>())
 {
-    ASSERT_NULL(file, "Lexer File init failure");
+    ASSERT_NULL(file, "Lexer File passed is a null pointer");
+    ASSERT_NULL(tokens, "Lexer vec of tokens passed is a null pointer");
 }
 
 Lexer::~Lexer()
 {
     delete tokens;
+    delete file;
 }
 
 void Lexer::save_log(FILE *output)
@@ -28,7 +29,7 @@ void Lexer::save_log(FILE *output)
 
 u8 Lexer::lex()
 {
-    do
+    doascii.
     {
         switch (lex_director())
         {
@@ -41,7 +42,9 @@ u8 Lexer::lex()
             case EXIT_FAILURE:
                 return report_error();
         }
-    } while (true);
+    }
+    while (true)
+        ;
     return EXIT_SUCCESS;
 }
 
@@ -200,9 +203,9 @@ u8 Lexer::lex_identifiers()
             break;
     }
 
-    if (len > 100)
+    if (len > 128)
     {
-        log_error("identifier length is more than 100 chars");
+        log_error("identifier length is more than 128 chars");
         return EXIT_FAILURE;
     }
 
@@ -245,10 +248,11 @@ u8 Lexer::lex_hex_numbers()
         advance_len_inc();
     }
 
-    if (len > 64)
+    if (len > 32)
     {
-        log_error("hex number digits length is above 64");
+        log_error("hex number digits length is above 32");
     }
+    index -= len;
     return add_token(token_type::HexInteger);
 }
 
@@ -266,6 +270,7 @@ u8 Lexer::lex_binary_numbers()
     {
         log_error("binary number digits length is above 128");
     }
+    index -= len;
     return add_token(token_type::BinaryInteger);
 }
 
@@ -351,6 +356,7 @@ u8 Lexer::lex_symbols()
         case '[': return add_token(token_type::OpenSQRBrackets);
         case ']': return add_token(token_type::CloseSQRBrackets);
         case ';': return add_token(token_type::SemiColon);
+        // TODO(5717) bug below needs to check an eql during peeking
         case '>': return add_token(token_type::Greater);
         case '<': return add_token(token_type::Less);
         case '.': return add_token(token_type::Dot);
@@ -587,13 +593,11 @@ u8 Lexer::report_error()
     u32 spaces = index - low + 1;
     if (len < 101)
     {
-        char *arrows = (char *)malloc(len + 1);
-        if (!arrows) exit_error("could not display error message");
+        char *arrows = (char *)alloca(len + 1);
         memset(arrows, '^', len);
         arrows[len] = '\0';
 
         fprintf(stderr, " %*c |%*c%s%s%s\n", num_line_digits, ' ', spaces, ' ', LRED, BOLD, arrows);
-        free(arrows);
     }
     else
     {

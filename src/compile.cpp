@@ -13,8 +13,13 @@ void compile_options::log_error_unknown_flag(const char *str)
 
 void log_compilation(FILE *file, Lexer &lexer)
 {
+    time_t rawtime;
+    time(&rawtime);
+
     fprintf(file, "===META===\n");
-    fprintf(file, "filename: %s\n\n", lexer.getFile()->name);
+    fprintf(file, "filename: %s\n", lexer.getFile()->name);
+    fprintf(file, "file_len: %llu chars\n", lexer.getFile()->length);
+    fprintf(file, "time: %s\n", asctime(localtime(&rawtime)));
     fprintf(file, "===FILE===\n");
     fprintf(file, "%s", lexer.getFile()->contents);
     fprintf(file, "===TOKENS===\n");
@@ -31,7 +36,7 @@ void log_compilation(FILE *file, Lexer &lexer)
 u8 compile(compile_options *options, compilation_state *state) noexcept
 {
     ASSERT_NULL(state, "state is null");
-    file_t *file;
+    file_t *file; // owned by lexer
     Lexer *lexer;
     // Parser *parser;
     u8 exit = 0;
@@ -66,8 +71,7 @@ u8 compile(compile_options *options, compilation_state *state) noexcept
 
     /// free memory
     // delete parser;
-    delete lexer;
-    delete file;
+    delete lexer; // file memory is deleted by lexer
 
     //
     return exit;

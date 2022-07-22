@@ -5,10 +5,9 @@ namespace rotate
 {
 
 //
-Parser::Parser(Lexer *lexer)
+Parser::Parser(Lexer &lexer) : tokens(lexer.getTokens()), index(0)
 {
-    this->tokens = lexer->getTokens();
-    ASSERT_NULL(this->tokens, "lexer passed is null");
+    ASSERT_NULL(&this->tokens, "lexer passed is null");
 }
 
 // TODO: implementation
@@ -16,11 +15,11 @@ Parser::~Parser() = default;
 
 u8 Parser::parse()
 {
-    u8 exit   = 0;
-    auto tkns = tokens;
+    TODO("parser");
+    u8 exit = 0;
     for (;;)
     {
-        switch (tkns->at(index).type)
+        switch (tokens->at(index).type)
         {
             case Import:
                 exit = parse_gl_imports();
@@ -119,21 +118,11 @@ u8 Parser::parser_report_error()
 
 type Parser::parse_type()
 {
-
     //* FULL TYPE CHECKING WILL DO AFTER PARSING
-    /*
-    invalid,
-    f32, f64,
-    uint8, uint16, uint32, uint64,
-    sint8, sint16, sint32, sint64,
-    chr, boolean,
-
-    enumeration,
-    arr, struct,
-    type_identifier,
-    */
     switch (current().type)
     {
+        case Void:
+            return type(opaque);
         case FLOAT_f32:
             return type(f32);
         case FLOAT_f64:
@@ -160,9 +149,9 @@ type Parser::parse_type()
             return type(boolean);
         case OpenSQRBrackets:
             TODO("arr type parse");
-            return array_type(dynamic_array, 3);
+            return array_type(dynamic_array, 0);
         case Identifier:
-            return type(structure);
+            return type(undecided);
         default: {
             /*
                 Arrays, structures and enums

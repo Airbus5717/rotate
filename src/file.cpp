@@ -2,7 +2,7 @@
 
 namespace rotate
 {
-    
+
 // This function is written in C-style (C++ way is confusing and slower)
 file_t *file_read(const char *name) noexcept
 {
@@ -44,7 +44,7 @@ file_t *file_read(const char *name) noexcept
     rewind(file);
 
     // Read the file into a buffer
-    char *buffer = (char *)malloc(length + 3);
+    char *buffer = new char[length + 3];
     if (!buffer) exit_error("Memory allocation failure");
 
     // get file contents
@@ -52,7 +52,7 @@ file_t *file_read(const char *name) noexcept
     {
         log_error("Read file error");
         fclose(file);
-        free(buffer);
+        delete[] buffer;
         return NULL;
     }
 
@@ -65,7 +65,7 @@ file_t *file_read(const char *name) noexcept
     {
         log_error("Only ascii text files are supported for compilation");
         fclose(file);
-        free(buffer);
+        delete[] buffer;
         return NULL;
     }
 
