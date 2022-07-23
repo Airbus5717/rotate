@@ -29,7 +29,7 @@ void Lexer::save_log(FILE *output)
 
 u8 Lexer::lex()
 {
-    doascii.
+    do
     {
         switch (lex_director())
         {
@@ -42,9 +42,7 @@ u8 Lexer::lex()
             case EXIT_FAILURE:
                 return report_error();
         }
-    }
-    while (true)
-        ;
+    } while (true);
     return EXIT_SUCCESS;
 }
 

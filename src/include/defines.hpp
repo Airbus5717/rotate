@@ -71,7 +71,7 @@ typedef signed long long int isize;
 
 #define TODO(string1)                                                                              \
     fprintf(stderr, "%sTODO: %s\n@file: %s:%d%s\n", YELLOW, string1, __FILE__, __LINE__, RESET);   \
-    exit(1);
+    std::exit(1);
 
 #define UNUSED(x) (void)(x)
 #define EXIT_DONE 3

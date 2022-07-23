@@ -93,7 +93,12 @@ u8 Parser::parse_gl_function()
 
 u8 Parser::parse_gl_var_const()
 {
-    TODO("global variables parser implementation");
+    u8 exit;
+    exit = expect(Identifier);
+    if (exit == EXIT_FAILURE)
+    {
+        TODO("Let error msgs");
+    }
     return EXIT_FAILURE;
 }
 
