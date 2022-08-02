@@ -48,7 +48,7 @@ class Lexer
   public:
     //
     Lexer(file_t *file);
-    ~Lexer();
+    ~Lexer() noexcept;
     std::vector<token> *getTokens();
     file_t *getFile();
     u32 get_num_of_lines();

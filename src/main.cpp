@@ -3,8 +3,7 @@
 
 using namespace rotate;
 
-
-s32 main(const s32 argc, char **const argv)
+int main(const int argc, char **const argv)
 {
     if (argc > 1)
     {

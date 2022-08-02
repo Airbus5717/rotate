@@ -13,10 +13,9 @@ Lexer::Lexer(file_t *file)
     ASSERT_NULL(tokens, "Lexer vec of tokens passed is a null pointer");
 }
 
-Lexer::~Lexer()
+Lexer::~Lexer() noexcept
 {
     delete tokens;
-    delete file;
 }
 
 void Lexer::save_log(FILE *output)

@@ -38,40 +38,56 @@ typedef unsigned long long int usize;
 typedef signed long long int isize;
 
 #define ASSERT(expr, msg)                                                                          \
-    if (!(expr))                                                                                   \
+    do                                                                                             \
     {                                                                                              \
-        fprintf(stderr, "%sAssert failure: %s\n@file: %s:%d%s\n", LRED, msg, __FILE__, __LINE__,   \
-                RESET);                                                                            \
-        exit(1);                                                                                   \
-    }
+        if (!(expr))                                                                               \
+        {                                                                                          \
+            std::fprintf(stderr, "%sAssert failure: %s\n@file: %s:%d%s\n", LRED, msg, __FILE__,    \
+                         __LINE__, RESET);                                                         \
+            std::exit(1);                                                                          \
+        }                                                                                          \
+    } while (0)
 
 #define ASSERT_CMP(expr1, expr2, msg)                                                              \
-    if (expr1 != expr2)                                                                            \
+    do                                                                                             \
     {                                                                                              \
-        fprintf(stderr, "%sAssert failure: %s\n@file: %s:%d%s\n", LRED, msg, __FILE__, __LINE__,   \
-                RESET);                                                                            \
-        exit(1);                                                                                   \
-    }
+        if (expr1 != expr2)                                                                        \
+        {                                                                                          \
+            std::fprintf(stderr, "%sAssert failure: %s\n@file: %s:%d%s\n", LRED, msg, __FILE__,    \
+                         __LINE__, RESET);                                                         \
+            std::exit(1);                                                                          \
+        }                                                                                          \
+    } while (0)
 
 #define ASSERT_NULL(expr, msg)                                                                     \
-    if ((expr) == NULL)                                                                            \
+    do                                                                                             \
     {                                                                                              \
-        fprintf(stderr, "%sAssert failure: %s\n@file: %s:%d%s\n", LRED, msg, __FILE__, __LINE__,   \
-                RESET);                                                                            \
-        exit(1);                                                                                   \
-    }
+        if ((expr) == NULL)                                                                        \
+        {                                                                                          \
+            std::fprintf(stderr, "%sAssert failure: %s\n@file: %s:%d%s\n", LRED, msg, __FILE__,    \
+                         __LINE__, RESET);                                                         \
+            std::exit(1);                                                                          \
+        }                                                                                          \
+    } while (0)
 
 #define STR_ASSERT(string1, string2, msg)                                                          \
-    if (strcmp(string1, string2) != 0)                                                             \
+    do                                                                                             \
     {                                                                                              \
-        fprintf(stderr, "%sAssert failure: %s\n@file: %s:%d%s\n", LRED, msg, __FILE__, __LINE__,   \
-                RESET);                                                                            \
-        exit(1);                                                                                   \
-    }
+        if (std::strcmp(string1, string2) != 0)                                                    \
+        {                                                                                          \
+            std::fprintf(stderr, "%sAssert failure: %s\n@file: %s:%d%s\n", LRED, msg, __FILE__,    \
+                         __LINE__, RESET);                                                         \
+            std::exit(1);                                                                          \
+        }                                                                                          \
+    } while (0)
 
 #define TODO(string1)                                                                              \
-    fprintf(stderr, "%sTODO: %s\n@file: %s:%d%s\n", YELLOW, string1, __FILE__, __LINE__, RESET);   \
-    std::exit(1);
+    do                                                                                             \
+    {                                                                                              \
+        std::fprintf(stderr, "%sTODO: %s\n@file: %s:%d%s\n", YELLOW, string1, __FILE__, __LINE__,  \
+                     RESET);                                                                       \
+        std::exit(1);                                                                              \
+    } while (0)
 
 #define UNUSED(x) (void)(x)
 #define EXIT_DONE 3

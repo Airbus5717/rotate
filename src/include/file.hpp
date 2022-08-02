@@ -34,7 +34,7 @@ struct file_t
 
     ~file_t()
     {
-        delete contents;
+        delete[] contents;
     };
 };
 

@@ -409,7 +409,9 @@ const char *advice(const error_type error) noexcept
         default:
             break;
     }
-    return (LYELLOW "TODO: error msg implementation." RESET);
+    return ("\x1b[33m"
+            "TODO: error msg implementation."
+            "\x1b[0m");
 }
 
 } // namespace rotate

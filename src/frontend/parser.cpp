@@ -19,44 +19,43 @@ u8 Parser::parse()
     u8 exit = 0;
     for (;;)
     {
-        switch (tokens->at(index).type)
+        token_type _type = current().type;
+        switch (_type)
         {
             case Import:
-                exit = parse_gl_imports();
+                parse_gl_imports();
                 break;
             case Function:
-                exit = parse_gl_function();
+                parse_gl_function();
                 break;
             case Const:
-                exit = parse_gl_var_const();
+                parse_gl_var_const();
                 break;
             case Struct:
-                exit = parse_gl_struct();
+                parse_gl_struct();
                 break;
             case Enum:
-                exit = parse_gl_enum();
+                parse_gl_enum();
                 break;
             case EOT:
                 return exit;
-                break;
             default:
-                return parser_report_error();
+                return parser_report_error(_type);
         }
         advance();
-        if (exit == EXIT_FAILURE) return parser_report_error();
     }
 
     return EXIT_SUCCESS;
 }
 
-u8 Parser::expect(token_type _type)
+bool Parser::expect(token_type _type)
 {
-    if (_type == tokens->at(index).type)
+    if (_type == current().type)
     {
-        index++;
-        return EXIT_SUCCESS;
+        advance();
+        return true;
     }
-    return EXIT_FAILURE;
+    return parser_report_error(_type);
 }
 
 inline token Parser::current()
@@ -93,12 +92,7 @@ u8 Parser::parse_gl_function()
 
 u8 Parser::parse_gl_var_const()
 {
-    u8 exit;
-    exit = expect(Identifier);
-    if (exit == EXIT_FAILURE)
-    {
-        TODO("Let error msgs");
-    }
+    TODO("global variable parser implementation");
     return EXIT_FAILURE;
 }
 
@@ -115,48 +109,50 @@ u8 Parser::parse_gl_enum()
     return EXIT_FAILURE;
 }
 
-u8 Parser::parser_report_error()
+u8 Parser::parser_report_error(token_type _type)
 {
+    using std::exit;
     TODO("Parser error reporting implementation");
+    exit(1);
     return EXIT_FAILURE;
 }
 
-type Parser::parse_type()
+rotate_type Parser::parse_type()
 {
     //* FULL TYPE CHECKING WILL DO AFTER PARSING
     switch (current().type)
     {
         case Void:
-            return type(opaque);
+            return rotate_type(opaque, 0);
         case FLOAT_f32:
-            return type(f32);
+            return rotate_type(f32, 0);
         case FLOAT_f64:
-            return type(f64);
+            return rotate_type(f64, 0);
         case INT_U8:
-            return type(uint8);
+            return rotate_type(uint8, 0);
         case INT_U16:
-            return type(uint16);
+            return rotate_type(uint16, 0);
         case INT_U32:
-            return type(uint32);
+            return rotate_type(uint32, 0);
         case INT_U64:
-            return type(uint64);
+            return rotate_type(uint64, 0);
         case INT_S8:
-            return type(sint8);
+            return rotate_type(sint8, 0);
         case INT_S16:
-            return type(sint16);
+            return rotate_type(sint16, 0);
         case INT_S32:
-            return type(sint32);
+            return rotate_type(sint32, 0);
         case INT_S64:
-            return type(sint64);
+            return rotate_type(sint64, 0);
         case CharKeyword:
-            return type(chr);
+            return rotate_type(chr, 0);
         case BoolKeyword:
-            return type(boolean);
+            return rotate_type(boolean, 0);
         case OpenSQRBrackets:
-            TODO("arr type parse");
-            return array_type(dynamic_array, 0);
+            TODO("arr rotate_type parse");
+            return rotate_type(dynamic_array, 0);
         case Identifier:
-            return type(undecided);
+            return rotate_type(undecided, 0);
         default: {
             /*
                 Arrays, structures and enums
@@ -165,7 +161,7 @@ type Parser::parse_type()
         }
     }
 
-    return type(invalid);
+    return rotate_type(invalid, 0);
 }
 
 } // namespace rotate
