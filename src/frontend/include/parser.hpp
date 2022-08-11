@@ -9,9 +9,7 @@ namespace rotate
 
 enum class type_kind : u8
 {
-    invalid,
-    undecided, // To be known
-    opaque,    // void
+    no_type,
     f32,
     f64,
     uint8,

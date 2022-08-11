@@ -123,8 +123,6 @@ const char *tkn_type_describe(const token_type type) noexcept
             return "struct";
         case token_type::Ref:
             return "ref";
-        case token_type::Void:
-            return "void";
         case token_type::Include:
             return "include";
         case token_type::Enum:
@@ -198,8 +196,6 @@ const char *get_keyword_or_type(const char *string, const token &tkn)
             return "char";
         case token_type::BoolKeyword:
             return "bool";
-        case token_type::Void:
-            return "void";
         case token_type::While:
             return "while";
         case token_type::False:

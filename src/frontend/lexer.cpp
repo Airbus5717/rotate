@@ -103,6 +103,8 @@ u8 Lexer::lex_identifiers()
     }
     index -= len;
     token_type _type = token_type::Identifier;
+
+    // TODO: optimize matching keywords
     switch (len)
     {
         case 2: {
@@ -164,8 +166,6 @@ u8 Lexer::lex_identifiers()
                 _type = token_type::CharKeyword;
             else if (keyword_match("bool", 4))
                 _type = token_type::BoolKeyword;
-            else if (keyword_match("void", 4))
-                _type = token_type::Void;
             break;
         }
         case 5: {

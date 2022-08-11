@@ -122,8 +122,6 @@ rotate_type Parser::parse_type()
     //* FULL TYPE CHECKING WILL DO AFTER PARSING
     switch (current().type)
     {
-        case token_type::Void:
-            return rotate_type(type_kind::opaque, 0);
         case token_type::FLOAT_f32:
             return rotate_type(type_kind::f32, 0);
         case token_type::FLOAT_f64:
@@ -152,7 +150,7 @@ rotate_type Parser::parse_type()
             TODO("arr rotate_type parse");
             return rotate_type(type_kind::heap_array, 0);
         case token_type::Identifier:
-            return rotate_type(type_kind::undecided, 0);
+            return rotate_type(type_kind::no_type, 0);
         default: {
             /*
                 Arrays, structures and enums
@@ -161,7 +159,7 @@ rotate_type Parser::parse_type()
         }
     }
 
-    return rotate_type(type_kind::invalid, 0);
+    return rotate_type(type_kind::no_type, 0);
 }
 
 } // namespace rotate

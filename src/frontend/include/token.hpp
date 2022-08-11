@@ -79,7 +79,6 @@ enum class token_type : u8
     DivEqual,         // /=
     Struct,           // 'struct'
     Ref,              // 'ref'
-    Void,             // 'void'
     Include,          // 'include'
     Nil,              // `nil` basically null
     EOT,              // EOT - END OF TOKENS
