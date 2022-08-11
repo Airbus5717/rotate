@@ -58,14 +58,14 @@ bool is_token_type_length_variable(token_type type)
 {
     switch (type)
     {
-        case Integer:
-        case HexInteger:
-        case BinaryInteger:
-        case Float:
-        case BuiltinFunc:
-        case Identifier:
-        case String:
-        case Char:
+        case token_type::Integer:
+        case token_type::HexInteger:
+        case token_type::BinaryInteger:
+        case token_type::Float:
+        case token_type::BuiltinFunc:
+        case token_type::Identifier:
+        case token_type::String:
+        case token_type::Char:
             return true;
         default:
             return false;

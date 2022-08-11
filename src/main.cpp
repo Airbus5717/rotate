@@ -1,10 +1,10 @@
 #include "include/common.hpp"
 #include "include/compile.hpp"
 
-using namespace rotate;
 
 int main(const int argc, char **const argv)
 {
+    using namespace rotate;
     if (argc > 1)
     {
         auto comp_opt           = compile_options(argc, argv);

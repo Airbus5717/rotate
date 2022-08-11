@@ -32,7 +32,7 @@ class Lexer
     u8 reverse_len_for_error();
 
     //
-    u8 add_token(token_type type);
+    u8 add_token(const token_type type);
 
     //
     void advance();

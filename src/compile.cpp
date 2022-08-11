@@ -1,4 +1,5 @@
 #include "include/compile.hpp"
+#include "include/common.hpp"
 #include "include/file.hpp"
 
 #include "frontend/include/parser.hpp"
@@ -33,6 +34,7 @@ void log_compilation(FILE *file, Lexer &lexer)
                 tkn_type_describe(tkn.type), tkn.length, lexer.getFile()->contents + tkn.index);
     }
     fprintf(file, "===TODO: Parser Abstract Syntax Tree===\n");
+    log_info("Logging complete");
 }
 
 u8 compile(compile_options *options, compilation_state *state) noexcept

@@ -7,7 +7,7 @@
 namespace rotate
 {
 
-enum token_type : u8
+enum class token_type : u8
 {
     Identifier,       // ids
     BuiltinFunc,      // @ids
@@ -85,7 +85,7 @@ enum token_type : u8
     EOT,              // EOT - END OF TOKENS
 };
 
-enum error_type : u32
+enum class error_type : u32
 {
     // Unknown token/error (default)
     UNKNOWN,

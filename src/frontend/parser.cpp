@@ -22,22 +22,22 @@ u8 Parser::parse()
         token_type _type = current().type;
         switch (_type)
         {
-            case Import:
+            case token_type::Import:
                 parse_gl_imports();
                 break;
-            case Function:
+            case token_type::Function:
                 parse_gl_function();
                 break;
-            case Const:
+            case token_type::Const:
                 parse_gl_var_const();
                 break;
-            case Struct:
+            case token_type::Struct:
                 parse_gl_struct();
                 break;
-            case Enum:
+            case token_type::Enum:
                 parse_gl_enum();
                 break;
-            case EOT:
+            case token_type::EOT:
                 return exit;
             default:
                 return parser_report_error(_type);
@@ -122,37 +122,37 @@ rotate_type Parser::parse_type()
     //* FULL TYPE CHECKING WILL DO AFTER PARSING
     switch (current().type)
     {
-        case Void:
-            return rotate_type(opaque, 0);
-        case FLOAT_f32:
-            return rotate_type(f32, 0);
-        case FLOAT_f64:
-            return rotate_type(f64, 0);
-        case INT_U8:
-            return rotate_type(uint8, 0);
-        case INT_U16:
-            return rotate_type(uint16, 0);
-        case INT_U32:
-            return rotate_type(uint32, 0);
-        case INT_U64:
-            return rotate_type(uint64, 0);
-        case INT_S8:
-            return rotate_type(sint8, 0);
-        case INT_S16:
-            return rotate_type(sint16, 0);
-        case INT_S32:
-            return rotate_type(sint32, 0);
-        case INT_S64:
-            return rotate_type(sint64, 0);
-        case CharKeyword:
-            return rotate_type(chr, 0);
-        case BoolKeyword:
-            return rotate_type(boolean, 0);
-        case OpenSQRBrackets:
+        case token_type::Void:
+            return rotate_type(type_kind::opaque, 0);
+        case token_type::FLOAT_f32:
+            return rotate_type(type_kind::f32, 0);
+        case token_type::FLOAT_f64:
+            return rotate_type(type_kind::f64, 0);
+        case token_type::INT_U8:
+            return rotate_type(type_kind::uint8, 0);
+        case token_type::INT_U16:
+            return rotate_type(type_kind::uint16, 0);
+        case token_type::INT_U32:
+            return rotate_type(type_kind::uint32, 0);
+        case token_type::INT_U64:
+            return rotate_type(type_kind::uint64, 0);
+        case token_type::INT_S8:
+            return rotate_type(type_kind::sint8, 0);
+        case token_type::INT_S16:
+            return rotate_type(type_kind::sint16, 0);
+        case token_type::INT_S32:
+            return rotate_type(type_kind::sint32, 0);
+        case token_type::INT_S64:
+            return rotate_type(type_kind::sint64, 0);
+        case token_type::CharKeyword:
+            return rotate_type(type_kind::chr, 0);
+        case token_type::BoolKeyword:
+            return rotate_type(type_kind::boolean, 0);
+        case token_type::OpenSQRBrackets:
             TODO("arr rotate_type parse");
-            return rotate_type(dynamic_array, 0);
-        case Identifier:
-            return rotate_type(undecided, 0);
+            return rotate_type(type_kind::heap_array, 0);
+        case token_type::Identifier:
+            return rotate_type(type_kind::undecided, 0);
         default: {
             /*
                 Arrays, structures and enums
@@ -161,7 +161,7 @@ rotate_type Parser::parse_type()
         }
     }
 
-    return rotate_type(invalid, 0);
+    return rotate_type(type_kind::invalid, 0);
 }
 
 } // namespace rotate

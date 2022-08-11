@@ -7,7 +7,7 @@
 namespace rotate
 {
 
-enum type_kind : u8
+enum class type_kind : u8
 {
     invalid,
     undecided, // To be known
@@ -29,8 +29,8 @@ enum type_kind : u8
 
     structure,
     // strings are char arrays (only ascii) (other unicodes won't be supported)
-    arr,
-    dynamic_array, // length stored in runtime
+    stack_arr,
+    heap_array, // length stored in runtime
 };
 
 struct rotate_type
@@ -38,14 +38,16 @@ struct rotate_type
     type_kind rtype;
     u32 size;
 
-    rotate_type(type_kind i, u32 _size) : rtype(i), size(_size)
+    rotate_type(type_kind i, u32 _size) : rtype(i)
     {
+        if (i == type_kind::stack_arr)
+            _size = size;
     }
 
     ~rotate_type() = default;
 };
 
-enum rnode_type : u8
+enum class rnode_type : u8
 {
     literal = 0,
     literal_array,
@@ -53,13 +55,13 @@ enum rnode_type : u8
     unary,
 };
 
-enum unary_type : u8
+enum class unary_type : u8
 {
     negate_minus = 0,
     negate_bool,
 };
 
-enum binary_type : u8
+enum class binary_type : u8
 {
     plus = 0,    // +
     minus,       // -
@@ -118,7 +120,7 @@ struct node
 
 /// global stuff
 
-enum ast_gl_node : u8
+enum class ast_gl_node : u8
 {
     gl_function = 0,
     gl_variable,
