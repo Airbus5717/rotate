@@ -1,7 +1,6 @@
 #include "include/common.hpp"
 #include "include/compile.hpp"
 
-
 int main(const int argc, char **const argv)
 {
     using namespace rotate;

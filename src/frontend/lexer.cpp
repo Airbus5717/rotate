@@ -278,6 +278,7 @@ u8 Lexer::lex_strings()
     {
         if (current() == '\0')
         {
+            reverse_len_for_error();
             error = error_type::NOT_CLOSED_STRING;
             return EXIT_FAILURE;
         }
@@ -354,12 +355,28 @@ u8 Lexer::lex_symbols()
         case ']': return add_token(token_type::CloseSQRBrackets);
         case ';': return add_token(token_type::SemiColon);
         // TODO(5717) bug below needs to check an eql during peeking
-        case '>': return add_token(token_type::Greater);
-        case '<': return add_token(token_type::Less);
         case '.': return add_token(token_type::Dot);
         case ',': return add_token(token_type::Comma);
         case ':': return add_token(token_type::Colon);
         // clang-format on
+        case '>': {
+            if (p == '=')
+            {
+                len++;
+                return add_token(token_type::GreaterEql);
+            }
+            else
+                return add_token(token_type::Greater);
+            break;
+        }
+        case '<': {
+            if (p == '=')
+            {
+                len++;
+                return add_token(token_type::LessEql);
+            }
+            return add_token(token_type::Less);
+        }
         case '=': {
             if (p == '=')
             {

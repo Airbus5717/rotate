@@ -10,7 +10,7 @@
 * Basics
 ** Hello World
 #+begin_src cpp
-fn main() void {
+fn main() {
   @println("Hello World");
 }
 #+end_src

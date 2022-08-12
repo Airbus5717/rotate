@@ -59,7 +59,9 @@ enum class token_type : u8
     For,              // 'for'
     While,            // 'while'
     Greater,          // >
+    GreaterEql,       // >=
     Less,             // <
+    LessEql,          // <=
     Dot,              // .
     Not,              // "!"
     NotEqual,         // "!="

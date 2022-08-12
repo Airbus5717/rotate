@@ -7,7 +7,7 @@
 namespace rotate
 {
 
-enum class type_kind : u8
+enum class rt_type : u8
 {
     no_type,
     f32,
@@ -29,20 +29,6 @@ enum class type_kind : u8
     // strings are char arrays (only ascii) (other unicodes won't be supported)
     stack_arr,
     heap_array, // length stored in runtime
-};
-
-struct rotate_type
-{
-    type_kind rtype;
-    u32 size;
-
-    rotate_type(type_kind i, u32 _size) : rtype(i)
-    {
-        if (i == type_kind::stack_arr)
-            _size = size;
-    }
-
-    ~rotate_type() = default;
 };
 
 enum class rnode_type : u8
@@ -74,102 +60,77 @@ enum class binary_type : u8
     _or,         // or
 };
 
-struct node;
-struct ast_node;
-
-struct literal
+struct RType
 {
-    token *tkn;
+    rt_type _type;
 };
 
-struct literal_array
+struct RTArrayType : public RType
 {
-    std::vector<node *> children;
-    u32 size;
-
-    ~literal_array() = default;
+    usize size;
 };
 
-struct grouping
+struct RTStructType : public RType
 {
-    node *child;
+    // TODO later
+    std::vector<RType> types;
 };
 
-struct unary_op
+struct ASTNode
 {
-    unary_type _op;
+    RType type;
 };
 
-struct bin_op
+struct Literal : public ASTNode
 {
-    binary_type _op;
+};
+struct Unary : public ASTNode
+{
+};
+struct ArrayLiteral : public ASTNode
+{
+};
+struct BinaryOp : public ASTNode
+{
+};
+struct Grouping : public ASTNode
+{
+};
+struct FuncCall : public ASTNode
+{
 };
 
-struct node
+// don't use it directly
+struct GLASTNode
 {
-    rnode_type _type;
-    union {
-        struct literal ltr;
-        struct literal_array ltr_arr;
-        struct unary_op unary;
-        struct bin_op bin;
-    } & child;
+    const u32 id_index;
 };
 
-/// global stuff
-
-enum class ast_gl_node : u8
+struct GLFunction : public GLASTNode
 {
-    gl_function = 0,
-    gl_variable,
-    gl_import,
-    gl_struct,
-    gl_enum,
+    RType type;
 };
 
-struct gl_fun
+struct GLConst : public GLASTNode
 {
-    rotate_type return_type;
-    token &name;
-    std::vector<node *> stmts;
-
-    ~gl_fun()
-    {
-        stmts.clear();
-    }
+    RType type;
+    std::unique_ptr<ASTNode> value;
 };
 
-struct gl_variable
+struct GLStructure : public GLASTNode
 {
-    rotate_type _type;
-    node *value;
+    // TODO: later
+    std::vector<RType> types; // ordered
 };
 
-struct gl_import
+struct GLEnumeration : public GLASTNode
 {
-    token &path;
+    // TODO: later
 };
 
-struct gl_structure
+struct GLImportStmt : public GLASTNode
 {
-    // TODO NOTE(5717): this is kinda more complex
-};
-
-struct gl_enum
-{
-    // TODO NOTE(5717): this is kinda more complex
-};
-
-struct gl_node
-{
-    ast_gl_node node_type;
-    union {
-        struct gl_fun fn;
-        struct gl_import imprt;
-        struct gl_variable var;
-        struct gl_structure structure;
-        struct gl_enum enumeration;
-    } node;
+    // TODO: later
 };
 
 /// Parser
@@ -178,11 +139,11 @@ class Parser
     // ptr to tokens from the lexer
     std::vector<token> *tokens;
     u32 index;
-
+    u8 exit;
   public:
     Parser(Lexer &lexer);
     ~Parser(); // don't free lexer
-
+    
     //
     void save_log();
 
@@ -208,7 +169,8 @@ class Parser
     u8 parse_gl_struct();
     u8 parse_gl_enum();
 
-    rotate_type parse_type();
+    RType parse_type();
+    ASTNode *parse_node(); // nodes are in the heap
 };
 
 } // namespace rotate
