@@ -131,8 +131,6 @@ const char *tkn_type_describe(const token_type type) noexcept
             return "nil (null)";
         case token_type::Var:
             return "var";
-        case token_type::EscapedChar:
-            return "escaped_char";
         case token_type::EOT:
             return "End OF Tokens";
         case token_type::INT_U8:

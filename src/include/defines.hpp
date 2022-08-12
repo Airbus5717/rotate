@@ -4,6 +4,7 @@
 // C++ standard library
 #include <algorithm>
 #include <memory>
+#include <optional>
 #include <vector>
 
 // C standard library

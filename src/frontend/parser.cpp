@@ -5,7 +5,7 @@ namespace rotate
 {
 
 //
-Parser::Parser(Lexer &lexer) : tokens(lexer.getTokens()), index(0)
+Parser::Parser(Lexer &lexer) : tokens(lexer.getTokens())
 {
     ASSERT_NULL(&this->tokens, "lexer passed is null");
 }
@@ -16,7 +16,7 @@ Parser::~Parser() = default;
 u8 Parser::parse()
 {
     TODO("parser");
-    u8 exit = 0;
+    exit = 0, index = 0;
     for (;;)
     {
         token_type _type = current().type;
@@ -69,6 +69,17 @@ bool Parser::expect(token_type _type)
     //! bools are opposite
     //! ---V--- notice the negate symbol;
     return !parser_report_error(_type);
+}
+
+bool Parser::consume(token_type _type)
+{
+    // same as expect but returns false without throwing error
+    if (_type == current().type)
+    {
+        advance();
+        return true;
+    }
+    return false;
 }
 
 inline Token Parser::current()
@@ -134,14 +145,122 @@ u8 Parser::parser_report_error(token_type _type)
     return exit = EXIT_FAILURE;
 }
 
-RType Parser::parse_type()
+bool Parser::is_token_terminator(token_type _type)
 {
-    bool mut = false;
-    if (current().type == token_type::Mutable)
+    switch (_type)
     {
-        mut = true;
-        advance();
+        case token_type::SemiColon:
+        case token_type::CloseCurly:
+        case token_type::CloseParen:
+        case token_type::Comma:
+        case token_type::Equal:
+            return true;
+        default:
+            return false;
     }
+
+    return false;
+}
+
+ASTNode *Parser::parse_node_helper()
+{
+    return nullptr;
+}
+
+ASTNode *Parser::parse_node()
+{
+    //! Make sure to advance before entering this method
+    // its critical due to recursive nature of this method
+    /*
+      * NOTE(Airbus5717): Expression Notes
+
+        *Terminator = {
+            `}`, `)`, `;`, `=` or `,` etc.
+        }
+
+        Literal = {
+            String, Char(also EscapedChar), Integer, Float, Nil, True, False, Identifier,
+            Builtin_function
+        }
+
+        TODO: Array_literal = {
+            [ literals seperated with commas ]
+        }
+
+        Unary = {
+            `!` or `-` then a ASTNode
+            TODO: references
+        }
+
+        Operators = [
+            `+`, `-`, `!=`, `==`,
+            `>`, `<`, `>=`, `<=`,
+            `*`, `/`, `and`, `or`,
+        ]
+
+        First check for unary, literal or grouping
+    */
+    ASTNode *node = nullptr;
+    auto const c  = current();
+    auto const p  = peek();
+    switch (c.type)
+    {
+        case token_type::Not:
+            node = new UnaryNode(c.index, unary_type::negate_bool, parse_node());
+            break;
+        case token_type::MINUS:
+            node = new UnaryNode(c.index, unary_type::negate_minus, parse_node());
+            break;
+        case token_type::String:
+        case token_type::Char:
+        case token_type::Integer:
+        case token_type::Float:
+        case token_type::Identifier:
+        case token_type::BuiltinFunc:
+        case token_type::False:
+        case token_type::True:
+        case token_type::Nil: {
+            if (is_token_terminator(p.type))
+            {
+                return new LiteralNode(c.index, convert_tkn_type_to_literal_type(c.type));
+            }
+        }
+        break;
+        default:
+            return nullptr;
+    }
+
+    return node;
+}
+
+literal_type Parser::convert_tkn_type_to_literal_type(token_type tt)
+{
+    switch (tt)
+    {
+        case token_type::String:
+            return literal_type::string;
+        case token_type::Char:
+            return literal_type::chr;
+        case token_type::Integer:
+            return literal_type::integer;
+        case token_type::Float:
+            return literal_type::float_;
+        case token_type::Nil:
+            return literal_type::nil;
+        case token_type::True:
+        case token_type::False:
+            return literal_type::boolean;
+
+        default:
+            break;
+    }
+    return literal_type::other;
+}
+
+RType Parser::parse_type(bool allow_mut)
+{
+    bool mut = consume(token_type::Mutable) && allow_mut;
+
     switch (current().type)
     {
         case token_type::INT_U8:

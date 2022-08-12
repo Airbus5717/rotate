@@ -9,32 +9,32 @@ namespace rotate
 
 enum class token_type : u8
 {
-    Identifier,    // ids
-    BuiltinFunc,   // @ids
-    Equal,         // =
-    Let,           // 'let'
-    Var,           // 'var'
-    Const,         // 'const'
-    Integer,       // refers to 10 digits ints
-    HexInteger,    // refers to Hexidecimal ints
-    BinaryInteger, // refers to binary ints
-    IntKeyword,    // 'int'
-    INT_U8,        // u8
-    INT_U16,       // u16
-    INT_U32,       // u32
-    INT_U64,       // u64
-    INT_S8,        // s8
-    INT_S16,       // s16
-    INT_S32,       // s32
-    INT_S64,       // s64
-    Float,         // refer to floats
-    FLOAT_f32,     // f32
-    FLOAT_f64,     // f64
-    FloatKeyword,  // 'float'
-    String,        // refer to strings
+    Identifier = 0, // ids
+    BuiltinFunc,    // @ids
+    Equal,          // =
+    Let,            // 'let'
+    Var,            // 'var'
+    Const,          // 'const'
+    Integer,        // refers to 10 digits ints
+    HexInteger,     // refers to Hexidecimal ints
+    BinaryInteger,  // refers to binary ints
+    IntKeyword,     // 'int'
+    INT_U8,         // u8
+    INT_U16,        // u16
+    INT_U32,        // u32
+    INT_U64,        // u64
+    INT_S8,         // s8
+    INT_S16,        // s16
+    INT_S32,        // s32
+    INT_S64,        // s64
+    Float,          // refer to floats
+    FLOAT_f32,      // f32
+    FLOAT_f64,      // f64
+    FloatKeyword,   // 'float'
     // StringKeyword,    // 'str'
-    Char,             // refers to chars
-    EscapedChar,      // '\{}' chars i.e. '\n'
+    String, // refer to strings
+    Char,   // refers to chars
+    // EscapedChar,      // '\{}' chars i.e. '\n'
     CharKeyword,      // 'char'
     True,             // 'true'
     False,            // 'false'
@@ -80,13 +80,12 @@ enum class token_type : u8
     MultEqual,        // *=
     DivEqual,         // /=
     Struct,           // 'struct'
-    Ref,              // 'ref'
+    Ref,              // 'ref' // TODO later
     Include,          // 'include'
     Nil,              // `nil` basically null
     Mutable,          // `mut`
     EOT,              // EOT - END OF TOKENS
 };
-
 
 struct Token
 {
@@ -144,7 +143,6 @@ enum class error_type : u32
     INVALID_EXPORT_DIR,
     FN_TYPE_REQUIRED,
 };
-
 
 const char *tkn_type_describe(const token_type type) noexcept;
 const char *get_keyword_or_type(const char *string, const Token &tkn);

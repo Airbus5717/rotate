@@ -323,13 +323,13 @@ u8 Lexer::lex_chars()
                 break;
             default:
                 error = error_type::NOT_VALID_ESCAPE_CHAR;
-                return EXIT_FAILURE;
+                return reverse_len_for_error();
         }
         if (current() == '\'')
         {
             advance_len_inc();
             index -= len;
-            return add_token(token_type::EscapedChar);
+            return add_token(token_type::Char);
         }
         else
         {
@@ -492,7 +492,6 @@ u8 Lexer::lex_builtin_funcs()
         case 3: {
             if (keyword_match("col", 3))
             {
-
                 return add_token(token_type::BuiltinFunc);
             }
             break;
@@ -500,12 +499,17 @@ u8 Lexer::lex_builtin_funcs()
         case 4: {
             if (keyword_match("line", 4))
             {
-
                 return add_token(token_type::BuiltinFunc);
             }
             else if (keyword_match("file", 4))
             {
-
+                return add_token(token_type::BuiltinFunc);
+            }
+            break;
+        }
+        case 5: {
+            if (keyword_match("print", 5))
+            {
                 return add_token(token_type::BuiltinFunc);
             }
             break;
@@ -513,7 +517,6 @@ u8 Lexer::lex_builtin_funcs()
         case 7: {
             if (keyword_match("println", 7))
             {
-
                 return add_token(token_type::BuiltinFunc);
             }
             break;

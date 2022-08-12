@@ -10,6 +10,7 @@ namespace rotate
 enum class rt_type : u8
 {
     no_type = 0,
+    nil,
     undecided,
     float32,
     float64,
@@ -36,6 +37,17 @@ enum class rt_type : u8
     heap_array, // length stored in runtime
 };
 
+enum class literal_type : u8
+{
+    string,
+    chr,
+    integer,
+    float_,
+    boolean,
+    nil,
+    other,
+};
+
 enum class rnode_type : u8
 {
     literal = 0,
@@ -48,6 +60,7 @@ enum class unary_type : u8
 {
     negate_minus = 0,
     negate_bool,
+    reference_ptr, // node must be an identifier to a variable
 };
 
 enum class binary_type : u8
@@ -61,8 +74,8 @@ enum class binary_type : u8
     less,        // <
     less_eql,    // <=
     eql_eql,     // ==
-    _and,        // and
-    _or,         // or
+    rt_and,      // and
+    rt_or,       // or
 };
 
 struct RType
@@ -90,40 +103,60 @@ struct RTStructType : public RType
 
 struct ASTNode
 {
-    RType type;
-    ASTNode(RType type): type(type) {}
+    const u32 index; // token index
+    ASTNode(u32 index) : index(index)
+    {
+    }
 };
 
-struct Literal : public ASTNode
+struct LiteralNode : public ASTNode
+{
+    literal_type type;
+    LiteralNode(const u32 index, literal_type type) : ASTNode(index), type(type)
+    {
+    }
+};
+
+struct UnaryNode : public ASTNode
+{
+    unary_type type;
+    ASTNode *arg;
+    UnaryNode(const u32 index, unary_type untype, ASTNode *arg)
+        : ASTNode(index), type(untype), arg(arg)
+    {
+    }
+};
+
+struct ArrayLiteralNode : public ASTNode
 {
     Token token;
-    Literal(RType type, Token token): ASTNode(type), token(token) {}
+    // TODO:
 };
 
-struct Unary : public ASTNode
+struct BinaryOpNode : public ASTNode
+{
+    binary_type type;
+    ASTNode *rhs;
+    ASTNode *lhs;
+    BinaryOpNode(u32 index, binary_type bin_type, ASTNode *rhs, ASTNode *lhs)
+        : ASTNode(index), type(bin_type), rhs(rhs), lhs(lhs)
+    {
+    }
+};
+
+struct GroupingNode : public ASTNode
 {
 };
 
-struct ArrayLiteral : public ASTNode
-{
-};
-
-struct BinaryOp : public ASTNode
-{
-};
-
-struct Grouping : public ASTNode
-{
-};
-
-struct FuncCall : public ASTNode
+struct FuncCallNode : public ASTNode
 {
 };
 
 // don't use it directly
 struct GLASTNode
 {
-    const u32 id_index; const bool is_public;
+    const u32 id_index;
+    const bool is_public;
 };
 
 struct GLFunction : public GLASTNode
@@ -156,42 +189,52 @@ struct GLImportStmt : public GLASTNode
 /// Parser
 class Parser
 {
+
+  public:
+    Parser(Lexer &);
+    ~Parser(); // don't free lexer
+
+    // parser starting point
+    u8 parse();
+    //
+    void save_log();
+
+  private:
+    std::vector<GLConst> GLConstants;
+    std::vector<GLFunction> GLFunctions;
+    std::vector<GLStructure> GLStructures;
+    std::vector<GLEnumeration> GLEnums;
+    std::vector<GLImportStmt> GLImports;
     // ptr to tokens from the lexer
     std::vector<Token> *tokens;
     u32 index;
     u8 exit;
 
-  public:
-    Parser(Lexer &lexer);
-    ~Parser(); // don't free lexer
-
     //
-    void save_log();
-
-    //
-    bool expect(token_type _type);
-    u32 consume();
+    bool expect(token_type);
+    bool consume(token_type);
     inline void advance();
     inline Token current();
     inline Token past();
     inline Token peek();
     inline Token next();
 
-    // parser starting point
-    u8 parse();
-
     // parser report errs
     u8 parser_report_error(token_type);
 
     // parsing gl_stmts
     u8 parse_gl_imports();
-    u8 parse_gl_function(bool is_public);
-    u8 parse_gl_var_const(bool is_public);
-    u8 parse_gl_struct(bool is_public);
-    u8 parse_gl_enum(bool is_public);
+    u8 parse_gl_function(bool);
+    u8 parse_gl_var_const(bool);
+    u8 parse_gl_struct(bool);
+    u8 parse_gl_enum(bool);
 
-    RType parse_type();
-    ASTNode *parse_node(); // nodes are allocated in the heap
+    RType parse_type(bool);
+    ASTNode *parse_node();        // nodes are allocated in the heap
+    ASTNode *parse_node_helper(); // nodes are allocated in the heap
+    bool is_token_terminator(token_type);
+
+    literal_type convert_tkn_type_to_literal_type(token_type);
 };
 
 } // namespace rotate
