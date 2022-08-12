@@ -102,8 +102,8 @@ const char *tkn_type_describe(const token_type type) noexcept
             return "int_word";
         case token_type::Match:
             return "match";
-        case token_type::StringKeyword:
-            return "str_word";
+        // case token_type::StringKeyword:
+        // return "str_word";
         case token_type::BoolKeyword:
             return "bool_word";
 
@@ -156,7 +156,7 @@ const char *tkn_type_describe(const token_type type) noexcept
     }
 }
 
-const char *get_keyword_or_type(const char *string, const token &tkn)
+const char *get_keyword_or_type(const char *string, const Token &tkn)
 {
     switch (tkn.type)
     {
@@ -174,8 +174,8 @@ const char *get_keyword_or_type(const char *string, const token &tkn)
             return "pub";
         case token_type::Const:
             return "const";
-        case token_type::StringKeyword:
-            return "str";
+        // case token_type::StringKeyword:
+        // return "str";
         case token_type::IntKeyword:
             return "int";
         case token_type::Ref:

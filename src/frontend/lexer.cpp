@@ -7,7 +7,7 @@ namespace rotate
 // file must not be null and lexer owns the ile ptr
 Lexer::Lexer(file_t *file)
     : index(0), len(0), line(1), file(file), file_length(file ? file->length : 0), is_done(false),
-      error(error_type::UNKNOWN), tokens(new std::vector<token>())
+      error(error_type::UNKNOWN), tokens(new std::vector<Token>())
 {
     ASSERT_NULL(file, "Lexer File passed is a null pointer");
     ASSERT_NULL(tokens, "Lexer vec of tokens passed is a null pointer");
@@ -84,7 +84,7 @@ u8 Lexer::lex_director()
     return lex_symbols();
 }
 
-std::vector<token> *Lexer::getTokens()
+std::vector<Token> *Lexer::getTokens()
 {
     return tokens;
 }
@@ -128,8 +128,8 @@ u8 Lexer::lex_identifiers()
                 _type = token_type::Let;
             else if (keyword_match("pub", 3))
                 _type = token_type::Public;
-            else if (keyword_match("str", 3))
-                _type = token_type::StringKeyword;
+            else if (keyword_match("mut", 3))
+                _type = token_type::Mutable;
             else if (keyword_match("int", 3))
                 _type = token_type::IntKeyword;
             else if (keyword_match("ref", 3))
@@ -200,9 +200,10 @@ u8 Lexer::lex_identifiers()
             break;
     }
 
-    if (len > 128)
+    if (len > 100)
     {
-        log_error("identifier length is more than 128 chars");
+        // log_error("identifier length is more than 128 chars");
+        error = error_type::TOO_LONG_IDENTIFIER;
         return EXIT_FAILURE;
     }
 
@@ -232,6 +233,7 @@ u8 Lexer::lex_numbers()
         log_error("number digits length is above 100");
         return EXIT_FAILURE;
     }
+    index -= len;
     return add_token(reached_dot ? token_type::Float : token_type::Integer);
 }
 
@@ -542,7 +544,7 @@ inline void Lexer::advance_len_inc()
     const char c = current();
     index++;
     len++;
-    if (c == '\n') line++;
+    line += c == '\n'; // if (c == '\n') line++;
 }
 
 inline char Lexer::peek() const
@@ -625,7 +627,7 @@ u8 Lexer::report_error()
 u8 Lexer::add_token(const token_type type)
 {
     // index at the end of the token
-    tokens->push_back(token(type, index, len));
+    tokens->push_back(Token(type, index, len));
 
     for (u32 i = 0; i < len; i++)
         advance();

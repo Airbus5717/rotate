@@ -9,30 +9,30 @@ namespace rotate
 
 enum class token_type : u8
 {
-    Identifier,       // ids
-    BuiltinFunc,      // @ids
-    Equal,            // =
-    Let,              // 'let'
-    Var,              // 'var'
-    Const,            // 'const'
-    Integer,          // refers to 10 digits ints
-    HexInteger,       // refers to Hexidecimal ints
-    BinaryInteger,    // refers to binary ints
-    IntKeyword,       // 'int'
-    INT_U8,           // u8
-    INT_U16,          // u16
-    INT_U32,          // u32
-    INT_U64,          // u64
-    INT_S8,           // s8
-    INT_S16,          // s16
-    INT_S32,          // s32
-    INT_S64,          // s64
-    Float,            // refer to floats
-    FLOAT_f32,        // f32
-    FLOAT_f64,        // f64
-    FloatKeyword,     // 'float'
-    String,           // refer to strings
-    StringKeyword,    // 'str'
+    Identifier,    // ids
+    BuiltinFunc,   // @ids
+    Equal,         // =
+    Let,           // 'let'
+    Var,           // 'var'
+    Const,         // 'const'
+    Integer,       // refers to 10 digits ints
+    HexInteger,    // refers to Hexidecimal ints
+    BinaryInteger, // refers to binary ints
+    IntKeyword,    // 'int'
+    INT_U8,        // u8
+    INT_U16,       // u16
+    INT_U32,       // u32
+    INT_U64,       // u64
+    INT_S8,        // s8
+    INT_S16,       // s16
+    INT_S32,       // s32
+    INT_S64,       // s64
+    Float,         // refer to floats
+    FLOAT_f32,     // f32
+    FLOAT_f64,     // f64
+    FloatKeyword,  // 'float'
+    String,        // refer to strings
+    // StringKeyword,    // 'str'
     Char,             // refers to chars
     EscapedChar,      // '\{}' chars i.e. '\n'
     CharKeyword,      // 'char'
@@ -83,7 +83,20 @@ enum class token_type : u8
     Ref,              // 'ref'
     Include,          // 'include'
     Nil,              // `nil` basically null
+    Mutable,          // `mut`
     EOT,              // EOT - END OF TOKENS
+};
+
+
+struct Token
+{
+    token_type type;
+    u32 index;
+    u32 length;
+
+    Token(token_type type, u32 index, u32 length) : type(type), index(index), length(length)
+    {
+    }
 };
 
 enum class error_type : u32
@@ -132,19 +145,9 @@ enum class error_type : u32
     FN_TYPE_REQUIRED,
 };
 
-struct token
-{
-    token_type type;
-    u32 index;
-    u32 length;
-
-    token(token_type type, u32 index, u32 length) : type(type), index(index), length(length)
-    {
-    }
-};
 
 const char *tkn_type_describe(const token_type type) noexcept;
-const char *get_keyword_or_type(const char *string, const token &tkn);
+const char *get_keyword_or_type(const char *string, const Token &tkn);
 const char *advice(const error_type error) noexcept;
 const char *err_msgsfunc(const error_type error) noexcept;
 bool is_token_type_length_variable(token_type type);

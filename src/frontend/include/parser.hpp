@@ -9,18 +9,23 @@ namespace rotate
 
 enum class rt_type : u8
 {
-    no_type,
-    f32,
-    f64,
+    no_type = 0,
+    undecided,
+    float32,
+    float64,
+
     uint8,
     uint16,
     uint32,
     uint64,
+
     sint8,
     sint16,
     sint32,
     sint64,
+
     chr,
+
     boolean,
 
     enumeration,
@@ -63,11 +68,18 @@ enum class binary_type : u8
 struct RType
 {
     rt_type _type;
+    bool mut = false;
+    RType(rt_type _type, bool mut) : _type(_type), mut(mut)
+    {
+    }
 };
 
 struct RTArrayType : public RType
 {
     usize size;
+    RTArrayType(rt_type _type, bool mut, usize size) : RType(_type, mut), size(size)
+    {
+    }
 };
 
 struct RTStructType : public RType
@@ -79,23 +91,31 @@ struct RTStructType : public RType
 struct ASTNode
 {
     RType type;
+    ASTNode(RType type): type(type) {}
 };
 
 struct Literal : public ASTNode
 {
+    Token token;
+    Literal(RType type, Token token): ASTNode(type), token(token) {}
 };
+
 struct Unary : public ASTNode
 {
 };
+
 struct ArrayLiteral : public ASTNode
 {
 };
+
 struct BinaryOp : public ASTNode
 {
 };
+
 struct Grouping : public ASTNode
 {
 };
+
 struct FuncCall : public ASTNode
 {
 };
@@ -103,7 +123,7 @@ struct FuncCall : public ASTNode
 // don't use it directly
 struct GLASTNode
 {
-    const u32 id_index;
+    const u32 id_index; const bool is_public;
 };
 
 struct GLFunction : public GLASTNode
@@ -137,13 +157,14 @@ struct GLImportStmt : public GLASTNode
 class Parser
 {
     // ptr to tokens from the lexer
-    std::vector<token> *tokens;
+    std::vector<Token> *tokens;
     u32 index;
     u8 exit;
+
   public:
     Parser(Lexer &lexer);
     ~Parser(); // don't free lexer
-    
+
     //
     void save_log();
 
@@ -151,10 +172,10 @@ class Parser
     bool expect(token_type _type);
     u32 consume();
     inline void advance();
-    inline token current();
-    inline token past();
-    inline token peek();
-    inline token next();
+    inline Token current();
+    inline Token past();
+    inline Token peek();
+    inline Token next();
 
     // parser starting point
     u8 parse();
@@ -164,13 +185,13 @@ class Parser
 
     // parsing gl_stmts
     u8 parse_gl_imports();
-    u8 parse_gl_function();
-    u8 parse_gl_var_const();
-    u8 parse_gl_struct();
-    u8 parse_gl_enum();
+    u8 parse_gl_function(bool is_public);
+    u8 parse_gl_var_const(bool is_public);
+    u8 parse_gl_struct(bool is_public);
+    u8 parse_gl_enum(bool is_public);
 
     RType parse_type();
-    ASTNode *parse_node(); // nodes are in the heap
+    ASTNode *parse_node(); // nodes are allocated in the heap
 };
 
 } // namespace rotate

@@ -14,7 +14,7 @@ class Lexer
     u32 file_length;
     bool is_done;
     error_type error;
-    std::vector<token> *tokens;
+    std::vector<Token> *tokens;
 
     //
     u8 lex_director();
@@ -49,14 +49,14 @@ class Lexer
     //
     Lexer(file_t *file);
     ~Lexer() noexcept;
-    std::vector<token> *getTokens();
+    std::vector<Token> *getTokens();
     file_t *getFile();
     u32 get_num_of_lines();
     u8 lex();
     void save_log(FILE *output);
 };
 
-void log_token(FILE *output, const rotate::token tkn, const char *str);
+void log_token(FILE *output, const rotate::Token tkn, const char *str);
 
 } // namespace rotate
 
