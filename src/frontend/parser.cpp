@@ -7,11 +7,18 @@ namespace rotate
 //
 Parser::Parser(Lexer &lexer) : tokens(lexer.getTokens())
 {
-    ASSERT_NULL(&this->tokens, "lexer passed is null");
+    ASSERT_NULL(&this->tokens, "lexer tokens passed is null");
 }
 
 // TODO:
-Parser::~Parser() = default;
+Parser::~Parser()
+{
+    this->GLConstants.clear();
+    this->GLFunctions.clear();
+    this->GLEnums.clear();
+    this->GLImports.clear();
+    this->GLStructures.clear();
+}
 
 u8 Parser::parse()
 {
@@ -172,7 +179,7 @@ ASTNode *Parser::parse_node()
     //! Make sure to advance before entering this method
     // its critical due to recursive nature of this method
     /*
-      * NOTE(Airbus5717): Expression Notes
+        * NOTE(Airbus5717): Expression Notes
 
         *Terminator = {
             `}`, `)`, `;`, `=` or `,` etc.
@@ -200,37 +207,33 @@ ASTNode *Parser::parse_node()
 
         First check for unary, literal or grouping
     */
-    ASTNode *node = nullptr;
-    auto const c  = current();
-    auto const p  = peek();
-    switch (c.type)
+
+    return nullptr;
+}
+
+bool Parser::is_token_binary_op(token_type type)
+{
+    // `+`, `-`, `*`, `/`, `>`, `>=`
+    // `or`, `and`, `==`, `<`, `<=`
+    switch (type)
     {
-        case token_type::Not:
-            node = new UnaryNode(c.index, unary_type::negate_bool, parse_node());
-            break;
+        case token_type::PLUS:
         case token_type::MINUS:
-            node = new UnaryNode(c.index, unary_type::negate_minus, parse_node());
-            break;
-        case token_type::String:
-        case token_type::Char:
-        case token_type::Integer:
-        case token_type::Float:
-        case token_type::Identifier:
-        case token_type::BuiltinFunc:
-        case token_type::False:
-        case token_type::True:
-        case token_type::Nil: {
-            if (is_token_terminator(p.type))
-            {
-                return new LiteralNode(c.index, convert_tkn_type_to_literal_type(c.type));
-            }
-        }
-        break;
+        case token_type::Star:
+        case token_type::DIV:
+        case token_type::Greater:
+        case token_type::GreaterEql:
+        case token_type::Less:
+        case token_type::LessEql:
+        case token_type::EqualEqual:
+        case token_type::And:
+        case token_type::Or:
+            return true;
         default:
-            return nullptr;
+            break;
     }
 
-    return node;
+    return false;
 }
 
 literal_type Parser::convert_tkn_type_to_literal_type(token_type tt)

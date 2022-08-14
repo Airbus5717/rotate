@@ -41,7 +41,6 @@ u8 compile(compile_options *options, compilation_state *state) noexcept
 {
     ASSERT_NULL(state, "state is null");
     file_t *file;
-    Lexer *lexer;
     // Parser *parser;
     u8 exit = 0;
 
@@ -51,10 +50,10 @@ u8 compile(compile_options *options, compilation_state *state) noexcept
     if (!file) return EXIT_FAILURE;
 
     // Lexical analysis
-    *state = cs_lexer;
-    lexer  = new Lexer(file);
-    exit   = lexer->lex();
-    if (exit == EXIT_FAILURE && !lexer) return EXIT_FAILURE;
+    *state      = cs_lexer;
+    Lexer lexer = Lexer(file);
+    exit        = lexer.lex();
+    if (exit == EXIT_FAILURE) return EXIT_FAILURE;
 
     // parse lexed tokens to Abstract Syntax tree
     // *state = cs_parser;
@@ -68,16 +67,11 @@ u8 compile(compile_options *options, compilation_state *state) noexcept
         FILE *output = fopen("output.log", "wb");
         if (output)
         {
-            log_compilation(output, *lexer);
+            log_compilation(output, lexer);
             fclose(output);
         }
     }
 
-    /// free memory
-    // delete parser;
-    delete lexer; // file memory is deleted by lexer
-    delete file;
-    //
     return exit;
 }
 

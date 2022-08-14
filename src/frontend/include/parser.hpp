@@ -3,6 +3,8 @@
 
 #include "lexer.hpp"
 #include "token.hpp"
+#include <memory>
+#include <string>
 
 namespace rotate
 {
@@ -125,12 +127,26 @@ struct UnaryNode : public ASTNode
         : ASTNode(index), type(untype), arg(arg)
     {
     }
+
+    ~UnaryNode()
+    {
+        delete arg;
+    }
 };
 
 struct ArrayLiteralNode : public ASTNode
 {
-    Token token;
-    // TODO:
+    std::vector<ASTNode *> elements;
+    usize size;
+    ArrayLiteralNode(u32 index, usize size) : ASTNode(index), size(size)
+    {
+    }
+
+    ~ArrayLiteralNode()
+    {
+        for (const auto &s : elements)
+            delete s;
+    }
 };
 
 struct BinaryOpNode : public ASTNode
@@ -142,10 +158,25 @@ struct BinaryOpNode : public ASTNode
         : ASTNode(index), type(bin_type), rhs(rhs), lhs(lhs)
     {
     }
+
+    ~BinaryOpNode()
+    {
+        delete rhs;
+        delete lhs;
+    }
 };
 
 struct GroupingNode : public ASTNode
 {
+    ASTNode *arg;
+    GroupingNode(u32 index, ASTNode *arg) : ASTNode(index), arg(arg)
+    {
+    }
+
+    ~GroupingNode()
+    {
+        delete arg;
+    }
 };
 
 struct FuncCallNode : public ASTNode
@@ -167,13 +198,23 @@ struct GLFunction : public GLASTNode
 struct GLConst : public GLASTNode
 {
     RType type;
-    std::unique_ptr<ASTNode> value;
+    ASTNode *value;
+
+    ~GLConst()
+    {
+        delete value;
+    }
 };
 
 struct GLStructure : public GLASTNode
 {
     // TODO: later
     std::vector<RType> types; // ordered
+
+    ~GLStructure()
+    {
+        types.clear();
+    }
 };
 
 struct GLEnumeration : public GLASTNode
@@ -187,9 +228,12 @@ struct GLImportStmt : public GLASTNode
 };
 
 /// Parser
+/*
+    allocate nodes into a pool
+    which will be deleted all at once
+*/
 class Parser
 {
-
   public:
     Parser(Lexer &);
     ~Parser(); // don't free lexer
@@ -205,7 +249,8 @@ class Parser
     std::vector<GLStructure> GLStructures;
     std::vector<GLEnumeration> GLEnums;
     std::vector<GLImportStmt> GLImports;
-    // ptr to tokens from the lexer
+
+    // weak ptr to tokens from the lexer(the owner)
     std::vector<Token> *tokens;
     u32 index;
     u8 exit;
@@ -235,6 +280,7 @@ class Parser
     bool is_token_terminator(token_type);
 
     literal_type convert_tkn_type_to_literal_type(token_type);
+    bool is_token_binary_op(token_type);
 };
 
 } // namespace rotate

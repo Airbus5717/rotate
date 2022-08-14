@@ -2,9 +2,8 @@
 #define ROTATE_DEFINE
 
 // C++ standard library
-#include <algorithm>
 #include <memory>
-#include <optional>
+#include <memory_resource>
 #include <vector>
 
 // C standard library
@@ -37,6 +36,12 @@ typedef uint64_t u64;
 
 typedef unsigned long long int usize;
 typedef signed long long int isize;
+
+using std::make_shared;
+using std::make_unique;
+using std::shared_ptr;
+using std::unique_ptr;
+using std::weak_ptr;
 
 #define ASSERT(expr, msg)                                                                          \
     do                                                                                             \

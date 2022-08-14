@@ -21,7 +21,7 @@ file_t *file_read(const char *name) noexcept
     {
         // display error message if file does not exist
         log_error("File does not exist");
-        return NULL;
+        return nullptr;
     }
 
     // Calculate the file length
@@ -30,7 +30,7 @@ file_t *file_read(const char *name) noexcept
     {
         log_error("File is empty");
         fclose(file);
-        return NULL;
+        return nullptr;
     }
     const usize length = (usize)ftell(file);
 
@@ -38,7 +38,7 @@ file_t *file_read(const char *name) noexcept
     {
         log_error("File too large");
         fclose(file);
-        return NULL;
+        return nullptr;
     }
     // rewind the fseek to the beginning of the file
     rewind(file);
@@ -53,7 +53,7 @@ file_t *file_read(const char *name) noexcept
         log_error("Read file error");
         fclose(file);
         delete[] buffer;
-        return NULL;
+        return nullptr;
     }
 
     // add NULL charactor (3 for extra safety)
@@ -66,7 +66,7 @@ file_t *file_read(const char *name) noexcept
         log_error("Only ascii text files are supported for compilation");
         fclose(file);
         delete[] buffer;
-        return NULL;
+        return nullptr;
     }
 
     // Close the file
