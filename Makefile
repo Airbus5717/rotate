@@ -67,7 +67,7 @@ memcheck: debug
 	@valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes -s $(BIN) ./main.vr
 
 lint:
-	@cppcheck  $(SRC_C_H) $(CSTD_LINT) --enable=all --check-config --quiet
+	@cppcheck  $(SRC_C_H) $(CSTD_LINT) --enable=all --check-config --quiet 
 
 format:
 	@clang-format -i src/**/**.cpp src/**/**.hpp 

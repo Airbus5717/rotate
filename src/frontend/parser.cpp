@@ -11,14 +11,7 @@ Parser::Parser(Lexer &lexer) : tokens(lexer.getTokens())
 }
 
 // TODO:
-Parser::~Parser()
-{
-    this->GLConstants.clear();
-    this->GLFunctions.clear();
-    this->GLEnums.clear();
-    this->GLImports.clear();
-    this->GLStructures.clear();
-}
+Parser::~Parser() = default;
 
 u8 Parser::parse()
 {
@@ -60,7 +53,7 @@ u8 Parser::parse()
         advance();
     }
 
-    return exit == 0 ? EXIT_SUCCESS : EXIT_FAILURE;
+    return exit;
 }
 
 bool Parser::expect(token_type _type)
@@ -169,9 +162,16 @@ bool Parser::is_token_terminator(token_type _type)
     return false;
 }
 
-ASTNode *Parser::parse_node_helper()
+ASTNode *Parser::parse_node_helper(ASTNode *lhs, u8 precendence)
 {
     return nullptr;
+}
+
+LiteralNode *Parser::parse_literal()
+{
+    return is_primary(current().type)
+               ? new LiteralNode(current().index, convert_tkn_type_to_literal_type(current().type))
+               : nullptr;
 }
 
 ASTNode *Parser::parse_node()
@@ -206,9 +206,30 @@ ASTNode *Parser::parse_node()
         ]
 
         First check for unary, literal or grouping
+
+        1 - Unary
+        2 - Grouping
+        3 - BinaryOp
     */
 
     return nullptr;
+}
+
+bool Parser::is_primary(token_type type)
+{
+    switch (type)
+    {
+        case token_type::Integer:
+        case token_type::Nil:
+        case token_type::Float:
+        case token_type::Char:
+        case token_type::True:
+        case token_type::False:
+            return true;
+        default:
+            return false;
+    }
+    return false;
 }
 
 bool Parser::is_token_binary_op(token_type type)
@@ -236,12 +257,37 @@ bool Parser::is_token_binary_op(token_type type)
     return false;
 }
 
+const u8 Parser::precedence(token_type type)
+{
+    switch (type)
+    {
+
+        case token_type::Greater:
+        case token_type::GreaterEql:
+        case token_type::Less:
+        case token_type::LessEql:
+        case token_type::EqualEqual:
+        case token_type::NotEqual:
+            return 1;
+        case token_type::PLUS:
+        case token_type::MINUS:
+            return 2;
+        case token_type::Star:
+        case token_type::DIV:
+            return 3;
+        case token_type::Not:
+            return 4;
+        default:
+            return 0;
+    }
+
+    return 0;
+}
+
 literal_type Parser::convert_tkn_type_to_literal_type(token_type tt)
 {
     switch (tt)
     {
-        case token_type::String:
-            return literal_type::string;
         case token_type::Char:
             return literal_type::chr;
         case token_type::Integer:

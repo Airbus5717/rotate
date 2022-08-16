@@ -3,8 +3,6 @@
 
 #include "lexer.hpp"
 #include "token.hpp"
-#include <memory>
-#include <string>
 
 namespace rotate
 {
@@ -41,7 +39,6 @@ enum class rt_type : u8
 
 enum class literal_type : u8
 {
-    string,
     chr,
     integer,
     float_,
@@ -65,9 +62,10 @@ enum class unary_type : u8
     reference_ptr, // node must be an identifier to a variable
 };
 
+// kept as non class to use as int;
 enum class binary_type : u8
 {
-    plus = 0,    // +
+    plus = 1,    // +
     minus,       // -
     star,        // *
     divide,      // /
@@ -80,6 +78,16 @@ enum class binary_type : u8
     rt_or,       // or
 };
 
+enum presendence : u8
+{
+    lowest = 0,
+    compare, // ==, <=, <, >, >=, != etc.
+    sum,     // also subtraction
+    product, // also dividion
+    prefix,  // unary ops (!X) or (-X)
+    highest,
+};
+
 struct RType
 {
     rt_type _type;
@@ -87,6 +95,8 @@ struct RType
     RType(rt_type _type, bool mut) : _type(_type), mut(mut)
     {
     }
+
+    ~RType() = default;
 };
 
 struct RTArrayType : public RType
@@ -95,12 +105,16 @@ struct RTArrayType : public RType
     RTArrayType(rt_type _type, bool mut, usize size) : RType(_type, mut), size(size)
     {
     }
+
+    ~RTArrayType() = default;
 };
 
 struct RTStructType : public RType
 {
     // TODO later
     std::vector<RType> types;
+
+    ~RTStructType() = default;
 };
 
 struct ASTNode
@@ -109,6 +123,8 @@ struct ASTNode
     ASTNode(u32 index) : index(index)
     {
     }
+
+    ~ASTNode() = default;
 };
 
 struct LiteralNode : public ASTNode
@@ -117,6 +133,30 @@ struct LiteralNode : public ASTNode
     LiteralNode(const u32 index, literal_type type) : ASTNode(index), type(type)
     {
     }
+
+    ~LiteralNode() = default;
+};
+
+struct ArrayIndexLiteral : public ASTNode
+{
+    ASTNode *arr_index;
+    ArrayIndexLiteral(const u32 name_index, ASTNode *arr_index)
+        : ASTNode(name_index), arr_index(arr_index)
+    {
+    }
+
+    ~ArrayIndexLiteral() = default;
+};
+
+struct StringLiteralNode : public ASTNode
+{
+    u32 size;
+    StringLiteralNode(const u32 index, const u32 token_length)
+        : ASTNode(index), size(token_length - 2)
+    {
+    }
+
+    ~StringLiteralNode() = default;
 };
 
 struct UnaryNode : public ASTNode
@@ -211,20 +251,23 @@ struct GLStructure : public GLASTNode
     // TODO: later
     std::vector<RType> types; // ordered
 
-    ~GLStructure()
-    {
-        types.clear();
-    }
+    ~GLStructure() = default;
 };
 
 struct GLEnumeration : public GLASTNode
 {
     // TODO: later
+    ~GLEnumeration() = default;
 };
 
-struct GLImportStmt : public GLASTNode
+struct GLImportStmt
 {
-    // TODO: later
+    // index is for the string;
+    const u32 string_index;
+    GLImportStmt(u32 index) : string_index(index)
+    {
+    }
+    ~GLImportStmt() = default;
 };
 
 /// Parser
@@ -275,12 +318,15 @@ class Parser
     u8 parse_gl_enum(bool);
 
     RType parse_type(bool);
-    ASTNode *parse_node();        // nodes are allocated in the heap
-    ASTNode *parse_node_helper(); // nodes are allocated in the heap
+    ASTNode *parse_node(); // nodes are allocated in the heap
+    LiteralNode *parse_literal();
+    ASTNode *parse_node_helper(ASTNode *, u8); // nodes are allocated in the heap
     bool is_token_terminator(token_type);
 
     literal_type convert_tkn_type_to_literal_type(token_type);
     bool is_token_binary_op(token_type);
+    bool is_primary(token_type);
+    const u8 precedence(token_type);
 };
 
 } // namespace rotate
