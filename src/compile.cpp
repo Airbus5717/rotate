@@ -12,7 +12,7 @@ void compile_options::log_error_unknown_flag(const char *str)
     fprintf(stderr, "[%sWARN%s] : Ignored flag: `%s`\n", LYELLOW, RESET, str);
 }
 
-void log_compilation(FILE *file, Lexer &lexer)
+void log_compilation(FILE *file, Lexer &lexer, Parser &parser)
 {
     time_t rawtime;
     time(&rawtime);
@@ -25,7 +25,7 @@ void log_compilation(FILE *file, Lexer &lexer)
     fprintf(file, "time: %s", asctime(localtime(&rawtime)));
     fprintf(file, "number of tokens: %lu\n", tokens->size());
     fprintf(file, "===FILE===\n");
-    fprintf(file, "%s", lexer.getFile()->contents);
+    fprintf(file, "%s\n", lexer.getFile()->contents);
     fprintf(file, "===TOKENS===\n");
     for (usize i = 0; i < tokens->size(); i++)
     {
@@ -34,6 +34,8 @@ void log_compilation(FILE *file, Lexer &lexer)
                 tkn_type_describe(tkn.type), tkn.length, lexer.getFile()->contents + tkn.index);
     }
     fprintf(file, "===TODO: Parser Abstract Syntax Tree===\n");
+    parser.save_log(file);
+    fprintf(file, "====TODO: TYPECHECKER ====\n");
     log_info("Logging complete");
 }
 
@@ -56,10 +58,9 @@ u8 compile(compile_options *options, compilation_state *state) noexcept
     if (exit == EXIT_FAILURE) return EXIT_FAILURE;
 
     // parse lexed tokens to Abstract Syntax tree
-    // *state = cs_parser;
-    // parser = new Parser(lexer);
-    // if (exit == EXIT_FAILURE && !parser) return EXIT_FAILURE;
-    // exit = parser->parse();
+    *state        = cs_parser;
+    Parser parser = Parser(lexer);
+    exit          = parser.parse();
 
     // log compiliation
     if (options->debug_info)
@@ -67,7 +68,7 @@ u8 compile(compile_options *options, compilation_state *state) noexcept
         FILE *output = fopen("output.log", "wb");
         if (output)
         {
-            log_compilation(output, lexer);
+            log_compilation(output, lexer, parser);
             fclose(output);
         }
     }

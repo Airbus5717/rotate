@@ -1,6 +1,8 @@
 #include "include/parser.hpp"
 #include "include/token.hpp"
 
+#include "../include/defines.hpp"
+
 namespace rotate
 {
 
@@ -15,7 +17,6 @@ Parser::~Parser() = default;
 
 u8 Parser::parse()
 {
-    TODO("parser");
     exit = 0, index = 0;
     for (;;)
     {
@@ -28,7 +29,6 @@ u8 Parser::parse()
         }
         switch (_type)
         {
-
             case token_type::Import:
                 exit = parse_gl_imports();
                 break;
@@ -52,11 +52,10 @@ u8 Parser::parse()
         if (exit == EXIT_FAILURE) parser_report_error(_type);
         advance();
     }
-
     return exit;
 }
 
-bool Parser::expect(token_type _type)
+inline bool Parser::expect(token_type _type)
 {
     if (_type == current().type)
     {
@@ -71,7 +70,7 @@ bool Parser::expect(token_type _type)
     return !parser_report_error(_type);
 }
 
-bool Parser::consume(token_type _type)
+inline bool Parser::consume(token_type _type)
 {
     // same as expect but returns false without throwing error
     if (_type == current().type)
@@ -97,19 +96,21 @@ inline Token Parser::past()
     return tokens->at(index - 1);
 }
 
-inline Token Parser::peek()
+Token Parser::peek()
 {
     return tokens->at(index + 1);
 }
 
 u8 Parser::parse_gl_imports()
 {
+    advance();
     TODO("import parser implementation");
     return EXIT_FAILURE;
 }
 
 u8 Parser::parse_gl_function(bool is_public)
 {
+    advance();
     TODO("function parser implementation");
     UNUSED(is_public);
     return EXIT_FAILURE;
@@ -118,13 +119,25 @@ u8 Parser::parse_gl_function(bool is_public)
 u8 Parser::parse_gl_var_const(bool is_public)
 {
     advance();
-    TODO("global variable parser implementation");
-    UNUSED(is_public);
+    auto *x = new GLConst(current().index, is_public, RType(rt_type::undecided, true), nullptr);
+    expect(token_type::Identifier);
+    expect(token_type::Equal);
+    ASSERT_NULL(x, "Error allocating for GLConstant");
+    x->value = parse_node();
+    expect(token_type::SemiColon);
+
+    if (x->value != nullptr)
+    {
+        GLConstants.push_back(x);
+        return EXIT_SUCCESS;
+    }
+    delete x;
     return EXIT_FAILURE;
 }
 
 u8 Parser::parse_gl_struct(bool is_public)
 {
+    advance();
     TODO("structures parser implementation");
     UNUSED(is_public);
     return EXIT_FAILURE;
@@ -140,8 +153,7 @@ u8 Parser::parse_gl_enum(bool is_public)
 
 u8 Parser::parser_report_error(token_type _type)
 {
-    TODO("Parser error reporting implementation");
-    UNUSED(_type);
+    fprintf(stderr, "Error at %s at index: %u\n", tkn_type_describe(_type), current().index);
     return exit = EXIT_FAILURE;
 }
 
@@ -162,9 +174,28 @@ bool Parser::is_token_terminator(token_type _type)
     return false;
 }
 
-ASTNode *Parser::parse_node_helper(ASTNode *lhs, u8 precendence)
+ASTNode *Parser::parse_node_helper(ASTNode *lhs, s8 minprec)
 {
-    return nullptr;
+    advance();
+    Token p = peek();
+    while (is_token_binary_op(p.type) && precedence(p.type) >= minprec)
+    {
+        auto op = p;
+        advance();
+        ASTNode *rhs = parse_literal();
+
+        p = peek();
+        while (is_token_binary_op(p.type) && precedence(p.type) >= precedence(op.type))
+        {
+            rhs = parse_node_helper(rhs, precedence(op.type) +
+                                             (precedence(p.type) > precedence(op.type)));
+
+            p = peek();
+        }
+        // Binary Operator index
+        lhs = new BinaryOpNode(op.index, op.type, rhs, lhs);
+    }
+    return lhs;
 }
 
 LiteralNode *Parser::parse_literal()
@@ -212,7 +243,7 @@ ASTNode *Parser::parse_node()
         3 - BinaryOp
     */
 
-    return nullptr;
+    return parse_node_helper(parse_literal(), 0);
 }
 
 bool Parser::is_primary(token_type type)
@@ -234,7 +265,7 @@ bool Parser::is_primary(token_type type)
 
 bool Parser::is_token_binary_op(token_type type)
 {
-    // `+`, `-`, `*`, `/`, `>`, `>=`
+    // `+`, `-`, `*`, `/`, `>`, `>=`, `!=`
     // `or`, `and`, `==`, `<`, `<=`
     switch (type)
     {
@@ -247,41 +278,67 @@ bool Parser::is_token_binary_op(token_type type)
         case token_type::Less:
         case token_type::LessEql:
         case token_type::EqualEqual:
+        case token_type::NotEqual:
         case token_type::And:
         case token_type::Or:
             return true;
         default:
-            break;
+            return false;
     }
 
     return false;
 }
 
-const u8 Parser::precedence(token_type type)
+inline s8 Parser::precedence(token_type type)
 {
+    /*
+    SOURCE(https://journal.stuffwithstuff.com/2011/03/19/pratt-parsers-expression-parsing-made-easy/)
+      other       = -1;
+      UNUSED(ASSIGNMENT) = 1;
+      CONDITIONAL = 2;
+      SUM         = 3;
+      PRODUCT     = 4;
+      UNUSED(EXPONENT) = 5;
+      PREFIX      = 6;
+      POSTFIX     = 7;
+      CALL        = 8;
+    */
     switch (type)
     {
-
         case token_type::Greater:
         case token_type::GreaterEql:
         case token_type::Less:
         case token_type::LessEql:
         case token_type::EqualEqual:
         case token_type::NotEqual:
-            return 1;
+            // `>`, `>=`, `<`, `<=`, `==`, `!=`,
+            return 2;
         case token_type::PLUS:
         case token_type::MINUS:
-            return 2;
+            // `+`, `-`
+            return 3;
         case token_type::Star:
         case token_type::DIV:
-            return 3;
-        case token_type::Not:
+            // `*`, `/`
             return 4;
+        case token_type::Or:
+            // `or`
+            return 5;
+        case token_type::And:
+            // `and`
+            return 6;
+        case token_type::Not:
+            //* TAKE CARE OF PREFIX OPERATORS SUCH AS (-X) CUZ IT MIGHT BE WRONG
+            return 7;
+        case token_type::Identifier:
+        case token_type::BuiltinFunc:
+            // `id`, `@id`
+            return 8;
         default:
-            return 0;
+            return -1;
     }
 
-    return 0;
+    return -1;
 }
 
 literal_type Parser::convert_tkn_type_to_literal_type(token_type tt)
@@ -343,6 +400,27 @@ RType Parser::parse_type(bool allow_mut)
             break;
     }
     return RType(rt_type::no_type, mut);
+}
+
+void Parser::save_log(FILE *file)
+{
+    fprintf(file, "--- GLOBAL IMPORTS ---\n");
+    fprintf(file, "\n--- GLOBAL CONSTANTS ---\n");
+    for (const auto &c : GLConstants)
+        fprintf(file, "%s\n", c->to_string().c_str());
+    fprintf(file, "\n--- FUNCTIONS ---\n");
+    for (const auto &f : GLFunctions)
+        fprintf(file, "TODO: function foo\n");
+
+    fprintf(file, "\n--- STRUCTURES ---\n");
+    for (const auto &s : GLStructures)
+        fprintf(file, "TODO: s\n");
+
+    fprintf(file, "\n--- ENUMERATIONS ---\n");
+    for (const auto &e : GLEnums)
+        fprintf(file, "TODO: enum\n");
+
+    fprintf(file, "\n----- END OF PARSER -----\n");
 }
 
 } // namespace rotate

@@ -21,6 +21,7 @@ void log_info(const char *str);
 u32 get_digits_from_number(u32 v);
 
 // TODO: Implement alternative to libc++ vector
+/*
 template <typename T> class Vector
 {
     T *arr;
@@ -31,7 +32,7 @@ template <typename T> class Vector
     // TODO: growth rate optimizer
     static const usize growth_rate = 2;
 
-    Vector() : arr((T *)calloc(sizeof(T), 10)), index(0), capacity(10)
+    Vector() : arr(new T[10]), index(0), capacity(10)
     {
         ASSERT_NULL(arr, "Vector init failure");
         TODO("FIX BUGS RELATED TO THE VECTOR");
@@ -39,13 +40,13 @@ template <typename T> class Vector
 
     ~Vector()
     {
-        if (capacity > 0 && arr != NULL) free((void *)arr);
+        if (capacity > 0 && arr != NULL) delete[] arr;
         capacity = 0;
     }
 
     void clear()
     {
-        if (capacity > 0 && arr != NULL) free((void *)arr);
+        if (capacity > 0 && arr != NULL) delete[] arr;
         capacity = 0;
         arr      = NULL;
     }
@@ -57,9 +58,7 @@ template <typename T> class Vector
 
     u8 push_back(T elem)
     {
-        /*
-         * 9223372036854775807LL == (ULONG_LONG_MAX / 2) - 1;
-         */
+        // 9223372036854775807LL == (ULONG_LONG_MAX / 2) - 1;
         ASSERT(capacity < 9223372036854775807LL, "too large vector");
         if (index + 1 == capacity)
         {
@@ -93,7 +92,7 @@ template <typename T> class Vector
         return arr;
     }
 };
-
+*/
 } // namespace rotate
 
 #endif // ROTATE COMMON

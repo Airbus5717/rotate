@@ -87,6 +87,8 @@ enum class token_type : u8
     EOT,              // EOT - END OF TOKENS
 };
 
+const char *tkn_type_describe(const token_type type) noexcept;
+
 struct Token
 {
     token_type type;
@@ -95,6 +97,18 @@ struct Token
 
     Token(token_type type, u32 index, u32 length) : type(type), index(index), length(length)
     {
+    }
+
+    void print(FILE *file)
+    {
+        fprintf(file, "Token(type: `%s`, index: `%u`, length: `%u`)", tkn_type_describe(type),
+                index, length);
+    }
+
+    void println(FILE *file)
+    {
+        fprintf(file, "Token(type: `%s`, index: `%u`, length: `%u`)\n", tkn_type_describe(type),
+                index, length);
     }
 };
 
@@ -144,7 +158,6 @@ enum class error_type : u32
     FN_TYPE_REQUIRED,
 };
 
-const char *tkn_type_describe(const token_type type) noexcept;
 const char *get_keyword_or_type(const char *string, const Token &tkn);
 const char *advice(const error_type error) noexcept;
 const char *err_msgsfunc(const error_type error) noexcept;

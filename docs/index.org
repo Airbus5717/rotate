@@ -34,7 +34,7 @@ let a: bool = true;
 let b: str = "string";
 
 // arrays
-let arr1 := []int{ 1, 2, 3 };
+let arr1 : [int] = [ 1, 2, 3 ];
 
 // structs
 struct vec {
@@ -126,4 +126,5 @@ vector.d = 3;
 
 ** DOCS
 - Add a copy button in HTML docs export 
-- Add automation to docs generation 
+- Add automation to docs generation
+- Custom syntax highlighting for rotate

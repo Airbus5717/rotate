@@ -4,6 +4,7 @@
 // C++ standard library
 #include <memory>
 #include <memory_resource>
+#include <string>
 #include <vector>
 
 // C standard library
