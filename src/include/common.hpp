@@ -21,7 +21,6 @@ void log_info(const char *str);
 u32 get_digits_from_number(u32 v);
 
 // TODO: Implement alternative to libc++ vector
-/*
 template <typename T> class Vector
 {
     T *arr;
@@ -34,8 +33,7 @@ template <typename T> class Vector
 
     Vector() : arr(new T[10]), index(0), capacity(10)
     {
-        ASSERT_NULL(arr, "Vector init failure");
-        TODO("FIX BUGS RELATED TO THE VECTOR");
+        check();
     }
 
     ~Vector()
@@ -49,6 +47,11 @@ template <typename T> class Vector
         if (capacity > 0 && arr != NULL) delete[] arr;
         capacity = 0;
         arr      = NULL;
+    }
+
+    u8 check()
+    {
+        return !(arr != NULL && capacity > 0);
     }
 
     usize size() const
@@ -92,7 +95,7 @@ template <typename T> class Vector
         return arr;
     }
 };
-*/
+
 } // namespace rotate
 
 #endif // ROTATE COMMON

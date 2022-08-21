@@ -12,7 +12,7 @@ void compile_options::log_error_unknown_flag(const char *str)
     fprintf(stderr, "[%sWARN%s] : Ignored flag: `%s`\n", LYELLOW, RESET, str);
 }
 
-void log_compilation(FILE *file, Lexer &lexer, Parser &parser)
+void log_compilation(FILE *file, Lexer &lexer, Parser *parser)
 {
     time_t rawtime;
     time(&rawtime);
@@ -26,15 +26,17 @@ void log_compilation(FILE *file, Lexer &lexer, Parser &parser)
     fprintf(file, "number of tokens: %lu\n", tokens->size());
     fprintf(file, "===FILE===\n");
     fprintf(file, "%s\n", lexer.getFile()->contents);
+
     fprintf(file, "===TOKENS===\n");
     for (usize i = 0; i < tokens->size(); i++)
     {
         const Token &tkn = tokens->at(i);
-        fprintf(file, "[TOKEN]: idx: %u, len: %u, type: %s, val: `%.*s`\n", tkn.index, tkn.length,
-                tkn_type_describe(tkn.type), tkn.length, lexer.getFile()->contents + tkn.index);
+        fprintf(file, "[TOKEN]: idx: %u, line: %u, len: %u, type: %s, val: `%.*s`\n", tkn.index,
+                tkn.line, tkn.length, tkn_type_describe(tkn.type), tkn.length,
+                lexer.getFile()->contents + tkn.index);
     }
     fprintf(file, "===TODO: Parser Abstract Syntax Tree===\n");
-    parser.save_log(file);
+    if (parser) parser->save_log(file);
     fprintf(file, "====TODO: TYPECHECKER ====\n");
     log_info("Logging complete");
 }
@@ -42,24 +44,27 @@ void log_compilation(FILE *file, Lexer &lexer, Parser &parser)
 u8 compile(compile_options *options, compilation_state *state) noexcept
 {
     ASSERT_NULL(state, "state is null");
-    file_t *file;
     // Parser *parser;
     u8 exit = 0;
 
     // Read file
-    *state = cs_file_read;
-    file   = file_read(options->filename);
-    if (!file) return EXIT_FAILURE;
+    *state      = cs_file_read;
+    file_t file = file_read(options->filename);
+    if (file.valid_code == valid::failure) return EXIT_FAILURE;
 
     // Lexical analysis
     *state      = cs_lexer;
-    Lexer lexer = Lexer(file);
+    Lexer lexer = Lexer(&file);
     exit        = lexer.lex();
     if (exit == EXIT_FAILURE) return EXIT_FAILURE;
-
+    if (options->lex_only)
+    {
+        log_compilation(fopen("output.log", "wb"), lexer, nullptr);
+        return exit;
+    }
     // parse lexed tokens to Abstract Syntax tree
     *state        = cs_parser;
-    Parser parser = Parser(lexer);
+    Parser parser = Parser(&lexer); // parser does not own lexer pointer
     exit          = parser.parse();
 
     // log compiliation
@@ -68,7 +73,7 @@ u8 compile(compile_options *options, compilation_state *state) noexcept
         FILE *output = fopen("output.log", "wb");
         if (output)
         {
-            log_compilation(output, lexer, parser);
+            log_compilation(output, lexer, &parser);
             fclose(output);
         }
     }

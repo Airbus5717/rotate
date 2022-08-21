@@ -3,8 +3,6 @@
 
 #include "lexer.hpp"
 #include "token.hpp"
-#include <memory>
-#include <string>
 
 namespace rotate
 {
@@ -59,7 +57,7 @@ enum class unary_type : u8
 {
     negate_minus = 0,
     negate_bool,
-    reference_ptr, // node must be an identifier to a variable
+    other,
 };
 
 // kept as non class to use as int;
@@ -130,7 +128,7 @@ struct RType
 
     ~RType() = default;
 
-    virtual std::string to_string()
+    virtual std::string to_string() const
     {
         return "RType(" + rt_type_to_string(_type) + ", mut: " + (mut ? "true" : "false") + " )";
     }
@@ -144,7 +142,8 @@ struct RTArrayType : public RType
     }
 
     ~RTArrayType() = default;
-    std::string to_string()
+
+    std::string to_string() const
     {
         TODO("TO_STRING RTArrayType");
         return "";
@@ -157,10 +156,11 @@ struct RTStructType : public RType
     std::vector<RType> types;
 
     ~RTStructType() = default;
-    std::string to_string()
+
+    std::string to_string() const
     {
-        TODO("TO_STRING RTStructType");
-        return "";
+        TODO("RTStructType");
+        return std::string{"TODO"};
     }
 };
 
@@ -188,13 +188,14 @@ static const std::string literal_type_to_string(literal_type t)
 struct ASTNode
 {
     const u32 index; // token index
+
     ASTNode(u32 index) : index(index)
     {
     }
 
     virtual ~ASTNode() = default;
 
-    virtual std::string to_string()
+    virtual std::string to_string() const
     {
         return std::string{"ASTNode(index: " + std::to_string(index) + ")"};
     }
@@ -203,13 +204,14 @@ struct ASTNode
 struct LiteralNode : public ASTNode
 {
     literal_type type;
+
     LiteralNode(const u32 index, literal_type type) : ASTNode(index), type(type)
     {
     }
 
     ~LiteralNode() = default;
 
-    std::string to_string()
+    std::string to_string() const
     {
         return std::string{"LiteralNode(Type: " + literal_type_to_string(type) +
                            ", index: " + std::to_string(index) + ")"};
@@ -218,7 +220,10 @@ struct LiteralNode : public ASTNode
 
 struct ArrayIndexLiteral : public ASTNode
 {
+
+    // index is name
     ASTNode *arr_index;
+
     ArrayIndexLiteral(const u32 name_index, ASTNode *arr_index)
         : ASTNode(name_index), arr_index(arr_index)
     {
@@ -226,15 +231,17 @@ struct ArrayIndexLiteral : public ASTNode
 
     ~ArrayIndexLiteral() = default;
 
-    std::string to_string()
+    std::string to_string() const
     {
-        return "TODO To_String()";
+        return std::string{"ArrayIndexLiteral(name_index: " + std::to_string(index) +
+                           ", array_index: " + arr_index->to_string() + ")"};
     }
 };
 
 struct StringLiteralNode : public ASTNode
 {
     u32 size;
+
     StringLiteralNode(const u32 index, const u32 token_length)
         : ASTNode(index), size(token_length - 2)
     {
@@ -242,7 +249,7 @@ struct StringLiteralNode : public ASTNode
 
     ~StringLiteralNode() = default;
 
-    std::string to_string()
+    std::string to_string() const
     {
         return std::string{"String(index: " + std::to_string(index) +
                            ", size: " + std::to_string(size) + ")"};
@@ -253,6 +260,7 @@ struct UnaryNode : public ASTNode
 {
     unary_type type;
     ASTNode *arg;
+
     UnaryNode(const u32 index, unary_type untype, ASTNode *arg)
         : ASTNode(index), type(untype), arg(arg)
     {
@@ -263,7 +271,7 @@ struct UnaryNode : public ASTNode
         delete arg;
     }
 
-    std::string to_string()
+    std::string to_string() const
     {
         return std::string{
             "UnaryNode(type: " + std::string((type == unary_type::negate_bool) ? "`!`" : "`-`") +
@@ -275,6 +283,7 @@ struct ArrayLiteralNode : public ASTNode
 {
     std::vector<ASTNode *> elements;
     usize size;
+
     ArrayLiteralNode(u32 index, usize size) : ASTNode(index), size(size)
     {
     }
@@ -285,7 +294,7 @@ struct ArrayLiteralNode : public ASTNode
             delete s;
     }
 
-    std::string to_string()
+    std::string to_string() const
     {
         TODO("to_string ArrayLiteralNode implementation");
     }
@@ -294,8 +303,8 @@ struct ArrayLiteralNode : public ASTNode
 struct BinaryOpNode : public ASTNode
 {
     token_type type;
-    ASTNode *rhs;
-    ASTNode *lhs;
+    ASTNode *rhs, *lhs;
+
     // index is the binary operator
     BinaryOpNode(u32 index, token_type bin_type, ASTNode *rhs, ASTNode *lhs)
         : ASTNode(index), type(bin_type), rhs(rhs), lhs(lhs)
@@ -308,7 +317,7 @@ struct BinaryOpNode : public ASTNode
         delete lhs;
     }
 
-    std::string to_string()
+    std::string to_string() const
     {
         return std::string{"BinaryNode(Operator: " + std::string(tkn_type_describe(type)) +
                            ", binary index: " + std::to_string(index) +
@@ -328,7 +337,7 @@ struct GroupingNode : public ASTNode
         delete arg;
     }
 
-    std::string to_string()
+    std::string to_string() const
     {
         return std::string{"GroupingNode(" + arg->to_string() + ")"};
     }
@@ -339,6 +348,8 @@ struct FuncCallNode : public ASTNode
 };
 
 // don't use it directly
+
+/// AST NODES IN GLOBAL SCOPE
 struct GLASTNode
 {
     const u32 id_index;
@@ -348,9 +359,9 @@ struct GLASTNode
     {
     }
 
-    ~GLASTNode() = default;
+    virtual ~GLASTNode() = default;
 
-    virtual std::string to_string()
+    virtual std::string to_string() const
     {
         return "ASTNode(index: " + std::to_string(id_index) +
                ", public: " + (is_public ? "true" : "false") + ")";
@@ -376,7 +387,7 @@ struct GLConst : public GLASTNode
         delete value;
     }
 
-    std::string to_string()
+    std::string to_string() const
     {
         return "GLConst(index: " + std::to_string(id_index) +
                ", public: " + (is_public ? "true" : "false") +
@@ -390,12 +401,26 @@ struct GLStructure : public GLASTNode
     std::vector<RType> types; // ordered
 
     ~GLStructure() = default;
+
+    std::string to_string() const
+    {
+        return std::string{"GLStructure(TODO)"};
+    }
 };
 
 struct GLEnumeration : public GLASTNode
 {
+    GLEnumeration() : GLASTNode(0, false)
+    {
+        TODO("GLEnumeration constructor implementation");
+    }
     // TODO: later
     ~GLEnumeration() = default;
+
+    std::string to_string() const
+    {
+        return std::string{"GLEnumeration(TODO)"};
+    }
 };
 
 struct GLImportStmt
@@ -408,9 +433,9 @@ struct GLImportStmt
 
     ~GLImportStmt() = default;
 
-    std::string to_string()
+    std::string to_string() const
     {
-        return std::string{"GLImport(index: " + std::to_string(string_index) + ")"};
+        return std::string{"GLImport(string index: " + std::to_string(string_index) + ")"};
     }
 };
 
@@ -422,7 +447,7 @@ struct GLImportStmt
 class Parser
 {
   public:
-    Parser(Lexer &);
+    Parser(Lexer *);
     ~Parser(); // don't free lexer
 
     // parser starting point
@@ -431,14 +456,16 @@ class Parser
     void save_log(FILE *);
 
   private:
-    std::vector<GLConst *> GLConstants;
-    std::vector<GLFunction *> GLFunctions;
-    std::vector<GLStructure *> GLStructures;
-    std::vector<GLEnumeration *> GLEnums;
-    std::vector<GLImportStmt *> GLImports;
+    std::vector<GLConst> GLConstants;
+    std::vector<GLFunction> GLFunctions;
+    std::vector<GLStructure> GLStructures;
+    std::vector<GLEnumeration> GLEnums;
+    std::vector<GLImportStmt> GLImports;
 
-    // weak ptr to tokens from the lexer(the owner)
-    std::vector<Token> *tokens;
+    // weak ptr to the lexer(parser doesnt own the lexer)
+    Lexer *lexer;
+    std::vector<Token> *tokens; // also this
+
     u32 index;
     u8 exit;
 
@@ -448,11 +475,11 @@ class Parser
     inline void advance();
     inline Token current();
     inline Token past();
-    Token peek(); // compiler recommends against inlining
+    inline Token peek(); // compiler recommends against inlining
     inline Token next();
 
     // parser report errs
-    u8 parser_report_error(token_type);
+    u8 parser_report_error(Token);
 
     // parsing gl_stmts
     u8 parse_gl_imports();
@@ -462,14 +489,27 @@ class Parser
     u8 parse_gl_enum(bool);
 
     RType parse_type(bool);
-    ASTNode *parse_node(); // nodes are allocated in the heap
-    LiteralNode *parse_literal();
+
+    ASTNode *parse_node();                     // nodes are allocated in the heap
     ASTNode *parse_node_helper(ASTNode *, s8); // nodes are allocated in the heap
-    bool is_token_terminator(token_type);
+
+    ASTNode *parse_primary();
+    void parse_literal(ASTNode *, Token);
+    void parse_unary(ASTNode *, Token);
+    void parse_grouping(ASTNode *);
+    ASTNode *parse_binary(ASTNode *);
+    void parse_function_or_name(ASTNode *);
+    void parse_array_index(ASTNode *);
+    void parse_array_literal(ASTNode *);
+    void parse_function_call(ASTNode *);
+    void parse_object_member(ASTNode *);
 
     literal_type convert_tkn_type_to_literal_type(token_type);
+    unary_type convert_tkn_type_to_unary_type(token_type);
     bool is_token_binary_op(token_type);
-    bool is_primary(token_type);
+    bool is_literal(token_type);
+    bool is_unary(token_type);
+    bool is_token_terminator(token_type);
     inline s8 precedence(token_type);
 };
 

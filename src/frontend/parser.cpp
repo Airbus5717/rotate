@@ -7,9 +7,9 @@ namespace rotate
 {
 
 //
-Parser::Parser(Lexer &lexer) : tokens(lexer.getTokens())
+Parser::Parser(Lexer *lexer) : lexer(lexer), tokens(lexer->getTokens())
 {
-    ASSERT_NULL(&this->tokens, "lexer tokens passed is null");
+    ASSERT_NULL(this->tokens, "lexer tokens passed is null");
 }
 
 // TODO:
@@ -20,14 +20,13 @@ u8 Parser::parse()
     exit = 0, index = 0;
     for (;;)
     {
-        token_type _type = current().type;
-        bool is_public   = false;
-        if (_type == token_type::Public)
+        bool is_public = false;
+        if (current().type == token_type::Public)
         {
             advance();
             is_public = true;
         }
-        switch (_type)
+        switch (current().type)
         {
             case token_type::Import:
                 exit = parse_gl_imports();
@@ -47,10 +46,9 @@ u8 Parser::parse()
             case token_type::EOT:
                 return exit;
             default:
-                return parser_report_error(_type);
+                return parser_report_error(current());
         }
-        if (exit == EXIT_FAILURE) parser_report_error(_type);
-        advance();
+        if (exit == EXIT_FAILURE) return parser_report_error(current());
     }
     return exit;
 }
@@ -67,7 +65,7 @@ inline bool Parser::expect(token_type _type)
     //! which defaults to EXIT_SUCCESS OR EXIT_FAILURE;
     //! bools are opposite
     //! ---V--- notice the negate symbol;
-    return !parser_report_error(_type);
+    return !parser_report_error(current());
 }
 
 inline bool Parser::consume(token_type _type)
@@ -96,7 +94,7 @@ inline Token Parser::past()
     return tokens->at(index - 1);
 }
 
-Token Parser::peek()
+inline Token Parser::peek()
 {
     return tokens->at(index + 1);
 }
@@ -104,7 +102,8 @@ Token Parser::peek()
 u8 Parser::parse_gl_imports()
 {
     advance();
-    TODO("import parser implementation");
+    if (expect(token_type::String)) GLImports.emplace_back(past().index);
+    if (consume(token_type::SemiColon)) return EXIT_SUCCESS;
     return EXIT_FAILURE;
 }
 
@@ -119,20 +118,11 @@ u8 Parser::parse_gl_function(bool is_public)
 u8 Parser::parse_gl_var_const(bool is_public)
 {
     advance();
-    auto *x = new GLConst(current().index, is_public, RType(rt_type::undecided, true), nullptr);
-    expect(token_type::Identifier);
-    expect(token_type::Equal);
-    ASSERT_NULL(x, "Error allocating for GLConstant");
-    x->value = parse_node();
-    expect(token_type::SemiColon);
-
-    if (x->value != nullptr)
-    {
-        GLConstants.push_back(x);
-        return EXIT_SUCCESS;
-    }
-    delete x;
-    return EXIT_FAILURE;
+    auto _id_index = current().index;
+    if (expect(token_type::Identifier)) return EXIT_FAILURE;
+    if (expect(token_type::Equal)) return EXIT_FAILURE;
+    GLConstants.emplace_back(_id_index, is_public, RType(rt_type::undecided, true), parse_node());
+    return expect(token_type::SemiColon);
 }
 
 u8 Parser::parse_gl_struct(bool is_public)
@@ -151,21 +141,27 @@ u8 Parser::parse_gl_enum(bool is_public)
     return EXIT_FAILURE;
 }
 
-u8 Parser::parser_report_error(token_type _type)
-{
-    fprintf(stderr, "Error at %s at index: %u\n", tkn_type_describe(_type), current().index);
-    return exit = EXIT_FAILURE;
-}
-
 bool Parser::is_token_terminator(token_type _type)
 {
+    // `;`, `}`, `)`, `,`
     switch (_type)
     {
         case token_type::SemiColon:
         case token_type::CloseCurly:
         case token_type::CloseParen:
         case token_type::Comma:
-        case token_type::Equal:
+        // also
+        case token_type::Let:
+        case token_type::Function:
+        case token_type::BuiltinFunc:
+        case token_type::Var:
+        case token_type::Const:
+        case token_type::Public:
+        case token_type::Enum:
+        case token_type::Struct:
+        case token_type::Include:
+        case token_type::Import:
+        case token_type::Return:
             return true;
         default:
             return false;
@@ -177,32 +173,99 @@ bool Parser::is_token_terminator(token_type _type)
 ASTNode *Parser::parse_node_helper(ASTNode *lhs, s8 minprec)
 {
     advance();
-    Token p = peek();
-    while (is_token_binary_op(p.type) && precedence(p.type) >= minprec)
-    {
-        auto op = p;
-        advance();
-        ASTNode *rhs = parse_literal();
-
-        p = peek();
-        while (is_token_binary_op(p.type) && precedence(p.type) >= precedence(op.type))
-        {
-            rhs = parse_node_helper(rhs, precedence(op.type) +
-                                             (precedence(p.type) > precedence(op.type)));
-
-            p = peek();
-        }
-        // Binary Operator index
-        lhs = new BinaryOpNode(op.index, op.type, rhs, lhs);
-    }
-    return lhs;
+    UNUSED(lhs), UNUSED(minprec);
+    TODO("parse node helper");
+    return nullptr;
 }
 
-LiteralNode *Parser::parse_literal()
+void Parser::parse_grouping(ASTNode *node)
 {
-    return is_primary(current().type)
-               ? new LiteralNode(current().index, convert_tkn_type_to_literal_type(current().type))
-               : nullptr;
+    advance();
+    node = new GroupingNode(current().index, parse_node());
+    expect(token_type::CloseParen);
+    UNUSED(node);
+}
+
+ASTNode *Parser::parse_primary()
+{
+    auto tkn      = current();
+    ASTNode *node = nullptr;
+    if (tkn.type == token_type::OpenParen)
+        parse_grouping(node);
+    else if (is_unary(tkn.type))
+        parse_unary(node, tkn);
+    else if (tkn.type == token_type::Identifier)
+        parse_function_or_name(node);
+    else if (is_literal(tkn.type) && is_token_terminator(peek().type))
+        parse_literal(node, tkn);
+    else if (is_token_binary_op(peek().type))
+        parse_binary(node);
+    else if (tkn.type == token_type::String)
+        node = new StringLiteralNode(current().index, current().length);
+    else
+        parser_report_error(tkn);
+    advance();
+    return node;
+}
+
+void Parser::parse_literal(ASTNode *node, Token tkn)
+{
+    node = new LiteralNode(tkn.index, convert_tkn_type_to_literal_type(tkn.type));
+    UNUSED(node); // makes the compiler shutup
+}
+
+void Parser::parse_unary(ASTNode *node, Token tkn)
+{
+    node = new UnaryNode(tkn.index, convert_tkn_type_to_unary_type(tkn.type), parse_node());
+    UNUSED(node); // makes the compiler shutup
+}
+
+ASTNode *Parser::parse_binary(ASTNode *rhs)
+{
+    TODO("parse binary");
+    UNUSED(rhs);
+    return nullptr;
+}
+
+void Parser::parse_function_or_name(ASTNode *node)
+{
+    if (peek().type == token_type::OpenParen)
+        parse_function_call(node);
+    else if (peek().type == token_type::Dot)
+        parse_object_member(node);
+    else if (peek().type == token_type::OpenSQRBrackets)
+        parse_array_index(node);
+    else
+        parse_literal(node, current());
+}
+
+void Parser::parse_object_member(ASTNode *node)
+{
+    // struct.member
+    /*
+        struct x {
+            g: int;
+        }
+
+        parsing ---> x.g;
+    */
+    TODO("parse members");
+    UNUSED(node);
+}
+
+void Parser::parse_function_call(ASTNode *node)
+{
+    // TODO: parse arguments + consume commas
+    UNUSED(node);
+    TODO("parse function call");
+}
+
+void Parser::parse_array_index(ASTNode *node)
+{
+    consume(token_type::OpenSQRBrackets);
+    node = new ArrayIndexLiteral(past().index, parse_node());
+    expect(token_type::CloseSQRBrackets);
+    UNUSED(node); // makes the compiler shutup
 }
 
 ASTNode *Parser::parse_node()
@@ -218,12 +281,16 @@ ASTNode *Parser::parse_node()
 
         Literal = {
             String, Char(also EscapedChar), Integer, Float, Nil, True, False, Identifier,
-            Builtin_function
+       ArrayID[index] Builtin_function,
         }
 
         TODO: Array_literal = {
-            [ literals seperated with commas ]
+            [ Nodes seperated with commas ]
         }
+
+        Array = [
+          ArrayIdentifier[index]
+        ]
 
         Unary = {
             `!` or `-` then a ASTNode
@@ -243,10 +310,10 @@ ASTNode *Parser::parse_node()
         3 - BinaryOp
     */
 
-    return parse_node_helper(parse_literal(), 0);
+    return parse_primary();
 }
 
-bool Parser::is_primary(token_type type)
+bool Parser::is_literal(token_type type)
 {
     switch (type)
     {
@@ -341,6 +408,18 @@ inline s8 Parser::precedence(token_type type)
     return -1;
 }
 
+bool Parser::is_unary(token_type tt)
+{
+    switch (tt)
+    {
+        case token_type::Not:
+        case token_type::MINUS: // it could be a binary operator too
+            return true;
+        default:
+            return false;
+    }
+}
+
 literal_type Parser::convert_tkn_type_to_literal_type(token_type tt)
 {
     switch (tt)
@@ -358,13 +437,28 @@ literal_type Parser::convert_tkn_type_to_literal_type(token_type tt)
             return literal_type::boolean;
 
         default:
-            break;
+            return literal_type::other;
     }
     return literal_type::other;
 }
 
+unary_type Parser::convert_tkn_type_to_unary_type(token_type tt)
+{
+    switch (tt)
+    {
+        case token_type::MINUS:
+            return unary_type::negate_minus;
+        case token_type::Not:
+            return unary_type::negate_bool;
+        default:
+            return unary_type::other;
+    }
+}
+
 RType Parser::parse_type(bool allow_mut)
 {
+
+    // TODO: deal with allow_mut
     bool mut = consume(token_type::Mutable) && allow_mut;
 
     switch (current().type)
@@ -402,25 +496,95 @@ RType Parser::parse_type(bool allow_mut)
     return RType(rt_type::no_type, mut);
 }
 
+// WARN(Airbus5717): Can slow the compiler by multiple magnitutes
 void Parser::save_log(FILE *file)
 {
     fprintf(file, "--- GLOBAL IMPORTS ---\n");
+    for (const auto &a : GLImports)
+        fprintf(file, "%s\n", a.to_string().c_str());
+
+    // GL constants
     fprintf(file, "\n--- GLOBAL CONSTANTS ---\n");
     for (const auto &c : GLConstants)
-        fprintf(file, "%s\n", c->to_string().c_str());
+        fprintf(file, "%s\n", c.to_string().c_str());
+
+    // GL Functions (functions are always global)
     fprintf(file, "\n--- FUNCTIONS ---\n");
     for (const auto &f : GLFunctions)
+    {
         fprintf(file, "TODO: function foo\n");
+        UNUSED(f);
+    }
 
+    // Structures
     fprintf(file, "\n--- STRUCTURES ---\n");
     for (const auto &s : GLStructures)
+    {
         fprintf(file, "TODO: s\n");
+        UNUSED(s);
+    }
 
+    // Enumerations
     fprintf(file, "\n--- ENUMERATIONS ---\n");
     for (const auto &e : GLEnums)
+    {
         fprintf(file, "TODO: enum\n");
+        UNUSED(e);
+    }
 
+    // END OF LOG (PARSING PHASE)
     fprintf(file, "\n----- END OF PARSER -----\n");
+}
+
+u8 Parser::parser_report_error(const Token tkn)
+{
+    auto file  = lexer->getFile();
+    auto len   = tkn.length;
+    auto index = tkn.index;
+    auto line  = tkn.line;
+
+    if (tkn.type == token_type::EOT) return EXIT_SUCCESS;
+    u32 low = index, col = 0;
+    while (file->contents[low] != '\n' && low > 0)
+    {
+        low--;
+        col++;
+    }
+    low++;
+
+    //
+    u32 _length = index;
+    while (file->contents[_length] != '\n' && _length + 1 < file->length)
+        _length++;
+
+    _length -= low;
+
+    // error msg
+    fprintf(stderr, "> %s%s%s:%u:%u: %serror: expected :%s found :%s %s%s\n", BOLD, WHITE,
+            file->name, line, col, LRED, LBLUE, tkn_type_describe(tkn.type),
+            tkn_type_describe(tkn.type), RESET);
+
+    // line from source code
+    fprintf(stderr, " %s%u%s | %.*s\n", LYELLOW, line, RESET, _length, (file->contents + low));
+
+    u32 num_line_digits = get_digits_from_number(line);
+
+    // arrows pointing to error location
+    u32 spaces = index - low + 1;
+    if (len < 101)
+    {
+        char *arrows = (char *)alloca(len + 1);
+        memset(arrows, '^', len);
+        arrows[len] = '\0';
+
+        fprintf(stderr, " %*c |%*c%s%s%s\n", num_line_digits, ' ', spaces, ' ', LRED, BOLD, arrows);
+    }
+    else
+    {
+        fprintf(stderr, " %*c |%*c%s%s^^^---...\n", num_line_digits, ' ', spaces, ' ', LRED, BOLD);
+    }
+    TODO("Parser error messages fix implementation");
+    return exit = EXIT_FAILURE;
 }
 
 } // namespace rotate

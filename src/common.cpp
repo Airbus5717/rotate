@@ -25,7 +25,9 @@ void exit_error(const char *str)
 
 void log_debug(const char *str)
 {
+#if DEBUG
     fprintf(stderr, "[%sDEBUG%s]: %s\n", LYELLOW, RESET, str);
+#endif
 }
 
 void log_info(const char *str)

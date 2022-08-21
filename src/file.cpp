@@ -3,16 +3,17 @@
 namespace rotate
 {
 
-// This function is written in C-style (C++ way is confusing and slower)
-file_t *file_read(const char *name) noexcept
+file_t file_read(const char *name) noexcept
 {
+
     u16 len              = strlen(name);
     const char *file_ext = &(name)[len - 3];
     if (strcmp(file_ext, ".vr") != 0)
     {
         fprintf(stderr, "%s%serror:%s file name: `%s` must end with `.vr`%s\n", BOLD, LRED, WHITE,
                 name, RESET);
-        return NULL;
+
+        return file_t(nullptr, nullptr, 0, valid::failure);
     }
 
     // open file
@@ -21,7 +22,7 @@ file_t *file_read(const char *name) noexcept
     {
         // display error message if file does not exist
         log_error("File does not exist");
-        return nullptr;
+        return file_t(nullptr, nullptr, 0, valid::failure);
     }
 
     // Calculate the file length
@@ -30,7 +31,7 @@ file_t *file_read(const char *name) noexcept
     {
         log_error("File is empty");
         fclose(file);
-        return nullptr;
+        return file_t(nullptr, nullptr, 0, valid::failure);
     }
     const usize length = (usize)ftell(file);
 
@@ -38,7 +39,7 @@ file_t *file_read(const char *name) noexcept
     {
         log_error("File too large");
         fclose(file);
-        return nullptr;
+        return file_t(nullptr, nullptr, 0, valid::failure);
     }
     // rewind the fseek to the beginning of the file
     rewind(file);
@@ -53,7 +54,7 @@ file_t *file_read(const char *name) noexcept
         log_error("Read file error");
         fclose(file);
         delete[] buffer;
-        return nullptr;
+        return file_t(nullptr, nullptr, 0, valid::failure);
     }
 
     // add NULL charactor (3 for extra safety)
@@ -66,12 +67,12 @@ file_t *file_read(const char *name) noexcept
         log_error("Only ascii text files are supported for compilation");
         fclose(file);
         delete[] buffer;
-        return nullptr;
+        return file_t(nullptr, nullptr, 0, valid::failure);
     }
 
     // Close the file
     fclose(file);
-    return new file_t(name, buffer, length);
+    return file_t(name, buffer, length, valid::success);
 }
 
 } // namespace rotate

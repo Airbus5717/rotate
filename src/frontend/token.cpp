@@ -78,10 +78,6 @@ const char *tkn_type_describe(const token_type type) noexcept
             return "and";
         case token_type::Or:
             return "or";
-        case token_type::DoubleQuotes:
-            return "double quotes `\"`";
-        case token_type::Quote:
-            return "quote `'`";
         case token_type::Float:
             return "float";
         case token_type::Let:
@@ -405,6 +401,20 @@ const char *advice(const error_type error) noexcept
     return ("\x1b[33m"
             "TODO: error msg implementation."
             "\x1b[0m");
+}
+
+bool is_token_a_number(token_type tt)
+{
+    switch (tt)
+    {
+        case token_type::Integer:
+        case token_type::BinaryInteger:
+        case token_type::Float:
+        case token_type::HexInteger:
+            return true;
+        default:
+            return false;
+    }
 }
 
 } // namespace rotate

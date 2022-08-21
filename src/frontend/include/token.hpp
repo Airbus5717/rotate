@@ -67,8 +67,6 @@ enum class token_type : u8
     NotEqual,         // "!="
     And,              // 'and'
     Or,               // 'or'
-    DoubleQuotes,     // "
-    Quote,            // '
     Comma,            // ,
     Public,           // 'pub'
     Match,            // 'match'
@@ -94,21 +92,18 @@ struct Token
     token_type type;
     u32 index;
     u32 length;
+    u32 line;
 
-    Token(token_type type, u32 index, u32 length) : type(type), index(index), length(length)
+    Token(token_type type, u32 index, u32 length, u32 line)
+        : type(type), index(index), length(length), line(line)
     {
     }
 
-    void print(FILE *file)
+    const std::string to_string() const
     {
-        fprintf(file, "Token(type: `%s`, index: `%u`, length: `%u`)", tkn_type_describe(type),
-                index, length);
-    }
-
-    void println(FILE *file)
-    {
-        fprintf(file, "Token(type: `%s`, index: `%u`, length: `%u`)\n", tkn_type_describe(type),
-                index, length);
+        return std::string{"Token{type: " + std::string(tkn_type_describe(type)) + ", index: " +
+                           std::to_string(index) + ", length: " + std::to_string(length) +
+                           ", line: " + std::to_string(line)};
     }
 };
 
@@ -158,10 +153,11 @@ enum class error_type : u32
     FN_TYPE_REQUIRED,
 };
 
-const char *get_keyword_or_type(const char *string, const Token &tkn);
-const char *advice(const error_type error) noexcept;
-const char *err_msgsfunc(const error_type error) noexcept;
-bool is_token_type_length_variable(token_type type);
+const char *get_keyword_or_type(const char *, const Token &);
+const char *advice(const error_type) noexcept;
+const char *err_msgsfunc(const error_type) noexcept;
+bool is_token_type_length_variable(token_type);
+bool is_token_a_number(token_type);
 
 } // namespace rotate
 

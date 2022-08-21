@@ -4,13 +4,14 @@
 namespace rotate
 {
 
-// file must not be null and lexer owns the ile ptr
+// file must not be null and lexer owns the file ptr
 Lexer::Lexer(file_t *file)
     : index(0), len(0), line(1), file(file), file_length(file ? file->length : 0), is_done(false),
       error(error_type::UNKNOWN), tokens(new std::vector<Token>())
 {
     ASSERT_NULL(file, "Lexer File passed is a null pointer");
     ASSERT_NULL(tokens, "Lexer vec of tokens passed is a null pointer");
+    tokens->reserve(file->length / 2);
 }
 
 Lexer::~Lexer() noexcept
@@ -67,7 +68,7 @@ inline void Lexer::skip_whitespace() noexcept
 u8 Lexer::lex_director()
 {
     skip_whitespace();
-    len = 0;
+    len = 0, begin_tok_line = line;
 
     const char c = current();
 
@@ -630,7 +631,8 @@ u8 Lexer::report_error()
 u8 Lexer::add_token(const token_type type)
 {
     // index at the end of the token
-    tokens->push_back(Token(type, index, len));
+    // NOTE(Airbus5717): emplace_back constructs the token in the vector
+    tokens->emplace_back(type, index, len, begin_tok_line);
 
     for (u32 i = 0; i < len; i++)
         advance();
