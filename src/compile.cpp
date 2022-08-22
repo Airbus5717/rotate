@@ -7,11 +7,6 @@
 namespace rotate
 {
 
-void compile_options::log_error_unknown_flag(const char *str)
-{
-    fprintf(stderr, "[%sWARN%s] : Ignored flag: `%s`\n", LYELLOW, RESET, str);
-}
-
 void log_compilation(FILE *file, Lexer &lexer, Parser *parser)
 {
     time_t rawtime;

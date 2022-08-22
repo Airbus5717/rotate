@@ -170,12 +170,10 @@ bool Parser::is_token_terminator(token_type _type)
     return false;
 }
 
-ASTNode *Parser::parse_node_helper(ASTNode *lhs, s8 minprec)
+ASTNode *Parser::parse_next_node()
 {
     advance();
-    UNUSED(lhs), UNUSED(minprec);
-    TODO("parse node helper");
-    return nullptr;
+    return parse_node();
 }
 
 void Parser::parse_grouping(ASTNode *node)
@@ -198,31 +196,38 @@ ASTNode *Parser::parse_primary()
         parse_function_or_name(node);
     else if (is_literal(tkn.type) && is_token_terminator(peek().type))
         parse_literal(node, tkn);
-    else if (is_token_binary_op(peek().type))
-        parse_binary(node);
     else if (tkn.type == token_type::String)
         node = new StringLiteralNode(current().index, current().length);
     else
-        parser_report_error(tkn);
+        node = parse_binary(node);
+
+    //
     advance();
+    if (!is_token_terminator(current().type) || node == nullptr)
+    {
+        parser_report_error(current());
+        return nullptr;
+    }
+
     return node;
 }
 
 void Parser::parse_literal(ASTNode *node, Token tkn)
 {
     node = new LiteralNode(tkn.index, convert_tkn_type_to_literal_type(tkn.type));
-    UNUSED(node); // makes the compiler shutup
+    advance();
+    UNUSED(node); // make the compiler shutup
 }
 
 void Parser::parse_unary(ASTNode *node, Token tkn)
 {
-    node = new UnaryNode(tkn.index, convert_tkn_type_to_unary_type(tkn.type), parse_node());
-    UNUSED(node); // makes the compiler shutup
+    node = new UnaryNode(tkn.index, convert_tkn_type_to_unary_type(tkn.type), parse_next_node());
+    UNUSED(node); // make the compiler shutup
 }
 
 ASTNode *Parser::parse_binary(ASTNode *rhs)
 {
-    TODO("parse binary");
+    TODO("parse _ binary");
     UNUSED(rhs);
     return nullptr;
 }
@@ -281,7 +286,7 @@ ASTNode *Parser::parse_node()
 
         Literal = {
             String, Char(also EscapedChar), Integer, Float, Nil, True, False, Identifier,
-       ArrayID[index] Builtin_function,
+            ArrayID[index] Builtin_function,
         }
 
         TODO: Array_literal = {
@@ -543,14 +548,12 @@ u8 Parser::parser_report_error(const Token tkn)
     auto index = tkn.index;
     auto line  = tkn.line;
 
-    if (tkn.type == token_type::EOT) return EXIT_SUCCESS;
     u32 low = index, col = 0;
     while (file->contents[low] != '\n' && low > 0)
     {
         low--;
         col++;
     }
-    low++;
 
     //
     u32 _length = index;

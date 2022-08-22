@@ -62,7 +62,10 @@ struct compile_options
 
     ~compile_options() = default;
 
-    void log_error_unknown_flag(const char *str);
+    void log_error_unknown_flag(const char *str)
+    {
+        fprintf(stderr, "[%sWARN%s] : Ignored flag: `%s`\n", LYELLOW, RESET, str);
+    }
 };
 
 //

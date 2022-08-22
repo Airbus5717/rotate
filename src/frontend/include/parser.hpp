@@ -490,8 +490,9 @@ class Parser
 
     RType parse_type(bool);
 
-    ASTNode *parse_node();                     // nodes are allocated in the heap
-    ASTNode *parse_node_helper(ASTNode *, s8); // nodes are allocated in the heap
+    // ALL nodes are heap allocated
+    ASTNode *parse_node();
+    ASTNode *parse_next_node();
 
     ASTNode *parse_primary();
     void parse_literal(ASTNode *, Token);

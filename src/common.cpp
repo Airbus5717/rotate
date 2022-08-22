@@ -23,6 +23,10 @@ void exit_error(const char *str)
     exit(1);
 }
 
+void log_warn(const char *str)
+{
+    fprintf(stderr, "[%sWARN%s]: %s\n", LYELLOW, RESET, str);
+}
 void log_debug(const char *str)
 {
 #if DEBUG

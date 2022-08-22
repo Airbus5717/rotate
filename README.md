@@ -3,12 +3,19 @@
 - a work in progress language 
 
 ```cpp
-fn main() void {
-    @println("Hello World");
+import "io";
+
+fn main() {
+    println("Hello World");
 }
 ```
 
 
 ## Progress
 - [x] Lexer
-- [ ] Parser
+- [] Parser
+
+## Docs
+ moved to [https://github.com/rotate-lang/documentation]
+
+
