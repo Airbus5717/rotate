@@ -2,8 +2,6 @@
 #define ROTATE_DEFINE
 
 // C++ standard library
-#include <memory>
-#include <memory_resource>
 #include <string>
 #include <vector>
 
@@ -37,12 +35,6 @@ typedef uint64_t u64;
 
 typedef unsigned long long int usize;
 typedef signed long long int isize;
-
-using std::make_shared;
-using std::make_unique;
-using std::shared_ptr;
-using std::unique_ptr;
-using std::weak_ptr;
 
 #define ASSERT(expr, msg)                                                                          \
     do                                                                                             \
@@ -98,7 +90,6 @@ using std::weak_ptr;
 
 #define UNUSED(x) (void)(x)
 #define EXIT_DONE 3
-
 // terminal colors
 #define GREEN  "\x1b[32m"
 #define YELLOW "\x1b[33m"

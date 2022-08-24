@@ -53,6 +53,7 @@ u8 Parser::parse()
     return exit;
 }
 
+// throws error msg during mismatch
 inline bool Parser::expect(token_type _type)
 {
     if (_type == current().type)
@@ -68,6 +69,7 @@ inline bool Parser::expect(token_type _type)
     return !parser_report_error(current());
 }
 
+// does not throw error msgs
 inline bool Parser::consume(token_type _type)
 {
     // same as expect but returns false without throwing error
@@ -102,8 +104,13 @@ inline Token Parser::peek()
 u8 Parser::parse_gl_imports()
 {
     advance();
+    // advance ----v to next (which should be a string)
+    // EXAMPLE() `import "io";`
+    //                     | |
     if (expect(token_type::String)) GLImports.emplace_back(past().index);
-    if (consume(token_type::SemiColon)) return EXIT_SUCCESS;
+    //                       |
+    //                       |
+    if (expect(token_type::SemiColon)) return EXIT_SUCCESS;
     return EXIT_FAILURE;
 }
 
@@ -117,12 +124,13 @@ u8 Parser::parse_gl_function(bool is_public)
 
 u8 Parser::parse_gl_var_const(bool is_public)
 {
+    // const id = node;
     advance();
     auto _id_index = current().index;
-    if (expect(token_type::Identifier)) return EXIT_FAILURE;
-    if (expect(token_type::Equal)) return EXIT_FAILURE;
+    if (!expect(token_type::Identifier)) return EXIT_FAILURE;
+    if (!expect(token_type::Equal)) return EXIT_FAILURE;
     GLConstants.emplace_back(_id_index, is_public, RType(rt_type::undecided, true), parse_node());
-    return expect(token_type::SemiColon);
+    return !expect(token_type::SemiColon);
 }
 
 u8 Parser::parse_gl_struct(bool is_public)
@@ -150,18 +158,6 @@ bool Parser::is_token_terminator(token_type _type)
         case token_type::CloseCurly:
         case token_type::CloseParen:
         case token_type::Comma:
-        // also
-        case token_type::Let:
-        case token_type::Function:
-        case token_type::BuiltinFunc:
-        case token_type::Var:
-        case token_type::Const:
-        case token_type::Public:
-        case token_type::Enum:
-        case token_type::Struct:
-        case token_type::Include:
-        case token_type::Import:
-        case token_type::Return:
             return true;
         default:
             return false;
@@ -201,11 +197,11 @@ ASTNode *Parser::parse_primary()
     else
         node = parse_binary(node);
 
-    //
-    advance();
     if (!is_token_terminator(current().type) || node == nullptr)
     {
+        puts("at parse node");
         parser_report_error(current());
+        TODO(tkn_type_describe(current().type));
         return nullptr;
     }
 
@@ -504,17 +500,17 @@ RType Parser::parse_type(bool allow_mut)
 // WARN(Airbus5717): Can slow the compiler by multiple magnitutes
 void Parser::save_log(FILE *file)
 {
-    fprintf(file, "--- GLOBAL IMPORTS ---\n");
+    fprintf(file, "*** GLOBAL IMPORTS\n");
     for (const auto &a : GLImports)
         fprintf(file, "%s\n", a.to_string().c_str());
 
     // GL constants
-    fprintf(file, "\n--- GLOBAL CONSTANTS ---\n");
+    fprintf(file, "\n*** GLOBAL CONSTANTS \n");
     for (const auto &c : GLConstants)
         fprintf(file, "%s\n", c.to_string().c_str());
 
     // GL Functions (functions are always global)
-    fprintf(file, "\n--- FUNCTIONS ---\n");
+    fprintf(file, "\n*** FUNCTIONS \n");
     for (const auto &f : GLFunctions)
     {
         fprintf(file, "TODO: function foo\n");
@@ -522,7 +518,7 @@ void Parser::save_log(FILE *file)
     }
 
     // Structures
-    fprintf(file, "\n--- STRUCTURES ---\n");
+    fprintf(file, "\n*** STRUCTURES \n");
     for (const auto &s : GLStructures)
     {
         fprintf(file, "TODO: s\n");
@@ -530,15 +526,12 @@ void Parser::save_log(FILE *file)
     }
 
     // Enumerations
-    fprintf(file, "\n--- ENUMERATIONS ---\n");
+    fprintf(file, "\n*** ENUMERATIONS \n");
     for (const auto &e : GLEnums)
     {
         fprintf(file, "TODO: enum\n");
         UNUSED(e);
     }
-
-    // END OF LOG (PARSING PHASE)
-    fprintf(file, "\n----- END OF PARSER -----\n");
 }
 
 u8 Parser::parser_report_error(const Token tkn)

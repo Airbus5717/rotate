@@ -13,16 +13,19 @@ void log_compilation(FILE *file, Lexer &lexer, Parser *parser)
     time(&rawtime);
 
     const auto *tokens = lexer.getTokens();
+    fprintf(file, "#+TITLE: COMPILATION LOG\n");
+    fprintf(file, "#+OPTIONS: toc:nil num:nil\n");
+    fprintf(file, "#+DATE: %s\n", asctime(localtime(&rawtime)));
+    fprintf(file, "** Meta\n");
+    fprintf(file, "- filename: %s\n", lexer.getFile()->name);
+    fprintf(file, "- file_len: %llu chars\n", lexer.getFile()->length);
+    fprintf(file, "- time: %s", asctime(localtime(&rawtime)));
+    fprintf(file, "- number of tokens: %lu\n\n", tokens->size());
+    fprintf(file, "** FILE\n");
+    fprintf(file, "#+begin_src cpp \n%s\n#+end_src\n\n", lexer.getFile()->contents);
 
-    fprintf(file, "===META===\n");
-    fprintf(file, "filename: %s\n", lexer.getFile()->name);
-    fprintf(file, "file_len: %llu chars\n", lexer.getFile()->length);
-    fprintf(file, "time: %s", asctime(localtime(&rawtime)));
-    fprintf(file, "number of tokens: %lu\n", tokens->size());
-    fprintf(file, "===FILE===\n");
-    fprintf(file, "%s\n", lexer.getFile()->contents);
-
-    fprintf(file, "===TOKENS===\n");
+    fprintf(file, "** TOKENS\n");
+    fprintf(file, "#+begin_src\n");
     for (usize i = 0; i < tokens->size(); i++)
     {
         const Token &tkn = tokens->at(i);
@@ -30,9 +33,10 @@ void log_compilation(FILE *file, Lexer &lexer, Parser *parser)
                 tkn.line, tkn.length, tkn_type_describe(tkn.type), tkn.length,
                 lexer.getFile()->contents + tkn.index);
     }
-    fprintf(file, "===TODO: Parser Abstract Syntax Tree===\n");
+    fprintf(file, "#+end_src\n");
+    fprintf(file, "\n** TODO: Parser Abstract Syntax Tree\n");
     if (parser) parser->save_log(file);
-    fprintf(file, "====TODO: TYPECHECKER ====\n");
+    fprintf(file, "\n** TODO: TYPECHECKER\n");
     log_info("Logging complete");
 }
 
@@ -65,7 +69,7 @@ u8 compile(compile_options *options, compilation_state *state) noexcept
     // log compiliation
     if (options->debug_info)
     {
-        FILE *output = fopen("output.log", "wb");
+        FILE *output = fopen("output.org", "wb");
         if (output)
         {
             log_compilation(output, lexer, &parser);
