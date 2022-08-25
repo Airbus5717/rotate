@@ -48,7 +48,6 @@ u8 Parser::parse()
             default:
                 return parser_report_error(current());
         }
-        if (exit == EXIT_FAILURE) return parser_report_error(current());
     }
     return exit;
 }
@@ -104,22 +103,52 @@ inline Token Parser::peek()
 u8 Parser::parse_gl_imports()
 {
     advance();
-    // advance ----v to next (which should be a string)
+    // points from -v- to -v- (which should be a string)
     // EXAMPLE() `import "io";`
     //                     | |
     if (expect(token_type::String)) GLImports.emplace_back(past().index);
     //                       |
-    //                       |
-    if (expect(token_type::SemiColon)) return EXIT_SUCCESS;
-    return EXIT_FAILURE;
+    //             |-------------------|
+    return !expect(token_type::SemiColon);
+}
+
+void Parser::parse_function_params()
+{
+    TODO("parse function params");
+}
+
+BlockStmt *Parser::parse_block_stmt()
+{
+    if (consume(token_type::CloseCurly)) return new BlockStmt(past().index);
+    TODO("Parse block");
+    return nullptr;
 }
 
 u8 Parser::parse_gl_function(bool is_public)
 {
+    // fn main() {}
     advance();
-    TODO("function parser implementation");
-    UNUSED(is_public);
-    return EXIT_FAILURE;
+    u32 id_index = current().index;
+    RType type{rt_type::no_type, false};
+    BlockStmt *fn_block = nullptr;
+    if (!expect(token_type::Identifier)) return EXIT_FAILURE;
+    if (!expect(token_type::OpenParen)) return EXIT_FAILURE;
+    if (!consume(token_type::CloseParen))
+    {
+        TODO("parse function params");
+        parse_function_params();
+        if (!expect(token_type::CloseParen)) return EXIT_FAILURE;
+    }
+    else if (!consume(token_type::OpenCurly))
+    {
+        // TODO(FIX: false --v--)
+        TODO("parse function type");
+        type = parse_type(false);
+    }
+    fn_block = parse_block_stmt();
+    assert(fn_block);
+    GLFunctions.emplace_back(id_index, is_public, type, fn_block);
+    return fn_block == nullptr;
 }
 
 u8 Parser::parse_gl_var_const(bool is_public)
@@ -128,8 +157,13 @@ u8 Parser::parse_gl_var_const(bool is_public)
     advance();
     auto _id_index = current().index;
     if (!expect(token_type::Identifier)) return EXIT_FAILURE;
-    if (!expect(token_type::Equal)) return EXIT_FAILURE;
-    GLConstants.emplace_back(_id_index, is_public, RType(rt_type::undecided, true), parse_node());
+    if (consume(token_type::Colon))
+        TODO("parse types");
+    else if (!expect(token_type::Equal))
+        return EXIT_FAILURE;
+    ASTNode *node = parse_node();
+    assert(node);
+    GLConstants.emplace_back(_id_index, is_public, RType(rt_type::undecided, true), node);
     return !expect(token_type::SemiColon);
 }
 
@@ -184,7 +218,9 @@ ASTNode *Parser::parse_primary()
 {
     auto tkn      = current();
     ASTNode *node = nullptr;
-    if (tkn.type == token_type::OpenParen)
+    if (is_token_terminator(tkn.type))
+        return nullptr;
+    else if (tkn.type == token_type::OpenParen)
         parse_grouping(node);
     else if (is_unary(tkn.type))
         parse_unary(node, tkn);
@@ -194,15 +230,16 @@ ASTNode *Parser::parse_primary()
         parse_literal(node, tkn);
     else if (tkn.type == token_type::String)
         node = new StringLiteralNode(current().index, current().length);
-    else
+    else if (is_token_binary_op(peek().type))
         node = parse_binary(node);
+    else
+        TODO("parse edge case");
 
-    if (!is_token_terminator(current().type) || node == nullptr)
+    if (!is_token_terminator(current().type))
     {
         puts("at parse node");
         parser_report_error(current());
         TODO(tkn_type_describe(current().type));
-        return nullptr;
     }
 
     return node;
@@ -513,8 +550,7 @@ void Parser::save_log(FILE *file)
     fprintf(file, "\n*** FUNCTIONS \n");
     for (const auto &f : GLFunctions)
     {
-        fprintf(file, "TODO: function foo\n");
-        UNUSED(f);
+        fprintf(file, "%s\n", f.to_string().c_str());
     }
 
     // Structures
@@ -534,12 +570,12 @@ void Parser::save_log(FILE *file)
     }
 }
 
-u8 Parser::parser_report_error(const Token tkn)
+u8 Parser::parser_report_error(const Token expected)
 {
     auto file  = lexer->getFile();
-    auto len   = tkn.length;
-    auto index = tkn.index;
-    auto line  = tkn.line;
+    auto len   = expected.length;
+    auto index = expected.index;
+    auto line  = expected.line;
 
     u32 low = index, col = 0;
     while (file->contents[low] != '\n' && low > 0)
@@ -556,9 +592,9 @@ u8 Parser::parser_report_error(const Token tkn)
     _length -= low;
 
     // error msg
-    fprintf(stderr, "> %s%s%s:%u:%u: %serror: expected :%s found :%s %s%s\n", BOLD, WHITE,
-            file->name, line, col, LRED, LBLUE, tkn_type_describe(tkn.type),
-            tkn_type_describe(tkn.type), RESET);
+    fprintf(stderr, "> %s%s%s:%u:%u: %serror: expected: %s found :%s %s%s\n", BOLD, WHITE,
+            file->name, line, col, LRED, LBLUE, tkn_type_describe(expected.type),
+            tkn_type_describe(current().type), RESET);
 
     // line from source code
     fprintf(stderr, " %s%u%s | %.*s\n", LYELLOW, line, RESET, _length, (file->contents + low));

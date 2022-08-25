@@ -14,7 +14,7 @@ bool is_space_rotate(const char i)
 
 void log_error(const char *str)
 {
-    fprintf(stderr, "[%sERROR%s]: %s\n", LRED, RESET, str);
+    fprintf(stderr, "[%sERROR%s] : %s\n", LRED, RESET, str);
 }
 
 void exit_error(const char *str)
@@ -25,12 +25,15 @@ void exit_error(const char *str)
 
 void log_warn(const char *str)
 {
-    fprintf(stderr, "[%sWARN%s]: %s\n", LYELLOW, RESET, str);
+    fprintf(stderr, "[%sWARN%s] : %s\n", LYELLOW, RESET, str);
 }
+
 void log_debug(const char *str)
 {
 #if DEBUG
-    fprintf(stderr, "[%sDEBUG%s]: %s\n", LYELLOW, RESET, str);
+    fprintf(stderr, "[%sDEBUG%s] : %s\n", LYELLOW, RESET, str);
+#else
+    UNUSED(str);
 #endif
 }
 

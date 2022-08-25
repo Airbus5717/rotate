@@ -13,6 +13,12 @@ void log_compilation(FILE *file, Lexer &lexer, Parser *parser)
     time(&rawtime);
 
     const auto *tokens = lexer.getTokens();
+    if (tokens->size() > 1000)
+    {
+        log_warn("Too large file to show log (above 1k tokens)");
+        return;
+    }
+    log_warn("Logging will slow down compiliation and use alot of memory");
     fprintf(file, "#+TITLE: COMPILATION LOG\n");
     fprintf(file, "#+OPTIONS: toc:nil num:nil\n");
     fprintf(file, "#+DATE: %s\n", asctime(localtime(&rawtime)));
