@@ -1,5 +1,5 @@
 io :: import("std")
 
 main :: fn() {
-    @print("Hello, World")
+    io.print("Hello, World")
 }
