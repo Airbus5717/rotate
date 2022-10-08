@@ -5,7 +5,7 @@
 ```odin
 io :: import("std")
 
-main :: proc() {
+main :: fn() {
 	io.print("Hello, World\n")
 }
 ```
