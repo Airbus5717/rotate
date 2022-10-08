@@ -25,7 +25,7 @@ endif
 STRICT  = -Werror
 CSTD = -std=c++17
 CSTD_LINT = --std=c++17
-DEBUG  = -g -DDEBUG
+DEBUG  = -g -DDEBUG -ggdb3
 BIN  = ./build/rotate
 
 

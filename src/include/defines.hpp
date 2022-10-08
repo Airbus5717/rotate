@@ -80,6 +80,17 @@ typedef signed long long int isize;
         }                                                                                          \
     } while (0)
 
+#define ASSERT_RET_FAIL(expr, msg)                                                                 \
+    do                                                                                             \
+    {                                                                                              \
+        if (!(expr))                                                                               \
+        {                                                                                          \
+            std::fprintf(stderr, "%sAssert failure: %s\n@file: %s:%d%s\n", LRED, msg, __FILE__,    \
+                         __LINE__, RESET);                                                         \
+            return EXIT_FAILURE;                                                                   \
+        }                                                                                          \
+    } while (0)
+
 #define TODO(string1)                                                                              \
     do                                                                                             \
     {                                                                                              \

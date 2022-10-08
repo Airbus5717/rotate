@@ -109,92 +109,108 @@ u8 Lexer::lex_identifiers()
     switch (len)
     {
         case 2: {
-            if (keyword_match("fn", 2))
-                _type = token_type::Function;
-            else if (keyword_match("if", 2))
-                _type = token_type::If;
-            else if (keyword_match("or", 2))
-                _type = token_type::Or;
-            //
-            else if (keyword_match("u8", 2))
-                _type = token_type::INT_U8;
-            else if (keyword_match("s8", 2))
-                _type = token_type::INT_S8;
+            switch (current())
+            {
+                case 'f':
+                    if (keyword_match("fn", 2)) _type = token_type::Function;
+                    break;
+                case 'i':
+                    if (keyword_match("if", 2)) _type = token_type::If;
+                    break;
+                case 'o':
+                    if (keyword_match("or", 2)) _type = token_type::Or;
+                    break;
+                default:
+                    break;
+            }
+
             break;
         }
         case 3: {
-            if (keyword_match("for", 3))
-                _type = token_type::For;
-            else if (keyword_match("let", 3))
-                _type = token_type::Let;
-            else if (keyword_match("pub", 3))
-                _type = token_type::Public;
-            else if (keyword_match("mut", 3))
-                _type = token_type::Mutable;
-            else if (keyword_match("int", 3))
-                _type = token_type::IntKeyword;
-            else if (keyword_match("ref", 3))
-                _type = token_type::Ref;
-            else if (keyword_match("and", 3))
-                _type = token_type::And;
-            else if (keyword_match("nil", 3))
-                _type = token_type::Nil;
-            else if (keyword_match("var", 3))
-                _type = token_type::Var;
-            //
-            else if (keyword_match("u16", 3))
-                _type = token_type::INT_U16;
-            else if (keyword_match("u32", 3))
-                _type = token_type::INT_U32;
-            else if (keyword_match("u64", 3))
-                _type = token_type::INT_U64;
-            else if (keyword_match("s16", 3))
-                _type = token_type::INT_S16;
-            else if (keyword_match("s32", 3))
-                _type = token_type::INT_S32;
-            else if (keyword_match("s64", 3))
-                _type = token_type::INT_S64;
+            switch (current())
+            {
+                case 'f':
+                    if (keyword_match("for", 3)) _type = token_type::For;
+                    break;
+                case 'p':
+                    if (keyword_match("pub", 3)) _type = token_type::Public;
+                    break;
+                case 'i':
+                    if (keyword_match("int", 3)) _type = token_type::IntKeyword;
+                    break;
+                case 'r':
+                    if (keyword_match("ref", 3)) _type = token_type::Ref;
+                    break;
+                case 'a':
+                    if (keyword_match("and", 3)) _type = token_type::And;
+                    break;
+                case 'n':
+                    if (keyword_match("nil", 3)) _type = token_type::Nil;
+                    break;
+            }
             break;
         }
         case 4: {
-            if (keyword_match("else", 4))
-                _type = token_type::Else;
-            else if (keyword_match("true", 4))
-                _type = token_type::True;
-            else if (keyword_match("enum", 4))
-                _type = token_type::Enum;
-            else if (keyword_match("char", 4))
-                _type = token_type::CharKeyword;
-            else if (keyword_match("bool", 4))
-                _type = token_type::BoolKeyword;
+            switch (current())
+            {
+                case 'e': {
+                    if (keyword_match("else", 4))
+                        _type = token_type::Else;
+                    else if (keyword_match("enum", 4))
+                        _type = token_type::Enum;
+                    break;
+                }
+                case 't':
+                    if (keyword_match("true", 4)) _type = token_type::True;
+                    break;
+                case 'c':
+                    if (keyword_match("char", 4)) _type = token_type::CharKeyword;
+                    break;
+                case 'b':
+                    if (keyword_match("bool", 4)) _type = token_type::BoolKeyword;
+                    break;
+                case 'u':
+                    if (keyword_match("uint", 4)) _type = token_type::UintKeyword;
+                    break;
+            }
             break;
         }
         case 5: {
-            if (keyword_match("while", 5))
-                _type = token_type::While;
-            else if (keyword_match("false", 5))
-                _type = token_type::False;
-            else if (keyword_match("match", 5))
-                _type = token_type::Match;
-            else if (keyword_match("break", 5))
-                _type = token_type::Break;
-            else if (keyword_match("const", 5))
-                _type = token_type::Const;
-            else if (keyword_match("float", 5))
-                _type = token_type::FloatKeyword;
+            switch (current())
+            {
+                case 'w':
+                    if (keyword_match("while", 5)) _type = token_type::While;
+                    break;
+                case 'f': {
+                    if (keyword_match("false", 5))
+                        _type = token_type::False;
+                    else if (keyword_match("float", 5))
+                        _type = token_type::FloatKeyword;
+                    break;
+                }
+                case 'b':
+                    if (keyword_match("break", 5)) _type = token_type::Break;
+                    break;
+            }
             break;
         }
         case 6: {
-            if (keyword_match("return", 6))
-                _type = token_type::Return;
-            else if (keyword_match("import", 6))
-                _type = token_type::Import;
-            else if (keyword_match("struct", 6))
-                _type = token_type::Struct;
-            break;
-        }
-        case 7: {
-            if (keyword_match("include", 7)) _type = token_type::Include;
+            switch (current())
+            {
+                case 'r':
+                    if (keyword_match("return", 6)) _type = token_type::Return;
+                    break;
+                case 'i':
+                    if (keyword_match("import", 6)) _type = token_type::Import;
+                    break;
+                case 's': {
+                    if (keyword_match("struct", 6))
+                        _type = token_type::Struct;
+                    else if (keyword_match("switch", 6))
+                        _type = token_type::Switch;
+                    break;
+                }
+            }
             break;
         }
         default:
@@ -213,10 +229,10 @@ u8 Lexer::lex_identifiers()
 
 u8 Lexer::lex_numbers()
 {
-    const char c = current();
-    const char p = peek();
-    if (c == '0' && p == 'x') return lex_hex_numbers();
-    if (c == '0' && p == 'b') return lex_binary_numbers();
+    // const char c = current();
+    // const char p = peek();
+    // if (c == '0' && p == 'x') return lex_hex_numbers();
+    // if (c == '0' && p == 'b') return lex_binary_numbers();
 
     bool reached_dot = false;
     while (isdigit(current()) || current() == '.')
@@ -238,6 +254,7 @@ u8 Lexer::lex_numbers()
     return add_token(reached_dot ? token_type::Float : token_type::Integer);
 }
 
+/*
 u8 Lexer::lex_hex_numbers()
 {
     // skip '0x'
@@ -272,7 +289,7 @@ u8 Lexer::lex_binary_numbers()
     }
     index -= len;
     return add_token(token_type::BinaryInteger);
-}
+} */
 
 u8 Lexer::lex_strings()
 {
@@ -346,10 +363,10 @@ u8 Lexer::lex_symbols()
 {
     const char c = current();
     const char p = peek();
-    len++;
+    len++; // make sure length is 1
     switch (c)
     {
-        // clang-format off
+            // clang-format off
         case '{': return add_token(token_type::OpenCurly);
         case '}': return add_token(token_type::CloseCurly);
         case '(': return add_token(token_type::OpenParen);
@@ -360,17 +377,22 @@ u8 Lexer::lex_symbols()
         // TODO(5717) bug below needs to check an eql during peeking
         case '.': return add_token(token_type::Dot);
         case ',': return add_token(token_type::Comma);
-        case ':': return add_token(token_type::Colon);
         // clang-format on
+        case ':': {
+            if (p == ':')
+            {
+                len++;
+                return add_token(token_type::ColonColon);
+            }
+            return add_token(token_type::Colon);
+        }
         case '>': {
             if (p == '=')
             {
                 len++;
                 return add_token(token_type::GreaterEql);
             }
-            else
-                return add_token(token_type::Greater);
-            break;
+            return add_token(token_type::Greater);
         }
         case '<': {
             if (p == '=')
@@ -386,8 +408,7 @@ u8 Lexer::lex_symbols()
                 len++;
                 return add_token(token_type::EqualEqual);
             }
-            else
-                return add_token(token_type::Equal);
+            return add_token(token_type::Equal);
         }
         case '+': {
             if (p == '=')
@@ -395,8 +416,7 @@ u8 Lexer::lex_symbols()
                 len++;
                 return add_token(token_type::AddEqual);
             }
-            else
-                return add_token(token_type::PLUS);
+            return add_token(token_type::PLUS);
         }
         case '-': {
             if (p == '=')
@@ -404,8 +424,7 @@ u8 Lexer::lex_symbols()
                 len++;
                 return add_token(token_type::SubEqual);
             }
-            else
-                return add_token(token_type::MINUS);
+            return add_token(token_type::MINUS);
         }
         case '*': {
             if (p == '=')
@@ -413,8 +432,7 @@ u8 Lexer::lex_symbols()
                 len++;
                 return add_token(token_type::MultEqual);
             }
-            else
-                return add_token(token_type::Star);
+            return add_token(token_type::Star);
         }
         case '/': {
             if (p == '=')
@@ -445,11 +463,7 @@ u8 Lexer::lex_symbols()
                 }
                 return EXIT_SUCCESS;
             }
-            else
-            {
-                return add_token(token_type::DIV);
-            }
-            break;
+            return add_token(token_type::DIV);
         }
         case '!': {
             if (p == '=')

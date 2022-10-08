@@ -1,13 +1,14 @@
 #include "include/compile.hpp"
 #include "include/common.hpp"
+#include "include/defines.hpp"
 #include "include/file.hpp"
 
-#include "frontend/include/parser.hpp"
+#include "frontend/include/lexer.hpp"
 
 namespace rotate
 {
 
-void log_compilation(FILE *file, Lexer &lexer, Parser *parser)
+void log_compilation(FILE *file, Lexer &lexer)
 {
     time_t rawtime;
     time(&rawtime);
@@ -41,36 +42,39 @@ void log_compilation(FILE *file, Lexer &lexer, Parser *parser)
     }
     fprintf(file, "#+end_src\n");
     fprintf(file, "\n** TODO: Parser Abstract Syntax Tree\n");
-    if (parser) parser->save_log(file);
+    // if (nullptr) parser->save_log(file);
     fprintf(file, "\n** TODO: TYPECHECKER\n");
     log_info("Logging complete");
 }
 
-u8 compile(compile_options *options, compilation_state *state) noexcept
+u8 handle_err(u8 exit, const char *err_string)
 {
-    ASSERT_NULL(state, "state is null");
+    if (exit == 1)
+    {
+        log_error(err_string);
+    }
+    return exit;
+}
+
+u8 compile(compile_options *options) noexcept
+{
     // Parser *parser;
     u8 exit = 0;
 
     // Read file
-    *state      = cs_file_read;
     file_t file = file_read(options->filename);
-    if (file.valid_code == valid::failure) return EXIT_FAILURE;
+    ASSERT_RET_FAIL(file.valid_code == valid::success, "file read error");
 
     // Lexical analysis
-    *state      = cs_lexer;
     Lexer lexer = Lexer(&file);
     exit        = lexer.lex();
-    if (exit == EXIT_FAILURE) return EXIT_FAILURE;
+    ASSERT_RET_FAIL(exit == EXIT_DONE, "file read error");
     if (options->lex_only)
     {
-        log_compilation(fopen("output.log", "wb"), lexer, nullptr);
+        log_compilation(fopen("output.log", "wb"), lexer);
         return exit;
     }
     // parse lexed tokens to Abstract Syntax tree
-    *state        = cs_parser;
-    Parser parser = Parser(&lexer); // parser does not own lexer pointer
-    exit          = parser.parse();
 
     // log compiliation
     if (options->debug_info)
@@ -78,7 +82,7 @@ u8 compile(compile_options *options, compilation_state *state) noexcept
         FILE *output = fopen("output.org", "wb");
         if (output)
         {
-            log_compilation(output, lexer, &parser);
+            log_compilation(output, lexer);
             fclose(output);
         }
     }

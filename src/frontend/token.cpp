@@ -1,4 +1,5 @@
 #include "include/token.hpp"
+#include <cassert>
 
 // TODO: convert tokens to cstring funcs
 namespace rotate
@@ -8,6 +9,8 @@ const char *tkn_type_describe(const token_type type) noexcept
 {
     switch (type)
     {
+        case token_type::CharKeyword:
+            return "char";
         case token_type::Identifier:
             return "identifier";
         case token_type::BuiltinFunc:
@@ -80,26 +83,19 @@ const char *tkn_type_describe(const token_type type) noexcept
             return "or";
         case token_type::Float:
             return "float";
-        case token_type::Let:
-            return "let";
         case token_type::Comma:
             return "comma','";
         case token_type::Public:
             return "public";
         case token_type::NotEqual:
             return "`!=` not eql";
-        case token_type::Const:
-            return "const";
-        case token_type::CharKeyword:
             return "char_word";
         case token_type::FloatKeyword:
             return "float_word";
         case token_type::IntKeyword:
             return "int_word";
-        case token_type::Match:
-            return "match";
-        // case token_type::StringKeyword:
-        // return "str_word";
+        case token_type::Switch:
+            return "switch";
         case token_type::BoolKeyword:
             return "bool_word";
 
@@ -119,34 +115,23 @@ const char *tkn_type_describe(const token_type type) noexcept
             return "struct";
         case token_type::Ref:
             return "ref";
-        case token_type::Include:
-            return "include";
         case token_type::Enum:
             return "enum";
         case token_type::Nil:
             return "nil (null)";
-        case token_type::Var:
-            return "var";
+        case token_type::ColonColon:
+            return "::";
+        case token_type::UintKeyword:
+            return "uint";
+        case token_type::GreaterEql:
+            return ">=";
+        case token_type::LessEql:
+            return "<=";
         case token_type::EOT:
             return "End OF Tokens";
-        case token_type::INT_U8:
-            return "u8";
-        case token_type::INT_U16:
-            return "u16";
-        case token_type::INT_U32:
-            return "u32";
-        case token_type::INT_U64:
-            return "u64";
-        case token_type::INT_S8:
-            return "s8";
-        case token_type::INT_S16:
-            return "s16";
-        case token_type::INT_S32:
-            return "s32";
-        case token_type::INT_S64:
-            return "s64";
         default:
-            return "???";
+            __builtin_unreachable();
+            return "man IDK";
     }
 }
 
@@ -154,6 +139,14 @@ const char *get_keyword_or_type(const char *string, const Token &tkn)
 {
     switch (tkn.type)
     {
+        case token_type::GreaterEql:
+            return ">=";
+        case token_type::LessEql:
+            return "<=";
+        case token_type::ColonColon:
+            return "::";
+        case token_type::UintKeyword:
+            return "uint";
         case token_type::Function:
             return "fn";
         case token_type::If:
@@ -162,12 +155,8 @@ const char *get_keyword_or_type(const char *string, const Token &tkn)
             return "or";
         case token_type::For:
             return "for";
-        case token_type::Let:
-            return "let";
         case token_type::Public:
             return "pub";
-        case token_type::Const:
-            return "const";
         // case token_type::StringKeyword:
         // return "str";
         case token_type::IntKeyword:
@@ -178,8 +167,6 @@ const char *get_keyword_or_type(const char *string, const Token &tkn)
             return "and";
         case token_type::Nil:
             return "nil";
-        case token_type::Var:
-            return "var";
         case token_type::Enum:
             return "enum";
         case token_type::Else:
@@ -194,8 +181,8 @@ const char *get_keyword_or_type(const char *string, const Token &tkn)
             return "while";
         case token_type::False:
             return "false";
-        case token_type::Match:
-            return "match";
+        case token_type::Switch:
+            return "switch";
         case token_type::Break:
             return "break";
         case token_type::Return:
@@ -258,24 +245,19 @@ const char *get_keyword_or_type(const char *string, const Token &tkn)
             return ",";
         case token_type::EOT:
             return "end_of_tokens";
-        case token_type::INT_U8:
-            return "u8";
-        case token_type::INT_U16:
-            return "u16";
-        case token_type::INT_U32:
-            return "u32";
-        case token_type::INT_U64:
-            return "u64";
-        case token_type::INT_S8:
-            return "s8";
-        case token_type::INT_S16:
-            return "s16";
-        case token_type::INT_S32:
-            return "s32";
-        case token_type::INT_S64:
-            return "s64";
-        default:
+        case token_type::Integer:
+        case token_type::Float:
+        case token_type::BinaryInteger:
+        case token_type::HexInteger:
+        case token_type::Identifier:
+        case token_type::String:
+        case token_type::Char:
+        case token_type::BuiltinFunc:
             return strndup(string + tkn.index, tkn.length);
+        default: {
+            __builtin_unreachable();
+            return "TODO: IMPLEMENT";
+        }
     }
 }
 
@@ -340,6 +322,7 @@ const char *err_msgsfunc(const error_type error) noexcept
         default:
             break;
     }
+    __builtin_unreachable();
     return "TODO: error msg implementation.";
 }
 
@@ -403,7 +386,7 @@ const char *advice(const error_type error) noexcept
             "\x1b[0m");
 }
 
-bool is_token_a_number(token_type tt)
+bool is_token_type_a_number(token_type tt)
 {
     switch (tt)
     {

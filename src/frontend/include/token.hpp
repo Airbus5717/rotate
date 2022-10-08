@@ -9,38 +9,25 @@ namespace rotate
 
 enum class token_type : u8
 {
-    Identifier = 0, // ids
-    BuiltinFunc,    // @ids
-    Equal,          // =
-    Let,            // 'let'
-    Var,            // 'var'
-    Const,          // 'const'
-    Integer,        // refers to 10 digits ints
-    HexInteger,     // refers to Hexidecimal ints
-    BinaryInteger,  // refers to binary ints
-    IntKeyword,     // 'int'
-    INT_U8,         // u8
-    INT_U16,        // u16
-    INT_U32,        // u32
-    INT_U64,        // u64
-    INT_S8,         // s8
-    INT_S16,        // s16
-    INT_S32,        // s32
-    INT_S64,        // s64
-    Float,          // refer to floats
-    FLOAT_f32,      // f32
-    FLOAT_f64,      // f64
-    FloatKeyword,   // 'float'
-    // StringKeyword,    // 'str'
-    String, // refer to strings
-    Char,   // refers to chars
-    // EscapedChar,      // '\{}' chars i.e. '\n'
+    Identifier = 0,   // ids
+    BuiltinFunc,      // @ids
+    Equal,            // =
+    Integer,          // refers to 10 digits ints
+    HexInteger,       // refers to Hexidecimal ints
+    BinaryInteger,    // refers to binary ints
+    IntKeyword,       // 'int'
+    UintKeyword,      // 'uint'
+    Float,            // refer to floats
+    FloatKeyword,     // 'float'
+    String,           // refer to strings
+    Char,             // refers to chars
     CharKeyword,      // 'char'
     True,             // 'true'
     False,            // 'false'
     BoolKeyword,      // 'bool'
     SemiColon,        // ;
     Colon,            // :
+    ColonColon,       // constant (::)
     Function,         // 'fn'
     PLUS,             // +
     MINUS,            // -
@@ -69,7 +56,7 @@ enum class token_type : u8
     Or,               // 'or'
     Comma,            // ,
     Public,           // 'pub'
-    Match,            // 'match'
+    Switch,           // 'switch'
     Enum,             // 'enum'
     EqualEqual,       // ==
     Break,            // 'break'
@@ -79,9 +66,7 @@ enum class token_type : u8
     DivEqual,         // /=
     Struct,           // 'struct'
     Ref,              // 'ref' // TODO later
-    Include,          // 'include'
     Nil,              // `nil` basically null
-    Mutable,          // `mut`
     EOT,              // EOT - END OF TOKENS
 };
 
