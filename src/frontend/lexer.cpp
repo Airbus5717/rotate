@@ -114,7 +114,10 @@ u8 Lexer::lex_identifiers()
                     if (keyword_match("fn", 2)) _type = token_type::Function;
                     break;
                 case 'i':
-                    if (keyword_match("if", 2)) _type = token_type::If;
+                    if (keyword_match("if", 2))
+                        _type = token_type::If;
+                    else if (keyword_match("in", 2))
+                        _type = token_type::In;
                     break;
                 case 'o':
                     if (keyword_match("or", 2)) _type = token_type::Or;
@@ -376,10 +379,17 @@ u8 Lexer::lex_symbols()
         case '[': return add_token(token_type::OpenSQRBrackets);
         case ']': return add_token(token_type::CloseSQRBrackets);
         case ';': return add_token(token_type::SemiColon);
-        // TODO(5717) bug below needs to check an eql during peeking
-        case '.': return add_token(token_type::Dot);
         case ',': return add_token(token_type::Comma);
+        // TODO(5717) bug below needs to check an eql during peeking
         // clang-format on
+        case '.': {
+            if (p == '.')
+            {
+                len++;
+                return add_token(token_type::To);
+            }
+            return add_token(token_type::Dot);
+        }
         case ':': {
             if (p == ':')
             {

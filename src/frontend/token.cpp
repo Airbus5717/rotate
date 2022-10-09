@@ -8,6 +8,10 @@ const char *tkn_type_describe(const token_type type) noexcept
 {
     switch (type)
     {
+        case token_type::In:
+            return "in";
+        case token_type::To:
+            return "..";
         case token_type::Delete:
             return "delete";
         case token_type::CharKeyword:
@@ -138,8 +142,13 @@ const char *tkn_type_describe(const token_type type) noexcept
 
 const char *get_keyword_or_type(const char *string, const Token &tkn)
 {
+
     switch (tkn.type)
     {
+        case token_type::In:
+            return "in";
+        case token_type::To:
+            return "..";
         case token_type::Delete:
             return "delete";
         case token_type::GreaterEql:

@@ -10,6 +10,8 @@ enum class token_type : u8
 {
     Identifier = 0,   // ids
     BuiltinFunc,      // @ids
+    To,               // ..
+    In,               // in
     Delete,           // 'delete'
     Equal,            // =
     Integer,          // refers to 10 digits ints

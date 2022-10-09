@@ -114,15 +114,24 @@ TokenType :: enum {
 }
 #+end_src
 
-** Memory Allocation (similar to C, but typed)
+** Memory managment
+similar to C, with some modern features (new/delete and defer)
 #+begin_src odin
-x := new int[100]
+str := new([3]char)
+defer delete str
+
+x := new([100]int)
+tkn := new(Token) // assuming Token is a struct
+defer delete tkn
 defer delete x
+
+// how to check for failed allocation
 if x == nil {
 	io.println("Fail alloc")
 	os.exit(1)
 }
 #+end_src
+
 
 * TODO
 ** Compiler
