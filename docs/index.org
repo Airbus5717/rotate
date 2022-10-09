@@ -1,10 +1,12 @@
 #+TITLE: Rotate Programming Language
 #+OPTIONS: num:nil html-style:nil timestamp:nil date:nil author:nil
-#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="stylesheet.css"/>
-#+HTML_HEAD: <script src="code.js"></script> 
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="style.css"/>
+
 
 * Project Link
-[[https://github.com/Airbus5717/rotate-cpp]]
+[[https://codeberg.org/Airbus5717/rotate][codeberg]]
+
+[[https://github.com/Airbus5717/rotate-cpp][github mirror]]
 
 
 * Basics

@@ -7,8 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Rotate Programming Language</title>
 <meta name="generator" content="Org Mode" />
-<link rel="stylesheet" type="text/css" href="stylesheet.css"/>
-<script src="code.js"></script>
+<link rel="stylesheet" type="text/css" href="style.css"/>
 </head>
 <body>
 <div id="content" class="content">
@@ -17,52 +16,57 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org42cc5a6">Project Link</a></li>
-<li><a href="#org6564234">Basics</a>
+<li><a href="#orgbf4850d">Project Link</a></li>
+<li><a href="#org7cefa5b">Basics</a>
 <ul>
-<li><a href="#org4ca3a99">Hello World</a></li>
-<li><a href="#orge88ac98">Comments</a></li>
+<li><a href="#orgf133cf6">Hello World</a></li>
+<li><a href="#org213494d">Comments</a></li>
 </ul>
 </li>
-<li><a href="#org02cc24b">Syntax Overview</a>
+<li><a href="#org2e48abe">Syntax Overview</a>
 <ul>
-<li><a href="#org2ca2fdd">Basic variables</a></li>
-<li><a href="#org6eef5cf">If Else</a></li>
-<li><a href="#org30690a3">Loop</a></li>
-<li><a href="#orgd5b93c5">Switch</a></li>
-<li><a href="#orgef5b290">Struct</a></li>
-<li><a href="#org67ccef2">Function</a></li>
-<li><a href="#org763a9f9">Enums</a></li>
-<li><a href="#org820d377">Memory Allocation (similar to C, but typed)</a></li>
+<li><a href="#org86fa062">Basic variables</a></li>
+<li><a href="#orga4fdaa0">If Else</a></li>
+<li><a href="#org37b90fa">Loop</a></li>
+<li><a href="#orga46ba12">Switch</a></li>
+<li><a href="#org7fc2faf">Struct</a></li>
+<li><a href="#org3874f7e">Function</a></li>
+<li><a href="#org0a3d033">Enums</a></li>
+<li><a href="#org8e408a5">Memory Allocation (similar to C, but typed)</a></li>
 </ul>
 </li>
-<li><a href="#org3f3afd2">TODO</a>
+<li><a href="#org2653d51">TODO</a>
 <ul>
-<li><a href="#org7418759">Compiler</a></li>
-<li><a href="#org36b6fe9">DOCS</a></li>
+<li><a href="#org42df1de">Compiler</a></li>
+<li><a href="#orgf0c1626">DOCS</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org42cc5a6" class="outline-2">
-<h2 id="org42cc5a6">Project Link</h2>
-<div class="outline-text-2" id="text-org42cc5a6">
+
+<div id="outline-container-orgbf4850d" class="outline-2">
+<h2 id="orgbf4850d">Project Link</h2>
+<div class="outline-text-2" id="text-orgbf4850d">
 <p>
-<a href="https://github.com/Airbus5717/rotate-cpp">https://github.com/Airbus5717/rotate-cpp</a>
+<a href="https://codeberg.org/Airbus5717/rotate">codeberg</a>
+</p>
+
+<p>
+<a href="https://github.com/Airbus5717/rotate-cpp">github mirror</a>
 </p>
 </div>
 </div>
 
 
-<div id="outline-container-org6564234" class="outline-2">
-<h2 id="org6564234">Basics</h2>
-<div class="outline-text-2" id="text-org6564234">
+<div id="outline-container-org7cefa5b" class="outline-2">
+<h2 id="org7cefa5b">Basics</h2>
+<div class="outline-text-2" id="text-org7cefa5b">
 </div>
-<div id="outline-container-org4ca3a99" class="outline-3">
-<h3 id="org4ca3a99">Hello World</h3>
-<div class="outline-text-3" id="text-org4ca3a99">
+<div id="outline-container-orgf133cf6" class="outline-3">
+<h3 id="orgf133cf6">Hello World</h3>
+<div class="outline-text-3" id="text-orgf133cf6">
 <div class="org-src-container">
 <pre class="src src-cpp"><span style="color: #a9a1e1;">io</span> :: <span style="color: #51afef;">import</span><span style="color: #51afef;">(</span><span style="color: #98be65;">"std"</span><span style="color: #51afef;">)</span>
 
@@ -75,9 +79,9 @@
 </div>
 </div>
 
-<div id="outline-container-orge88ac98" class="outline-3">
-<h3 id="orge88ac98">Comments</h3>
-<div class="outline-text-3" id="text-orge88ac98">
+<div id="outline-container-org213494d" class="outline-3">
+<h3 id="org213494d">Comments</h3>
+<div class="outline-text-3" id="text-org213494d">
 <div class="org-src-container">
 <pre class="src src-cpp"><span style="color: #5B6268;">// </span><span style="color: #5B6268;">for single line comments</span>
 
@@ -90,13 +94,13 @@
 </div>
 </div>
 
-<div id="outline-container-org02cc24b" class="outline-2">
-<h2 id="org02cc24b">Syntax Overview</h2>
-<div class="outline-text-2" id="text-org02cc24b">
+<div id="outline-container-org2e48abe" class="outline-2">
+<h2 id="org2e48abe">Syntax Overview</h2>
+<div class="outline-text-2" id="text-org2e48abe">
 </div>
-<div id="outline-container-org2ca2fdd" class="outline-3">
-<h3 id="org2ca2fdd">Basic variables</h3>
-<div class="outline-text-3" id="text-org2ca2fdd">
+<div id="outline-container-org86fa062" class="outline-3">
+<h3 id="org86fa062">Basic variables</h3>
+<div class="outline-text-3" id="text-org86fa062">
 <div class="org-src-container">
 <pre class="src src-odin">io :: <span style="color: #51afef;">import</span>(<span style="color: #98be65;">"std"</span>)
 
@@ -114,9 +118,9 @@ io.println(arr.len) <span style="color: #5B6268;">// </span><span style="color: 
 </div>
 </div>
 
-<div id="outline-container-org6eef5cf" class="outline-3">
-<h3 id="org6eef5cf">If Else</h3>
-<div class="outline-text-3" id="text-org6eef5cf">
+<div id="outline-container-orga4fdaa0" class="outline-3">
+<h3 id="orga4fdaa0">If Else</h3>
+<div class="outline-text-3" id="text-orga4fdaa0">
 <div class="org-src-container">
 <pre class="src src-odin">x := <span style="color: #a9a1e1;">true</span>
 y := <span style="color: #a9a1e1;">false</span>
@@ -132,9 +136,9 @@ y := <span style="color: #a9a1e1;">false</span>
 </div>
 </div>
 
-<div id="outline-container-org30690a3" class="outline-3">
-<h3 id="org30690a3">Loop</h3>
-<div class="outline-text-3" id="text-org30690a3">
+<div id="outline-container-org37b90fa" class="outline-3">
+<h3 id="org37b90fa">Loop</h3>
+<div class="outline-text-3" id="text-org37b90fa">
 <div class="org-src-container">
 <pre class="src src-odin"><span style="color: #51afef;">for</span> i <span style="color: #51afef;">in</span> <span style="color: #da8548; font-weight: bold;">0</span><span style="color: #a9a1e1;">..</span><span style="color: #da8548; font-weight: bold;">2</span> {
         <span style="color: #5B6268;">// </span><span style="color: #5B6268;">do something</span>
@@ -148,9 +152,9 @@ while x {
 </div>
 </div>
 
-<div id="outline-container-orgd5b93c5" class="outline-3">
-<h3 id="orgd5b93c5">Switch</h3>
-<div class="outline-text-3" id="text-orgd5b93c5">
+<div id="outline-container-orga46ba12" class="outline-3">
+<h3 id="orga46ba12">Switch</h3>
+<div class="outline-text-3" id="text-orga46ba12">
 <div class="org-src-container">
 <pre class="src src-odin">x := <span style="color: #da8548; font-weight: bold;">1</span>
 <span style="color: #51afef;">switch</span> x {
@@ -162,9 +166,9 @@ while x {
 </div>
 </div>
 </div>
-<div id="outline-container-orgef5b290" class="outline-3">
-<h3 id="orgef5b290">Struct</h3>
-<div class="outline-text-3" id="text-orgef5b290">
+<div id="outline-container-org7fc2faf" class="outline-3">
+<h3 id="org7fc2faf">Struct</h3>
+<div class="outline-text-3" id="text-org7fc2faf">
 <div class="org-src-container">
 <pre class="src src-odin">
 <span style="color: #ECBE7B;">Token</span> :: <span style="color: #51afef;">struct</span> {
@@ -181,9 +185,9 @@ d.y[<span style="color: #da8548; font-weight: bold;">1</span>] = <span style="co
 </div>
 </div>
 
-<div id="outline-container-org67ccef2" class="outline-3">
-<h3 id="org67ccef2">Function</h3>
-<div class="outline-text-3" id="text-org67ccef2">
+<div id="outline-container-org3874f7e" class="outline-3">
+<h3 id="org3874f7e">Function</h3>
+<div class="outline-text-3" id="text-org3874f7e">
 <div class="org-src-container">
 <pre class="src src-cpp"><span style="color: #5B6268;">//</span><span style="color: #5B6268;">! no generics for now</span>
 <span style="color: #a9a1e1;">add</span> :: fn<span style="color: #51afef;">(</span>x: <span style="color: #ECBE7B;">int</span>, y: <span style="color: #ECBE7B;">int</span><span style="color: #51afef;">)</span> <span style="color: #ECBE7B;">int</span> <span style="color: #51afef;">{</span>
@@ -194,9 +198,9 @@ d.y[<span style="color: #da8548; font-weight: bold;">1</span>] = <span style="co
 </div>
 </div>
 
-<div id="outline-container-org763a9f9" class="outline-3">
-<h3 id="org763a9f9">Enums</h3>
-<div class="outline-text-3" id="text-org763a9f9">
+<div id="outline-container-org0a3d033" class="outline-3">
+<h3 id="org0a3d033">Enums</h3>
+<div class="outline-text-3" id="text-org0a3d033">
 <div class="org-src-container">
 <pre class="src src-odin"><span style="color: #5B6268;">// </span><span style="color: #5B6268;">no size specification</span>
 
@@ -213,11 +217,11 @@ d.y[<span style="color: #da8548; font-weight: bold;">1</span>] = <span style="co
 </div>
 </div>
 
-<div id="outline-container-org820d377" class="outline-3">
-<h3 id="org820d377">Memory Allocation (similar to C, but typed)</h3>
-<div class="outline-text-3" id="text-org820d377">
+<div id="outline-container-org8e408a5" class="outline-3">
+<h3 id="org8e408a5">Memory Allocation (similar to C, but typed)</h3>
+<div class="outline-text-3" id="text-org8e408a5">
 <div class="org-src-container">
-<pre class="src src-odin">x := <span style="color: #c678dd;">new</span> (<span style="color: #ECBE7B;">int</span>[<span style="color: #da8548; font-weight: bold;">100</span>])
+<pre class="src src-odin">x := <span style="color: #c678dd;">new</span> <span style="color: #ECBE7B;">int</span>[<span style="color: #da8548; font-weight: bold;">100</span>]
 <span style="color: #51afef;">defer</span> <span style="color: #c678dd;">delete</span> x
 <span style="color: #51afef;">if</span> x == <span style="color: #a9a1e1;">nil</span> {
     io.println(<span style="color: #98be65;">"Fail alloc"</span>)
@@ -229,13 +233,13 @@ d.y[<span style="color: #da8548; font-weight: bold;">1</span>] = <span style="co
 </div>
 </div>
 
-<div id="outline-container-org3f3afd2" class="outline-2">
-<h2 id="org3f3afd2">TODO</h2>
-<div class="outline-text-2" id="text-org3f3afd2">
+<div id="outline-container-org2653d51" class="outline-2">
+<h2 id="org2653d51">TODO</h2>
+<div class="outline-text-2" id="text-org2653d51">
 </div>
-<div id="outline-container-org7418759" class="outline-3">
-<h3 id="org7418759">Compiler</h3>
-<div class="outline-text-3" id="text-org7418759">
+<div id="outline-container-org42df1de" class="outline-3">
+<h3 id="org42df1de">Compiler</h3>
+<div class="outline-text-3" id="text-org42df1de">
 <ul class="org-ul">
 <li>Parser</li>
 <li>TypeChecker &amp; Analysis</li>
@@ -245,9 +249,9 @@ d.y[<span style="color: #da8548; font-weight: bold;">1</span>] = <span style="co
 </div>
 </div>
 
-<div id="outline-container-org36b6fe9" class="outline-3">
-<h3 id="org36b6fe9">DOCS</h3>
-<div class="outline-text-3" id="text-org36b6fe9">
+<div id="outline-container-orgf0c1626" class="outline-3">
+<h3 id="orgf0c1626">DOCS</h3>
+<div class="outline-text-3" id="text-orgf0c1626">
 <ul class="org-ul">
 <li>Add a copy button in HTML docs export</li>
 <li>Add automation to docs generation</li>
