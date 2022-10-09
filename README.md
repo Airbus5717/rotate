@@ -16,6 +16,6 @@ main :: fn() {
 - [] Parser
 
 ## Docs
- moved to [https://github.com/rotate-lang/documentation]
+https://airbus5717.github.io/rotate/
 
 
