@@ -3,7 +3,7 @@
 #include "include/defines.hpp"
 #include "include/file.hpp"
 
-#include "frontend/include/lexer.hpp"
+#include "frontend/lexer.hpp"
 
 namespace rotate
 {
@@ -68,7 +68,7 @@ u8 compile(compile_options *options) noexcept
     // Lexical analysis
     Lexer lexer = Lexer(&file);
     exit        = lexer.lex();
-    ASSERT_RET_FAIL(exit == EXIT_DONE, "file read error");
+    ASSERT_RET_FAIL(exit != EXIT_DONE, "Lexer error");
     if (options->lex_only)
     {
         log_compilation(fopen("output.log", "wb"), lexer);

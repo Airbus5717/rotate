@@ -1,5 +1,4 @@
-#include "include/token.hpp"
-#include <cassert>
+#include "token.hpp"
 
 // TODO: convert tokens to cstring funcs
 namespace rotate

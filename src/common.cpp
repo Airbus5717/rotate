@@ -1,6 +1,6 @@
 #include "include/common.hpp"
 
-#include "frontend/include/token.hpp"
+#include "frontend/token.hpp"
 
 //* USEFUL COMMON UTILS FOR ROTATE-LANG
 

@@ -1,8 +1,8 @@
 #ifndef ROTATE_TOKEN
 #define ROTATE_TOKEN
 
-#include "../../include/common.hpp"
-#include "../../include/file.hpp"
+#include "../include/common.hpp"
+#include "../include/file.hpp"
 
 namespace rotate
 {

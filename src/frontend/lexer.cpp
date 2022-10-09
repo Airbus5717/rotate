@@ -1,5 +1,4 @@
-#include "include/lexer.hpp"
-#include "include/token.hpp"
+#include "lexer.hpp"
 
 namespace rotate
 {
