@@ -4,9 +4,7 @@
 
 
 * Project Link
-[[https://codeberg.org/Airbus5717/rotate][codeberg]]
-
-[[https://github.com/Airbus5717/rotate-cpp][github mirror]]
+[[https://github.com/Airbus5717/rotate.git][Github]]
 
 
 * Basics
