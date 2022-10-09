@@ -14,6 +14,10 @@ main :: fn() {
 ## Progress
 - [x] Lexer
 - [] Parser
+- [] TypeChecker 
+- [] Analyzer 
+- [] Maybe? Optimizer
+- [] CodeGenerator (maybe custom Arch) 
 
 ## Docs
 https://airbus5717.github.io/rotate/
