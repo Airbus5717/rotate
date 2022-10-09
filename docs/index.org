@@ -1,0 +1,135 @@
+#+TITLE: Rotate Programming Language
+#+OPTIONS: num:nil html-style:nil timestamp:nil date:nil author:nil
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="stylesheet.css"/>
+#+HTML_HEAD: <script src="code.js"></script> 
+
+* Project Link
+[[https://github.com/Airbus5717/rotate-cpp]]
+
+
+* Basics
+** Hello World
+#+begin_src cpp
+io :: import("std")
+
+main :: fn() {
+    io.println("Hello, World")
+}
+
+#+end_src
+
+** Comments
+#+begin_src cpp
+// for single line comments
+
+/*
+  multi-line comments
+*/
+#+end_src
+
+* Syntax Overview
+** Basic variables
+#+begin_src odin
+io :: import("std")
+
+// semicolons are optional
+x: int = 1
+y := 2 // inferred
+z :: 3 // z is const 3
+d := ptr(x) // type is int*
+d = nil // now NULL
+
+arr : []int = [1, 2, 3] // inferred type ([3]int)
+io.println(arr.len) // arr.len == 3
+#+end_src
+
+** If Else
+#+begin_src odin
+x := true
+y := false
+if x {
+ // do stuff
+} else if !y {
+    // do stuff
+} else {
+    // do stuff
+}
+#+end_src
+
+** Loop
+#+begin_src odin
+for i in 0..2 {
+        // do something
+}
+x := true
+while x {
+	break
+}
+#+end_src
+
+** Switch
+#+begin_src odin
+x := 1
+switch x {
+	1: {}
+	2: {}
+	else:{}
+}
+#+end_src
+** Struct
+#+begin_src odin
+
+Token :: struct {
+	x: int,
+	y: [3]int,
+}
+
+
+d := Token{1, [1, 2, 3]}
+d.x = 2
+d.y[1] = 1
+#+end_src
+
+** Function
+#+begin_src cpp
+//! no generics for now
+add :: fn(x: int, y: int) int {
+    return x + y
+}
+#+end_src
+
+** Enums
+#+begin_src odin
+// no size specification
+
+TokenType :: enum {
+	Id,
+	Number,
+	Float,
+	String,
+	Char,
+	Invalid,
+}
+#+end_src
+
+** Memory Allocation (similar to C, but typed)
+#+begin_src odin
+x := new int[100]
+defer delete x
+if x == nil {
+	io.println("Fail alloc")
+	os.exit(1)
+}
+#+end_src
+
+* TODO
+** Compiler
+- Parser
+- TypeChecker & Analysis
+- Optimization
+- CodeGen
+
+** DOCS
+- Add a copy button in HTML docs export 
+- Add automation to docs generation
+- Custom syntax highlighting for rotate
