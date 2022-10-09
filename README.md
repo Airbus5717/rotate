@@ -16,8 +16,3 @@ main :: fn() {
 ## Progress
 - [x] Lexer
 - [] Parser
-
-## Docs
- moved to [https://codeberg.org/Airbus5717/docs/]
-
-
