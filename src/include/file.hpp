@@ -1,5 +1,4 @@
-#ifndef ROTATE_FILE
-#define ROTATE_FILE
+#pragma once
 
 #include "common.hpp"
 
@@ -46,5 +45,3 @@ struct file_t
 file_t file_read(const char *name) noexcept;
 
 } // namespace rotate
-
-#endif // ROTATE_FILE

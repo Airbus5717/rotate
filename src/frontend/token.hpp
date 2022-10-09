@@ -1,5 +1,4 @@
-#ifndef ROTATE_TOKEN
-#define ROTATE_TOKEN
+#pragma once
 
 #include "../include/common.hpp"
 #include "../include/file.hpp"
@@ -11,6 +10,7 @@ enum class token_type : u8
 {
     Identifier = 0,   // ids
     BuiltinFunc,      // @ids
+    Delete,           // 'delete'
     Equal,            // =
     Integer,          // refers to 10 digits ints
     HexInteger,       // refers to Hexidecimal ints
@@ -145,5 +145,3 @@ bool is_token_type_length_variable(token_type);
 bool is_token_a_number(token_type);
 
 } // namespace rotate
-
-#endif // ROTATE_TOKEN

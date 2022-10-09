@@ -1,3 +1,5 @@
+#pragma once
+
 #include "lexer.hpp"
 
 namespace rotate

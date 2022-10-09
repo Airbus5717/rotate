@@ -1,5 +1,4 @@
-#ifndef ROTATE_COMMON
-#define ROTATE_COMMON
+#pragma once
 
 #include "defines.hpp"
 
@@ -98,5 +97,3 @@ template <typename T> class Vector
 };
 
 } // namespace rotate
-
-#endif // ROTATE COMMON

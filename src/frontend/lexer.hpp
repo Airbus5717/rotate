@@ -1,5 +1,4 @@
-#ifndef ROTATE_LEXER
-#define ROTATE_LEXER
+#pragma once
 
 #include "token.hpp"
 
@@ -59,5 +58,3 @@ class Lexer
 void log_token(FILE *output, const rotate::Token tkn, const char *str);
 
 } // namespace rotate
-
-#endif // ROTATE_LEXER

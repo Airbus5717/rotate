@@ -202,6 +202,9 @@ u8 Lexer::lex_identifiers()
                 case 'i':
                     if (keyword_match("import", 6)) _type = token_type::Import;
                     break;
+                case 'd':
+                    if (keyword_match("delete", 6)) _type = token_type::Delete;
+                    break;
                 case 's': {
                     if (keyword_match("struct", 6))
                         _type = token_type::Struct;

@@ -1,5 +1,4 @@
-#ifndef ROTATE_DEFINE
-#define ROTATE_DEFINE
+#pragma once
 
 // C++ standard library
 #include <string>
@@ -126,5 +125,3 @@ typedef signed long long int isize;
 #define LWHITE   "\x1b[97m"
 
 } // namespace rotate
-
-#endif // ROTATE_DEFINE
