@@ -1,5 +1,7 @@
 
 ## Rotate (C++)
+MIGRATED TO [[https://codeberg.org/Airbus5717/rotate/]]
+
 - a work in progress language 
 
 ```odin
@@ -16,6 +18,6 @@ main :: fn() {
 - [] Parser
 
 ## Docs
- moved to [https://github.com/rotate-lang/documentation]
+ moved to [https://codeberg.org/Airbus5717/docs/]
 
 
