@@ -11,7 +11,7 @@ const char *tkn_type_describe(const token_type type) noexcept
         case token_type::In:
             return "in";
         case token_type::To:
-            return "..";
+            return "to";
         case token_type::Delete:
             return "delete";
         case token_type::CharKeyword:

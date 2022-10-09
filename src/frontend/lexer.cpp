@@ -309,14 +309,14 @@ u8 Lexer::lex_strings()
         }
         advance_len_inc();
     }
-
     advance_len_inc();
 
     if (len > UINT16_MAX)
     {
         log_error("Too long string");
     }
-    index -= len;
+    index -= len++;
+
     return add_token(token_type::String);
 }
 
@@ -368,7 +368,7 @@ u8 Lexer::lex_symbols()
 {
     const char c = current();
     const char p = peek();
-    len++; // make sure length is 1
+    len          = 1;
     switch (c)
     {
             // clang-format off

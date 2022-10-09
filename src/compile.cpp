@@ -71,7 +71,7 @@ u8 compile(compile_options *options) noexcept
     ASSERT_RET_FAIL(exit != EXIT_DONE, "Lexer error");
     if (options->lex_only)
     {
-        log_compilation(fopen("output.log", "wb"), lexer);
+        log_compilation(fopen("output.org", "wb"), lexer);
         return exit;
     }
     // parse lexed tokens to Abstract Syntax tree

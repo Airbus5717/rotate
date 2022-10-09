@@ -40,6 +40,8 @@ struct AstImport
 
 struct AstGlVar
 {
+    // NOTE(5717): GL Variables must be const
+    // and at comptime known their value
     // id, (comptime)value, type
 };
 
@@ -54,14 +56,21 @@ struct AstEnum
 
 struct AstBlock
 {
+    u8 deep{0};
+    u8 count{0};
 };
 
 struct AstFn
 {
+    AstBlock block;
 };
 
 class Parser
 {
+    // not owned
+    Ast ast;
+    std::vector<Token> *tokens;
+    u32 idx;
 
     u8 parse_director();
     // global
@@ -73,10 +82,15 @@ class Parser
     // non global
     u8 parse_block();
 
+    // utils
+    Token current() const;
+    Token past() const;
+    Token peek() const;
+
   public:
-    Parser();
+    Parser(Lexer *);
     ~Parser();
-    u8 parse_lexer(Lexer *);
+    u8 parse_lexer();
 }; // Parser
 
 } // namespace rotate

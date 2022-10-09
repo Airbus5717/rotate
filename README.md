@@ -1,7 +1,7 @@
 
 ## Rotate (C++)
 - a work in progress language 
-
+- inspired by C, odin and zig
 ```odin
 io :: import("std")
 
