@@ -273,63 +273,33 @@ const char *get_keyword_or_type(const char *string, const Token &tkn)
     }
 }
 
-const char *err_msgsfunc(const error_type error) noexcept
+const char *lexer_err_msg(const LexerErrorType error) noexcept
 {
     switch (error)
     {
-        case error_type::EXPECTED_ID_FOR_FN:
-            return "Id expected after `fn` keyword";
-        case error_type::OUT_OF_MEMORY:
+        case LexerErrorType::OUT_OF_MEMORY:
             return "Out of memory";
-        case error_type::LEXER_INVALID_CHAR:
+        case LexerErrorType::LEXER_INVALID_CHAR:
             return "Invalid character";
-        case error_type::TOO_LONG_IDENTIFIER:
+        case LexerErrorType::TOO_LONG_IDENTIFIER:
             return "Identifier is too long";
-        case error_type::TOO_LONG_NUMBER:
+        case LexerErrorType::TOO_LONG_NUMBER:
             return "Number is too long";
-        case error_type::TOO_LONG_STRING:
+        case LexerErrorType::TOO_LONG_STRING:
             return "String is too long";
-        case error_type::NOT_CLOSED_CHAR:
+        case LexerErrorType::NOT_CLOSED_CHAR:
             return "The char is not closed.";
-        case error_type::NOT_CLOSED_STRING:
+        case LexerErrorType::NOT_CLOSED_STRING:
             return "The string is not closed.";
-        case error_type::END_OF_FILE:
+        case LexerErrorType::END_OF_FILE:
             return "reached end of file.";
-        case error_type::FILE_EMPTY:
+        case LexerErrorType::FILE_EMPTY:
             return "The file is empty.";
-        case error_type::BAD_TOKEN_AT_GLOBAL:
+        case LexerErrorType::BAD_TOKEN_AT_GLOBAL:
             return "Found global token at its forbidden scope";
-        case error_type::IMPORT_NOT_SUPPORTED:
-            return "Import external files unsupported";
-        case error_type::GLOBAL_VAR_MUTABLE:
-            return "Global variables cannot be mutable";
-        case error_type::EXPECT_ID_AFTER_LET:
-            return "Id expected after `let` keyword";
-        case error_type::EXPECT_EQUAL_AFTER_ID:
-            return "Equal expected after Id";
-        case error_type::REQUIRED_GLOBAL_VAR_TYPE:
-            return "Global variables require variable type";
-        case error_type::EXPECTED_VALUE_AFTER_EQUAL:
-            return "Variable requires a value";
-        case error_type::VARIABLE_TYPE_MATCH:
-            return "Variable type and value's type do not match";
-        case error_type::SEMICOLON_END_REQUIREMENT:
-            return "Semicolon required at the end of the statement";
-        case error_type::EXPECT_OPEN_PAREN_AFTER_FN_ID:
-            return "Parentheses required after function identifier";
-        case error_type::EXPECT_CLOSE_PAREN_AFTER_OPEN_PAREN:
-            return "Closing parentheses required after opening one";
-        case error_type::EXPECTED_ARROW_OR_BLOCK:
-            return "Expected Arrow or Block";
-        case error_type::EXPECTED_IMPORT_ID:
-            return "Expected Id after import";
-        case error_type::INVALID_EXPORT_DIR:
-            return "No such directory for export";
-        case error_type::FN_TYPE_REQUIRED:
-            return "Function requires return type";
-        case error_type::TABS:
+        case LexerErrorType::TABS:
             return "Tabs '\\t' are unsupported";
-        case error_type::NOT_VALID_ESCAPE_CHAR:
+        case LexerErrorType::NOT_VALID_ESCAPE_CHAR:
             return "Invalid escaped char";
         default:
             break;
@@ -338,57 +308,31 @@ const char *err_msgsfunc(const error_type error) noexcept
     return "TODO: error msg implementation.";
 }
 
-const char *advice(const error_type error) noexcept
+const char *lexer_err_advice(const LexerErrorType error) noexcept
 {
     switch (error)
     {
-        case error_type::EXPECT_OPEN_PAREN_AFTER_FN_ID:
-            return "Add parentheses after function identifier";
-        case error_type::LEXER_INVALID_CHAR:
+        case LexerErrorType::LEXER_INVALID_CHAR:
             return "remove this character";
-        case error_type::OUT_OF_MEMORY:
+        case LexerErrorType::OUT_OF_MEMORY:
             return "The compiler needs more RAM";
-        case error_type::TOO_LONG_IDENTIFIER:
+        case LexerErrorType::TOO_LONG_IDENTIFIER:
             return "Identifier must not exceed 100 characters";
-        case error_type::TOO_LONG_NUMBER:
+        case LexerErrorType::TOO_LONG_NUMBER:
             return "Number must not exceed 100 digits";
-        case error_type::TOO_LONG_STRING:
+        case LexerErrorType::TOO_LONG_STRING:
             return "String must not exceed (UINT_MAX / 100000) characters";
-        case error_type::EXPECTED_ID_FOR_FN:
-            return "Add an Identifier after 'fn' keyword";
-        case error_type::NOT_CLOSED_CHAR:
+        case LexerErrorType::NOT_CLOSED_CHAR:
             return "Close the char with a quote";
-        case error_type::NOT_CLOSED_STRING:
+        case LexerErrorType::NOT_CLOSED_STRING:
             return "Close the string with a double quote";
-        case error_type::END_OF_FILE:
+        case LexerErrorType::END_OF_FILE:
             return "Needs more code for compiling";
-        case error_type::FILE_EMPTY:
+        case LexerErrorType::FILE_EMPTY:
             return "Do not compile empty files";
-        case error_type::BAD_TOKEN_AT_GLOBAL:
+        case LexerErrorType::BAD_TOKEN_AT_GLOBAL:
             return "Do not put this token in global scope";
-        case error_type::IMPORT_NOT_SUPPORTED:
-            return "Remove the import statement or comment it";
-        case error_type::GLOBAL_VAR_MUTABLE:
-            return "Remove the mutable `mut` keyword";
-        case error_type::EXPECT_ID_AFTER_LET:
-            return "Add an Identifier after 'let' keyword";
-        case error_type::EXPECT_EQUAL_AFTER_ID:
-            return "Add an equal '=' after the Id";
-        case error_type::REQUIRED_GLOBAL_VAR_TYPE:
-            return "Add type after colon";
-        case error_type::EXPECTED_VALUE_AFTER_EQUAL:
-            return "Add value to variable";
-        case error_type::VARIABLE_TYPE_MATCH:
-            return "Change variable types to match its value type";
-        case error_type::SEMICOLON_END_REQUIREMENT:
-            return "Add a semicolon after the expression";
-        case error_type::INVALID_EXPORT_DIR:
-            return "Directory specified after '-o' flag is invalid";
-        case error_type::EXPECT_CLOSE_PAREN_AFTER_OPEN_PAREN:
-            return "Function parameters unsupported CLOSE now";
-        case error_type::FN_TYPE_REQUIRED:
-            return "Add return type to function";
-        case error_type::TABS:
+        case LexerErrorType::TABS:
             return "Convert the tabs to spaces";
         default:
             break;

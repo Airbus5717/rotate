@@ -14,9 +14,9 @@ void log_compilation(FILE *file, Lexer &lexer)
     time(&rawtime);
 
     const auto *tokens = lexer.getTokens();
-    if (tokens->size() > 1000)
+    if (tokens->size() > 0x10000000)
     {
-        log_warn("Too large file to show log (above 1k tokens)");
+        log_warn("Too large file to show log");
         return;
     }
     log_warn("Logging will slow down compiliation and use alot of memory");
@@ -24,8 +24,8 @@ void log_compilation(FILE *file, Lexer &lexer)
     fprintf(file, "#+OPTIONS: toc:nil num:nil\n");
     fprintf(file, "#+DATE: %s\n", asctime(localtime(&rawtime)));
     fprintf(file, "** Meta\n");
-    fprintf(file, "- filename: %s\n", lexer.getFile()->name);
-    fprintf(file, "- file_len: %llu chars\n", lexer.getFile()->length);
+    fprintf(file, "- filename: =%s=\n", lexer.getFile()->name);
+    fprintf(file, "- file length(chars): %llu chars\n", lexer.getFile()->length);
     fprintf(file, "- time: %s", asctime(localtime(&rawtime)));
     fprintf(file, "- number of tokens: %lu\n\n", tokens->size());
     fprintf(file, "** FILE\n");

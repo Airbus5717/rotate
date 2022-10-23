@@ -34,8 +34,8 @@ file_t file_read(const char *name) noexcept
         return file_t(nullptr, nullptr, 0, valid::failure);
     }
     const usize length = (usize)ftell(file);
-
-    if (length + 3 > UINT32_MAX)
+	
+    if (length + 3 > (Uint_MAX))
     {
         log_error("File too large");
         fclose(file);
@@ -62,7 +62,7 @@ file_t file_read(const char *name) noexcept
         buffer[length + i] = '\0';
 
     // simple validator (check first char if it is a visible ascii or is_space(without tabs))
-    if ((buffer[0] < ' ' || buffer[0] > '~') && !is_space_rotate(buffer[0]))
+    if ((buffer[0] < ' ' || buffer[0] > '~') && isspace(buffer[0]))
     {
         log_error("Only ascii text files are supported for compilation");
         fclose(file);

@@ -8,6 +8,7 @@
 #include <cassert>
 #include <cctype>
 #include <climits>
+#include <cmath>
 #include <cstdbool>
 #include <cstdint>
 #include <cstdio>
@@ -22,6 +23,8 @@ namespace rotate
 {
 
 #define VERSION "0.0.1"
+const auto _VERSION = VERSION;
+
 typedef int8_t s8;
 typedef int16_t s16;
 typedef int32_t s32;
@@ -34,6 +37,11 @@ typedef uint64_t u64;
 
 typedef unsigned long long int usize;
 typedef signed long long int isize;
+
+typedef uint32_t Uint; // global unsigned integer for this project
+#define Uint_MAX UINT32_MAX
+// due to unsigned integer
+#define Uint_MIN 0
 
 #define ASSERT(expr, msg)                                                                          \
     do                                                                                             \

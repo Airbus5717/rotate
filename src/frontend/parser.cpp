@@ -12,11 +12,17 @@ Parser::~Parser() = default;
 
 u8 Parser::parse_lexer()
 {
-    while (idx < tokens->size())
+    // NOTE(5717): error handling in parser
+    // The parser will stop at the first error occured
+    return parse_director();
+}
+
+u8 Parser::parse_director()
+{
+    while (true)
     {
-        auto c = tokens[idx];
-        UNUSED(c);
-        TODO("implement parser");
+        TODO("parser Implementation");
+        break;
     }
     return EXIT_FAILURE;
 }

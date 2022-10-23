@@ -1,12 +1,13 @@
 #include "lexer.hpp"
+#include "token.hpp"
 
 namespace rotate
 {
 
 // file must not be null and lexer owns the file ptr
 Lexer::Lexer(file_t *file)
-    : index(0), len(0), line(1), file(file), file_length(file ? file->length : 0), is_done(false),
-      error(error_type::UNKNOWN), tokens(new std::vector<Token>())
+    : index(0), len(0), line(1), file_length(file ? file->length : 0), file(file), is_done(false),
+      error(LexerErrorType::UNKNOWN), tokens(new std::vector<Token>())
 {
     ASSERT_NULL(file, "Lexer File passed is a null pointer");
     ASSERT_NULL(tokens, "Lexer vec of tokens passed is a null pointer");
@@ -68,7 +69,7 @@ u8 Lexer::lex_director()
 {
     skip_whitespace();
     len = 0, begin_tok_line = line;
-
+    save_state();
     const char c = current();
 
     if (isdigit(c)) return lex_numbers();
@@ -76,6 +77,7 @@ u8 Lexer::lex_director()
     //
     if (c == '\'') return lex_chars();
     if (c == '"') return lex_strings();
+    if (c == '`') TODO("Multi line strings lex");
 
     //
     if (c == '_' || isalpha(c)) return lex_identifiers();
@@ -225,7 +227,8 @@ u8 Lexer::lex_identifiers()
     if (len > 100)
     {
         // log_error("identifier length is more than 128 chars");
-        error = error_type::TOO_LONG_IDENTIFIER;
+        error = LexerErrorType::TOO_LONG_IDENTIFIER;
+        restore_state_for_err();
         return EXIT_FAILURE;
     }
 
@@ -253,6 +256,7 @@ u8 Lexer::lex_numbers()
     if (len > 100)
     {
         log_error("number digits length is above 100");
+        restore_state_for_err();
         return EXIT_FAILURE;
     }
     index -= len;
@@ -303,8 +307,14 @@ u8 Lexer::lex_strings()
     {
         if (current() == '\0')
         {
-            reverse_len_for_error();
-            error = error_type::NOT_CLOSED_STRING;
+            restore_state_for_err();
+            error = LexerErrorType::NOT_CLOSED_STRING;
+            return EXIT_FAILURE;
+        }
+        if (current() == '\n')
+        {
+            restore_state_for_err();
+            error = LexerErrorType::NOT_CLOSED_STRING;
             return EXIT_FAILURE;
         }
         advance_len_inc();
@@ -314,6 +324,7 @@ u8 Lexer::lex_strings()
     if (len > UINT16_MAX)
     {
         log_error("Too long string");
+        return EXIT_FAILURE;
     }
     index -= len++;
 
@@ -345,8 +356,9 @@ u8 Lexer::lex_chars()
                 advance_len_inc();
                 break;
             default:
-                error = error_type::NOT_VALID_ESCAPE_CHAR;
-                return reverse_len_for_error();
+                error = LexerErrorType::NOT_VALID_ESCAPE_CHAR;
+                restore_state_for_err();
+                return EXIT_FAILURE;
         }
         if (current() == '\'')
         {
@@ -356,8 +368,9 @@ u8 Lexer::lex_chars()
         }
         else
         {
-            error = error_type::LEXER_INVALID_CHAR;
-            return reverse_len_for_error();
+            error = LexerErrorType::LEXER_INVALID_CHAR;
+            restore_state_for_err();
+            return EXIT_FAILURE;
         }
     }
 
@@ -492,13 +505,13 @@ u8 Lexer::lex_symbols()
                     is_done = true;
                     return EXIT_DONE;
                 case '\t':
-                    this->error = error_type::TABS;
+                    this->error = LexerErrorType::TABS;
                     break;
                 case '\r':
-                    this->error = error_type::WINDOWS_CRAP;
+                    this->error = LexerErrorType::WINDOWS_CRAP;
                     break;
                 default:
-                    this->error = error_type::LEXER_INVALID_CHAR;
+                    this->error = LexerErrorType::LEXER_INVALID_CHAR;
             }
         }
     }
@@ -553,8 +566,9 @@ u8 Lexer::lex_builtin_funcs()
         }
     }
 
-    error = error_type::LEXER_INVALID_BUILTN_FN;
-    return reverse_len_for_error();
+    error = LexerErrorType::LEXER_INVALID_BUILTN_FN;
+    restore_state_for_err();
+    return EXIT_FAILURE;
 }
 
 inline void Lexer::advance()
@@ -597,30 +611,36 @@ inline bool Lexer::is_not_eof() const
     return index < file_length;
 }
 
-inline bool Lexer::keyword_match(const char *string, u32 length)
+inline bool Lexer::keyword_match(const char *string, Uint length)
 {
     return strncmp(file->contents + index, string, length) == 0;
 }
 
-u8 Lexer::reverse_len_for_error()
+void Lexer::save_state()
 {
-    index -= len;
-    return EXIT_FAILURE;
+    save_index = index;
+    save_line  = line;
+}
+
+void Lexer::restore_state_for_err()
+{
+    index = save_index;
+    line  = save_line;
 }
 
 u8 Lexer::report_error()
 {
     //
-    u32 low = index, col = 0;
+    Uint low = index, col = 0;
     while (file->contents[low] != '\n' && low > 0)
     {
         low--;
         col++;
     }
-    low++;
+    low = low > 1 ? low + 1 : 0;
 
     //
-    u32 _length = index;
+    Uint _length = index;
     while (file->contents[_length] != '\n' && _length + 1 < file->length)
         _length++;
 
@@ -628,15 +648,15 @@ u8 Lexer::report_error()
 
     // error msg
     fprintf(stderr, "> %s%s%s:%u:%u: %serror: %s%s%s\n", BOLD, WHITE, file->name, line, col, LRED,
-            LBLUE, err_msgsfunc(error), RESET);
+            LBLUE, lexer_err_msg(error), RESET);
 
     // line from source code
     fprintf(stderr, " %s%u%s | %.*s\n", LYELLOW, line, RESET, _length, (file->contents + low));
 
-    u32 num_line_digits = get_digits_from_number(line);
+    Uint num_line_digits = get_digits_from_number(line);
 
     // arrows pointing to error location
-    u32 spaces = index - low + 1;
+    Uint spaces = index - low + 1;
     if (len < 101)
     {
         char *arrows = (char *)alloca(len + 1);
@@ -649,8 +669,8 @@ u8 Lexer::report_error()
     {
         fprintf(stderr, " %*c |%*c%s%s^^^---...\n", num_line_digits, ' ', spaces, ' ', LRED, BOLD);
     }
-    // error advice
-    fprintf(stderr, "> Advice: %s%s\n", RESET, advice(error));
+    // error lexer_err_advice
+    fprintf(stderr, "> Advice: %s%s\n", RESET, lexer_err_advice(error));
     return EXIT_FAILURE;
 }
 
@@ -660,7 +680,7 @@ u8 Lexer::add_token(const token_type type)
     // NOTE(Airbus5717): emplace_back constructs the token in the vector
     tokens->emplace_back(type, index, len, begin_tok_line);
 
-    for (u32 i = 0; i < len; i++)
+    for (Uint i = 0; i < len; i++)
         advance();
 
     return EXIT_SUCCESS;

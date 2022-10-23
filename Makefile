@@ -23,9 +23,9 @@ endif
 
 
 STRICT  = -Werror
-CSTD = -std=c++17
-CSTD_LINT = --std=c++17
-DEBUG  = -g -DDEBUG -ggdb3
+CSTD = -std=c++11
+CSTD_LINT = --std=c++11
+DEBUG  = -g -DDEBUG -ggdb3 -pg	
 BIN  = ./build/rotate
 
 
@@ -51,10 +51,10 @@ afl:
 	afl-$(CXX) $(SRC) -o $(BIN) $(CFLAGS) $(DEBUG) $(CSTD) $(LIB)
 
 debug:
-	$(CXX) $(SRC) -o $(BIN) $(CFLAGS) $(ANALYZE) $(DEBUG) $(CSTD) $(LIB) -fsanitize=undefined
+	$(CXX) $(SRC) -o $(BIN) $(CFLAGS) $(ANALYZE) $(DEBUG) $(CSTD) $(LIB)
 
-hidden_debug:
-	@$(CXX) $(SRC) -o $(BIN) $(CFLAGS) $(ANALYZE) $(DEBUG) $(CSTD) $(LIB) -fsanitize=undefined
+#hidden_debug:
+#	@$(CXX) $(SRC) -o $(BIN) $(CFLAGS) $(ANALYZE) $(DEBUG) $(CSTD) $(LIB) -fsanitize=undefined
 
 
 

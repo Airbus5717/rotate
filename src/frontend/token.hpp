@@ -77,11 +77,9 @@ const char *tkn_type_describe(const token_type type) noexcept;
 struct Token
 {
     token_type type;
-    u32 index;
-    u32 length;
-    u32 line;
+    Uint index, length, line;
 
-    Token(token_type type, u32 index, u32 length, u32 line)
+    Token(token_type type, Uint index, Uint length, Uint line)
         : type(type), index(index), length(length), line(line)
     {
     }
@@ -94,7 +92,7 @@ struct Token
     }
 };
 
-enum class error_type : u32
+enum class LexerErrorType : u8
 {
     // Unknown token/error (default)
     UNKNOWN,
@@ -121,28 +119,12 @@ enum class error_type : u32
     // forbidden token in global scope
     BAD_TOKEN_AT_GLOBAL,
     NOT_CLOSED_COMMENT,
-    IMPORT_NOT_SUPPORTED,
-    // Global variables must not be mutable error,
-    EXPECTED_IMPORT_ID,
-    GLOBAL_VAR_MUTABLE,
-    EXPECT_ID_AFTER_LET,
-    EXPECT_EQUAL_AFTER_ID,
-    REQUIRED_GLOBAL_VAR_TYPE,
-    EXPECTED_VALUE_AFTER_EQUAL,
-    VARIABLE_TYPE_MATCH,
-    SEMICOLON_END_REQUIREMENT,
     UNSUPPORTED,
-    EXPECTED_ID_FOR_FN,
-    EXPECT_OPEN_PAREN_AFTER_FN_ID,
-    EXPECT_CLOSE_PAREN_AFTER_OPEN_PAREN,
-    EXPECTED_ARROW_OR_BLOCK,
-    INVALID_EXPORT_DIR,
-    FN_TYPE_REQUIRED,
 };
 
 const char *get_keyword_or_type(const char *, const Token &);
-const char *advice(const error_type) noexcept;
-const char *err_msgsfunc(const error_type) noexcept;
+const char *lexer_err_advice(const LexerErrorType) noexcept;
+const char *lexer_err_msg(const LexerErrorType) noexcept;
 bool is_token_type_length_variable(token_type);
 bool is_token_a_number(token_type);
 

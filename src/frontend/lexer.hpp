@@ -8,11 +8,11 @@ namespace rotate
 class Lexer
 {
     // lexer state variables
-    u32 index, len, line, begin_tok_line;
+    Uint index, len, line, begin_tok_line, file_length;
     file_t *file; // not owned by the lexer
-    u32 file_length;
     bool is_done;
-    error_type error;
+    LexerErrorType error;
+    Uint save_index = 0, save_line = 0;
     std::vector<Token> *tokens;
 
     //
@@ -28,7 +28,8 @@ class Lexer
 
     //
     u8 report_error();
-    u8 reverse_len_for_error();
+    void save_state();
+    void restore_state_for_err();
 
     //
     u8 add_token(const token_type);
@@ -42,7 +43,7 @@ class Lexer
     char current() const;
     bool is_not_eof() const;
     void skip_whitespace() noexcept;
-    bool keyword_match(const char *, u32);
+    bool keyword_match(const char *, Uint);
 
   public:
     //
@@ -50,7 +51,7 @@ class Lexer
     ~Lexer() noexcept;
     std::vector<Token> *getTokens();
     file_t *getFile();
-    u32 get_num_of_lines();
+    Uint get_num_of_lines();
     u8 lex();
     void save_log(FILE *);
 };
