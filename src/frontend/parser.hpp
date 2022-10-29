@@ -31,6 +31,17 @@ struct AstStruct;
 struct AstEnum;
 struct AstFn;
 
+enum class PrsErr : u16
+{
+    Unknown = 0,
+    GlobalScopeNotAllowed,
+    OpenParents,
+    CloseParent,
+    StringExpect,
+    CharExpect,
+    SemicolonExpect,
+};
+
 enum class TypeType
 {
     undecided,
@@ -67,24 +78,32 @@ struct Type
  */
 enum class LiteralExprType
 {
-    integer,
-    _float
+    // TODO:
+    _integer,
+    _float,
+    _array,
 };
 
 enum class BinaryOpType
 {
+    // TODO:
     add,  // +
     sub,  // -
     mult, // *
     div,  // '/'
+    eqleql,
+    greater,
+    greql,
+    less,
+    leseql,
 };
 
 enum class UnaryOpType
 {
     logical_negate,   // '!'
     numerical_negate, // -
-    new_opr,          // new
-    delete_opr,       // delete
+    new_opr,          // new (only allowed as expressions)
+    delete_opr,       // delete (only allowed as stmts)
 };
 
 struct LitExpr
@@ -107,6 +126,7 @@ struct BinaryExpr
 
 struct Expr
 {
+    // TODO: Make a union
     LitExpr literal;
     UnaryExpr unary;
     BinaryExpr binary;
@@ -128,7 +148,6 @@ struct SymbolTable
 
 /*
  * Abstract Syntax tree
- * NOTE: which is for each program/file
  */
 struct Ast
 {
@@ -142,10 +161,18 @@ struct Ast
 
 struct AstImport
 {
-    // io :: import("std")
+
+    // 0  1  2     34    56
+    // io :: import("std");
     // ^^id          ^^^value
     Uint id_idx;
     Uint val_idx;
+
+    AstImport(Uint val) : id_idx(val - 4), val_idx(val)
+    {
+    }
+
+    ~AstImport() = default;
 };
 
 struct AstGlVar
@@ -178,9 +205,12 @@ struct AstFn
 
 class Parser
 {
-    // not owned
+    // not owned (weak ptr)
+    file_t *file;
+    //
     Ast ast;
     std::vector<Token> *tokens;
+    PrsErr error;
     Uint idx;
 
     u8 parse_director();
@@ -204,9 +234,25 @@ class Parser
     Token current() const;
     Token past() const;
     Token peek() const;
+    void advance();
+
+    //
+    u8 parse_error_expect_token(TknType);
+    PrsErr convert_tkn_type_to_parse_error(TknType);
+    u8 parser_error(PrsErr);
+    const char *parser_error_msg(PrsErr);
+    const char *parser_error_advice(PrsErr);
+    u8 parse_error_use_global_err();
+
+    // Parser exports
+    std::vector<AstImport> imports;
+    std::vector<AstFn> functions;
+    std::vector<AstEnum> enums;
+    std::vector<AstStruct> structs;
+    std::vector<AstGlVar> glVars;
 
   public:
-    Parser(Lexer *);
+    Parser(file_t *, Lexer *);
     ~Parser();
     u8 parse_lexer();
 }; // Parser

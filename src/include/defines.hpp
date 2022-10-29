@@ -25,6 +25,10 @@ namespace rotate
 #define VERSION "0.0.1"
 const auto _VERSION = VERSION;
 
+typedef float f32;
+typedef double f64;
+typedef long double f128;
+
 typedef int8_t s8;
 typedef int16_t s16;
 typedef int32_t s32;
@@ -50,18 +54,18 @@ typedef uint32_t Uint; // global unsigned integer for this project
         {                                                                                          \
             std::fprintf(stderr, "%sAssert failure: %s\n@file: %s:%d%s\n", LRED, msg, __FILE__,    \
                          __LINE__, RESET);                                                         \
-            std::exit(1);                                                                          \
+            exit(1);                                                                               \
         }                                                                                          \
     } while (0)
 
 #define ASSERT_CMP(expr1, expr2, msg)                                                              \
     do                                                                                             \
     {                                                                                              \
-        if (expr1 != expr2)                                                                        \
+        if ((expr1) != (expr2))                                                                    \
         {                                                                                          \
             std::fprintf(stderr, "%sAssert failure: %s\n@file: %s:%d%s\n", LRED, msg, __FILE__,    \
                          __LINE__, RESET);                                                         \
-            std::exit(1);                                                                          \
+            exit(1);                                                                               \
         }                                                                                          \
     } while (0)
 
@@ -72,7 +76,7 @@ typedef uint32_t Uint; // global unsigned integer for this project
         {                                                                                          \
             std::fprintf(stderr, "%sAssert failure: %s\n@file: %s:%d%s\n", LRED, msg, __FILE__,    \
                          __LINE__, RESET);                                                         \
-            std::exit(1);                                                                          \
+            exit(1);                                                                               \
         }                                                                                          \
     } while (0)
 
@@ -83,7 +87,7 @@ typedef uint32_t Uint; // global unsigned integer for this project
         {                                                                                          \
             std::fprintf(stderr, "%sAssert failure: %s\n@file: %s:%d%s\n", LRED, msg, __FILE__,    \
                          __LINE__, RESET);                                                         \
-            std::exit(1);                                                                          \
+            exit(1);                                                                               \
         }                                                                                          \
     } while (0)
 
@@ -92,22 +96,36 @@ typedef uint32_t Uint; // global unsigned integer for this project
     {                                                                                              \
         if (!(expr))                                                                               \
         {                                                                                          \
-            std::fprintf(stderr, "%sAssert failure: %s\n@file: %s:%d%s\n", LRED, msg, __FILE__,    \
-                         __LINE__, RESET);                                                         \
+            log_error(msg);                                                                        \
             return EXIT_FAILURE;                                                                   \
         }                                                                                          \
     } while (0)
 
-#define TODO(string1)                                                                              \
+#define TODO(str)                                                                                  \
     do                                                                                             \
     {                                                                                              \
-        std::fprintf(stderr, "%sTODO: %s\n@file: %s:%d%s\n", YELLOW, string1, __FILE__, __LINE__,  \
+        std::fprintf(stderr, "%sTODO: %s\n@file: %s:%d%s\n", YELLOW, str, __FILE__, __LINE__,      \
                      RESET);                                                                       \
-        std::exit(1);                                                                              \
+        exit(1);                                                                                   \
     } while (0)
 
 #define UNUSED(x) (void)(x)
 #define EXIT_DONE 3
+
+#define expect(expr, doWhenExpected, doElse)                                                       \
+    do                                                                                             \
+    {                                                                                              \
+        if (!(expr))                                                                               \
+        {                                                                                          \
+            doElse;                                                                                \
+            return EXIT_FAILURE;                                                                   \
+        }                                                                                          \
+        else                                                                                       \
+        {                                                                                          \
+            doWhenExpected;                                                                        \
+        }                                                                                          \
+    } while (0)
+
 // terminal colors
 #define GREEN  "\x1b[32m"
 #define YELLOW "\x1b[33m"

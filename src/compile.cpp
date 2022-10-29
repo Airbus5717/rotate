@@ -4,16 +4,19 @@
 #include "include/file.hpp"
 
 #include "frontend/lexer.hpp"
+#include "frontend/parser.hpp"
+#include <bits/types/FILE.h>
 
 namespace rotate
 {
 
-void log_compilation(FILE *file, Lexer &lexer)
+void log_compilation(FILE *file, file_t *code_file, Lexer *lexer)
 {
     time_t rawtime;
     time(&rawtime);
+	assert(code_file && lexer);
 
-    const auto *tokens = lexer.getTokens();
+    const auto *tokens = lexer->getTokens();
     if (tokens->size() > 0x10000000)
     {
         log_warn("Too large file to show log");
@@ -24,12 +27,12 @@ void log_compilation(FILE *file, Lexer &lexer)
     fprintf(file, "#+OPTIONS: toc:nil num:nil\n");
     fprintf(file, "#+DATE: %s\n", asctime(localtime(&rawtime)));
     fprintf(file, "** Meta\n");
-    fprintf(file, "- filename: =%s=\n", lexer.getFile()->name);
-    fprintf(file, "- file length(chars): %llu chars\n", lexer.getFile()->length);
+    fprintf(file, "- filename: =%s=\n", code_file->name);
+    fprintf(file, "- file length(chars): %u chars\n", code_file->length);
     fprintf(file, "- time: %s", asctime(localtime(&rawtime)));
     fprintf(file, "- number of tokens: %lu\n\n", tokens->size());
     fprintf(file, "** FILE\n");
-    fprintf(file, "#+begin_src cpp \n%s\n#+end_src\n\n", lexer.getFile()->contents);
+    fprintf(file, "#+begin_src cpp \n%s\n#+end_src\n\n", code_file->contents);
 
     fprintf(file, "** TOKENS\n");
     fprintf(file, "#+begin_src\n");
@@ -38,7 +41,7 @@ void log_compilation(FILE *file, Lexer &lexer)
         const Token &tkn = tokens->at(i);
         fprintf(file, "[TOKEN]: idx: %u, line: %u, len: %u, type: %s, val: `%.*s`\n", tkn.index,
                 tkn.line, tkn.length, tkn_type_describe(tkn.type), tkn.length,
-                lexer.getFile()->contents + tkn.index);
+                code_file->contents + tkn.index);
     }
     fprintf(file, "#+end_src\n");
     fprintf(file, "\n** TODO: Parser Abstract Syntax Tree\n");
@@ -65,24 +68,32 @@ u8 compile(compile_options *options) noexcept
     file_t file = file_read(options->filename);
     ASSERT_RET_FAIL(file.valid_code == valid::success, "file read error");
 
-    // Lexical analysis
+    /*
+     *
+     * LEXICAL ANALYSIS
+     *
+     * */
     Lexer lexer = Lexer(&file);
     exit        = lexer.lex();
     ASSERT_RET_FAIL(exit != EXIT_DONE, "Lexer error");
-    if (options->lex_only)
-    {
-        log_compilation(fopen("output.org", "wb"), lexer);
-        return exit;
-    }
+
     // parse lexed tokens to Abstract Syntax tree
+    /*
+    **
+    ** PARSING
+    **
+    */
+	if (!options->lex_only) {
+    Parser parser = Parser(&file, &lexer);
+    parser.parse_lexer();}
+
 
     // log compiliation
     if (options->debug_info)
     {
-        FILE *output = fopen("output.org", "wb");
-        if (output)
+        if (FILE *output = fopen("output.org", "wb"))
         {
-            log_compilation(output, lexer);
+            log_compilation(output, &file, &lexer);
             fclose(output);
         }
     }

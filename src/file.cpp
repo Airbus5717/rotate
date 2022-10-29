@@ -6,7 +6,8 @@ namespace rotate
 file_t file_read(const char *name) noexcept
 {
 
-    u16 len              = strlen(name);
+    usize len = strlen(name);
+
     const char *file_ext = &(name)[len - 3];
     if (strcmp(file_ext, ".vr") != 0)
     {
@@ -34,7 +35,7 @@ file_t file_read(const char *name) noexcept
         return file_t(nullptr, nullptr, 0, valid::failure);
     }
     const usize length = (usize)ftell(file);
-	
+
     if (length + 3 > (Uint_MAX))
     {
         log_error("File too large");
@@ -72,7 +73,7 @@ file_t file_read(const char *name) noexcept
 
     // Close the file
     fclose(file);
-    return file_t(name, buffer, length, valid::success);
+    return file_t(name, buffer, (Uint)length, valid::success);
 }
 
 } // namespace rotate

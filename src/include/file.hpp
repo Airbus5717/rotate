@@ -4,19 +4,21 @@
 
 namespace rotate
 {
+
 enum class valid : u8
 {
     success,
     failure,
 };
+
 struct file_t
 {
     const char *name;
     const char *contents;
-    const usize length = 0; // contents length
+    const Uint length = 0; // contents length
     valid valid_code;
 
-    file_t(const char *name, const char *contents, const usize length, valid valid_code)
+    file_t(const char *name, const char *contents, const Uint length, valid valid_code)
         : name(name), contents(contents), length(length), valid_code(valid_code)
     {
     }

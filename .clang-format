@@ -3,6 +3,7 @@ BasedOnStyle: Microsoft
 ColumnLimit: 100
 IndentWidth: 4
 AllowShortIfStatementsOnASingleLine: true
+AllowShortCaseLabelsOnASingleLine: true
 IndentCaseLabels: true
 UseTab: Never
 AlignConsecutiveAssignments: true

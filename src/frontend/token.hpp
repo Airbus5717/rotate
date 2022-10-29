@@ -6,17 +6,18 @@
 namespace rotate
 {
 
-enum class token_type : u8
+enum class TknType : u8
 {
-    Identifier = 0,   // ids
-    BuiltinFunc,      // @ids
-    To,               // ..
-    In,               // in
-    Delete,           // 'delete'
-    Equal,            // =
-    Integer,          // refers to 10 digits ints
-    HexInteger,       // refers to Hexidecimal ints
-    BinaryInteger,    // refers to binary ints
+    Identifier = 0, // ids
+    BuiltinFunc,    // @ids
+    To,             // ..
+    In,             // in
+    Delete,         // 'delete'
+    Equal,          // =
+    Integer,        // refers to 10 digits ints
+                    //
+    //    HexInteger,       // refers to Hexidecimal ints
+    //    BinaryInteger,    // refers to binary ints
     IntKeyword,       // 'int'
     UintKeyword,      // 'uint'
     Float,            // refer to floats
@@ -72,16 +73,21 @@ enum class token_type : u8
     EOT,              // EOT - END OF TOKENS
 };
 
-const char *tkn_type_describe(const token_type type) noexcept;
+const char *tkn_type_describe(const TknType type) noexcept;
 
 struct Token
 {
-    token_type type;
+    TknType type;
     Uint index, length, line;
 
-    Token(token_type type, Uint index, Uint length, Uint line)
+    Token(TknType type, Uint index, Uint length, Uint line)
         : type(type), index(index), length(length), line(line)
     {
+    }
+
+    const char *alloc_get_value(file_t *f) const
+    {
+        return strndup(f->contents + index, length);
     }
 
     const std::string to_string() const
@@ -92,13 +98,12 @@ struct Token
     }
 };
 
-enum class LexerErrorType : u8
+enum class LexErr : u8
 {
     // Unknown token/error (default)
     UNKNOWN,
     OUT_OF_MEMORY,
     LEXER_INVALID_CHAR,
-    LEXER_INVALID_BUILTN_FN,
     // an ID can have up to a specific length
     TOO_LONG_IDENTIFIER,
     TOO_LONG_NUMBER,
@@ -123,9 +128,9 @@ enum class LexerErrorType : u8
 };
 
 const char *get_keyword_or_type(const char *, const Token &);
-const char *lexer_err_advice(const LexerErrorType) noexcept;
-const char *lexer_err_msg(const LexerErrorType) noexcept;
-bool is_token_type_length_variable(token_type);
-bool is_token_a_number(token_type);
+const char *lexer_err_advice(const LexErr) noexcept;
+const char *lexer_err_msg(const LexErr) noexcept;
+bool is_token_type_length_variable(TknType);
+bool is_token_a_number(TknType);
 
 } // namespace rotate

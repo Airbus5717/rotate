@@ -3,7 +3,7 @@
 ARG := 
 
 CXX ?= clang++
-CFLAGS := -Wall -Wextra -Wpedantic -fshort-enums -ffast-math -Wno-unused -finline-functions -fno-strict-aliasing -funroll-loops -ftree-vectorize -march=native -mtune=native -Wwrite-strings -Wno-builtin-macro-redefined -pedantic-errors -Wcast-function-type
+CFLAGS := -Wall -Wextra -Wpedantic -fshort-enums -ffast-math -Wno-unused -finline-functions -fno-strict-aliasing -funroll-loops -ftree-vectorize -march=native -mtune=native -Wwrite-strings -Wno-builtin-macro-redefined -pedantic-errors -Wcast-function-type -Wconversion
 
 SRC = $(wildcard src/*.cpp)
 SRC += $(wildcard src/**/*.cpp)
@@ -53,6 +53,8 @@ afl:
 debug:
 	$(CXX) $(SRC) -o $(BIN) $(CFLAGS) $(ANALYZE) $(DEBUG) $(CSTD) $(LIB)
 
+debug_gdb: debug
+	gdb --tui $(BIN)
 #hidden_debug:
 #	@$(CXX) $(SRC) -o $(BIN) $(CFLAGS) $(ANALYZE) $(DEBUG) $(CSTD) $(LIB) -fsanitize=undefined
 

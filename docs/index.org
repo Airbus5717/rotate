@@ -102,7 +102,7 @@ add :: fn(x: int, y: int) int {
 #+begin_src odin
 // no size specification
 
-TokenType :: enum {
+TknType :: enum {
 	Id,
 	Number,
 	Float,

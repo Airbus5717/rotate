@@ -46,7 +46,7 @@ void log_token(FILE *output, const rotate::Token tkn, const char *str)
 Uint get_digits_from_number(Uint num)
 {
     // TODO: check
-    return std::floor(std::log10(num) + 1);
+    return (Uint)std::floor(std::log10(num) + 1);
 }
 
 } // namespace rotate
