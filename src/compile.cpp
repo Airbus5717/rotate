@@ -14,7 +14,7 @@ void log_compilation(FILE *file, file_t *code_file, Lexer *lexer)
 {
     time_t rawtime;
     time(&rawtime);
-	assert(code_file && lexer);
+    assert(code_file && lexer);
 
     const auto *tokens = lexer->getTokens();
     if (tokens->size() > 0x10000000)
@@ -83,10 +83,11 @@ u8 compile(compile_options *options) noexcept
     ** PARSING
     **
     */
-	if (!options->lex_only) {
-    Parser parser = Parser(&file, &lexer);
-    parser.parse_lexer();}
-
+    if (!options->lex_only)
+    {
+        Parser parser = Parser(&file, &lexer);
+        parser.parse_lexer();
+    }
 
     // log compiliation
     if (options->debug_info)

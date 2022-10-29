@@ -17,7 +17,7 @@ u8 Parser::parse_lexer()
 {
     // NOTE(5717): error handling in parser
     // The parser will stop at the first error occured
-    return parse_director() == EXIT_SUCCESS ? EXIT_DONE : EXIT_FAILURE;
+    return parse_director();
 }
 
 u8 Parser::parse_director()
