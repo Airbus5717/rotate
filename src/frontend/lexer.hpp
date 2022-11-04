@@ -19,6 +19,7 @@ class Lexer
     u8 lex_chars();
     u8 lex_numbers();
     u8 lex_strings();
+    u8 lex_multiline_strings();
     u8 lex_binary_numbers();
     u8 lex_hex_numbers();
     u8 lex_symbols();

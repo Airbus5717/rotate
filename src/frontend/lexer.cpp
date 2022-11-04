@@ -76,7 +76,7 @@ u8 Lexer::lex_director()
     //
     if (c == '\'') return lex_chars();
     if (c == '"') return lex_strings();
-    if (c == '`') TODO("Multi line strings lex");
+    if (c == '`') return lex_multiline_strings();
 
     //
     if (c == '_' || isalpha(c)) return lex_identifiers();
@@ -319,6 +319,31 @@ u8 Lexer::lex_strings()
     if (len > UINT16_MAX)
     {
         log_error("Too long string");
+        return EXIT_FAILURE;
+    }
+    index -= len;
+
+    return add_token(TknType::String);
+}
+
+u8 Lexer::lex_multiline_strings()
+{
+    advance_len_inc();
+    while (current() != '`' && past() != '\\')
+    {
+        if (current() == '\0')
+        {
+            restore_state_for_err();
+            error = LexErr::NOT_CLOSED_STRING;
+            return EXIT_FAILURE;
+        }
+        advance_len_inc();
+    }
+    advance_len_inc();
+
+    if (len > UINT32_MAX)
+    {
+        log_error("Too long multiline string");
         return EXIT_FAILURE;
     }
     index -= len;
