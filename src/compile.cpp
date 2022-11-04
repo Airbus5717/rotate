@@ -5,8 +5,6 @@
 
 #include "frontend/lexer.hpp"
 #include "frontend/parser.hpp"
-#include <bits/types/FILE.h>
-#include <cstdlib>
 
 namespace rotate
 {
