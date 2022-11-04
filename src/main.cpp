@@ -17,7 +17,7 @@ int main(const int argc, char **const argv)
         // compile
         u8 _exit = compile(&comp_opt);
         if (_exit == EXIT_FAILURE)
-            log_error("FAILURE");
+            log_error(main_err(comp_opt.st));
         else if (_exit == EXIT_SUCCESS)
             log_info("SUCCESS");
 
@@ -30,4 +30,19 @@ int main(const int argc, char **const argv)
         print_version_and_exit();
     }
     return EXIT_SUCCESS;
+}
+
+const char *rotate::main_err(rotate::Stage s)
+{
+    using namespace rotate;
+    switch (s)
+    {
+        case Stage::file: return "FILE READ";
+        case Stage::lexer: return "LEXER";
+        case Stage::parser: return "PARSER";
+        case Stage::tchecker: return "TYPE CHECKER";
+        case Stage::logger: return "LOGGER";
+        default: return "UNKNOWN";
+    }
+    return "UNKNOWN";
 }

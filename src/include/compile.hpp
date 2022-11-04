@@ -5,17 +5,6 @@
 namespace rotate
 {
 
-enum compilation_state : u8
-{
-    cs_begin,
-    cs_file_read,
-    cs_lexer,
-    cs_parser,
-    cs_type_checker,
-    cs_end,
-    // TODO (other)
-};
-
 static void print_version_and_exit()
 {
     fprintf(stdout, "Rotate Compiler \nVersion: %s\n", VERSION);
@@ -31,6 +20,7 @@ struct compile_options
     bool debug_symbols   = false;
     bool timer           = false;
     bool lex_only        = false;
+    Stage st             = Stage::unknown;
 
     compile_options(const s32 argc, char **argv) : argc(argc), argv(argv)
     {

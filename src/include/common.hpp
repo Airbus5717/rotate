@@ -5,6 +5,16 @@
 namespace rotate
 {
 
+enum class Stage : u8
+{
+    unknown = 0,
+    file,
+    lexer,
+    parser,
+    tchecker,
+    logger,
+};
+const char *main_err(Stage);
 /*
  *  Utilites
  */

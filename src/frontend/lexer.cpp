@@ -42,7 +42,7 @@ u8 Lexer::lex()
             case EXIT_FAILURE: return report_error();
         }
     } while (true);
-    return EXIT_SUCCESS;
+    return EXIT_FAILURE;
 }
 
 inline void Lexer::skip_whitespace() noexcept
@@ -466,11 +466,12 @@ u8 Lexer::lex_symbols()
             else if (p == '*')
             {
                 advance();
+                advance();
                 // TODO: Allow nested comments
                 bool end_comment = false;
                 while (is_not_eof() && !end_comment)
                 {
-                    if ((past() != '/' && current() == '*' && peek() == '/'))
+                    if (current() == '*' && peek() == '/')
                     {
                         advance();
                         end_comment = true;

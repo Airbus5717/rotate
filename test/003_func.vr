@@ -1,0 +1,11 @@
+io :: import("std/io");
+
+add :: fn(x: int, y: int) int { 
+    return x + y;
+}
+
+main :: fn() {
+    x := add(1, 2);
+	io.printi(x);
+	io.println("");
+}

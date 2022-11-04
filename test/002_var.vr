@@ -1,0 +1,7 @@
+io :: import("std/io");
+
+main :: fn() {
+    x := 1;
+	io.printi(x);
+	io.println("");
+}

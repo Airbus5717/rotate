@@ -126,6 +126,21 @@ typedef uint32_t Uint; // global unsigned integer for this project
         }                                                                                          \
     } while (0)
 
+#define expect_semicolon(doWhenExpected, doElse)                                                   \
+    do                                                                                             \
+    {                                                                                              \
+        if (current().type != TknType::SemiColon)                                                  \
+        {                                                                                          \
+            doElse;                                                                                \
+            idx--;                                                                                 \
+            return EXIT_FAILURE;                                                                   \
+        }                                                                                          \
+        else                                                                                       \
+        {                                                                                          \
+            doWhenExpected;                                                                        \
+        }                                                                                          \
+    } while (0)
+
 // terminal colors
 #define GREEN  "\x1b[32m"
 #define YELLOW "\x1b[33m"

@@ -3,7 +3,10 @@
 ARG := 
 
 CXX ?= clang++
-CFLAGS := -Wall -Wextra -Wpedantic -fshort-enums -ffast-math -Wno-unused -finline-functions -fno-strict-aliasing -funroll-loops -ftree-vectorize -march=native -mtune=native -Wwrite-strings -Wno-builtin-macro-redefined -pedantic-errors -Wcast-function-type -Wconversion
+CFLAGS := -Wall -Wextra -Wpedantic -fshort-enums -ffast-math -Wno-unused 
+CFLAGS += -finline-functions -fno-strict-aliasing -funroll-loops -ftree-vectorize 
+CFLAGS += -march=native -mtune=native -Wwrite-strings -fno-exceptions
+CFLAGS += -Wno-builtin-macro-redefined -pedantic-errors -Wcast-function-type -Wconversion
 
 SRC = $(wildcard src/*.cpp)
 SRC += $(wildcard src/**/*.cpp)

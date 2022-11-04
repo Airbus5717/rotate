@@ -17,16 +17,17 @@ u8 Parser::parse_lexer()
 {
     // NOTE(5717): error handling in parser
     // The parser will stop at the first error occured
+    if (tokens->size() < 2) return EXIT_FAILURE;
     return parse_director();
 }
 
 u8 Parser::parse_director()
 {
-    error = PrsErr::Unknown;
     while (true)
     {
         u8 exit       = EXIT_SUCCESS;
         const Token c = current(), p = peek();
+        error = PrsErr::Unknown;
         switch (c.type)
         {
             case TknType::Identifier: {
@@ -62,13 +63,16 @@ u8 Parser::parse_director()
 u8 Parser::parse_import()
 {
     advance(); // skip 'import'
-
     // Skip '('
-    expect(current().type == TknType::OpenParen, advance(), error = PrsErr::Unknown);
+    expect(current().type == TknType::OpenParen, advance(), error = PrsErr::OpenParents);
     // Skip the string
-    expect(current().type == TknType::String, advance(), error = PrsErr::StringExpect);
+    expect(current().type == TknType::String, advance(), error = PrsErr::ImportStringExpect);
+
     ast.imports.push_back(AstImport(past().index));
-    expect(current().type == TknType::SemiColon, advance(), error = PrsErr::SemicolonExpect);
+
+    // TODO error Parser error types
+    expect(current().type == TknType::CloseParen, advance(), error = PrsErr::CloseParents);
+    expect_semicolon(advance(), error = PrsErr::SemicolonExpect);
     return EXIT_SUCCESS;
 }
 
@@ -187,8 +191,9 @@ const char *Parser::parser_error_msg(PrsErr err)
     {
         case PrsErr::Unknown: return "TODO";
         case PrsErr::GlobalScopeNotAllowed: return "Found a non Global Statement";
-        case PrsErr::StringExpect: return "Expect a string";
-        case PrsErr::SemicolonExpect: return "Expecting a SemiColon";
+        case PrsErr::ImportStringExpect: return "Import statement requires a path";
+        case PrsErr::SemicolonExpect: return "Statement requires a SemiColon";
+        case PrsErr::OpenParents: return "Missing open parentheses";
         default: TODO("parser error msg");
     }
     return "TODO: Parser error msg";
@@ -201,8 +206,9 @@ const char *Parser::parser_error_advice(PrsErr err)
     {
         case PrsErr::Unknown: return "TODO";
         case PrsErr::GlobalScopeNotAllowed: return "This Token is not Allowed in global scope";
-        case PrsErr::StringExpect: return "add a string";
-        case PrsErr::SemicolonExpect: return "Add a SemiColon";
+        case PrsErr::ImportStringExpect: return "Write the path between the parentheses";
+        case PrsErr::SemicolonExpect: return "Add a SemiColon at the end of the statement";
+        case PrsErr::OpenParents: return "Add an open parentheses '('";
         default: TODO("Parser error advice");
     }
     return "TODO: Parser error msg";

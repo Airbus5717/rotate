@@ -6,6 +6,7 @@
 #include "frontend/lexer.hpp"
 #include "frontend/parser.hpp"
 #include <bits/types/FILE.h>
+#include <cstdlib>
 
 namespace rotate
 {
@@ -65,6 +66,7 @@ u8 compile(compile_options *options) noexcept
     u8 exit = 0;
 
     // Read file
+    options->st = Stage::file;
     file_t file = file_read(options->filename);
     ASSERT_RET_FAIL(file.valid_code == valid::success, "file read error");
 
@@ -73,10 +75,11 @@ u8 compile(compile_options *options) noexcept
      * LEXICAL ANALYSIS
      *
      * */
+    options->st = Stage::lexer;
     Lexer lexer = Lexer(&file);
     exit        = lexer.lex();
-    ASSERT_RET_FAIL(exit != EXIT_DONE, "Lexer error");
-
+    if (lexer.getTokens()->size() < 2) log_error("file is empty");
+    if (exit == EXIT_FAILURE) return EXIT_FAILURE;
     // parse lexed tokens to Abstract Syntax tree
     /*
     **
@@ -85,13 +88,16 @@ u8 compile(compile_options *options) noexcept
     */
     if (!options->lex_only)
     {
+        options->st   = Stage::parser;
         Parser parser = Parser(&file, &lexer);
-        parser.parse_lexer();
+        exit          = parser.parse_lexer();
+        ASSERT_RET_FAIL(exit == EXIT_FAILURE, "Parser error");
     }
 
     // log compiliation
     if (options->debug_info)
     {
+        options->st = Stage::logger;
         if (FILE *output = fopen("output.org", "wb"))
         {
             log_compilation(output, &file, &lexer);

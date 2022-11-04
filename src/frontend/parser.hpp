@@ -34,12 +34,21 @@ struct AstFn;
 enum class PrsErr : u16
 {
     Unknown = 0,
+    // global stmts
     GlobalScopeNotAllowed,
-    OpenParents,
-    CloseParent,
-    StringExpect,
-    CharExpect,
     SemicolonExpect,
+    // global import
+    OpenParents,
+    CloseParents,
+    ImportStringExpect,
+
+    // global variables
+    GlobalMutableVar,
+    GlobalVarType,
+    GlobalLongVarExpr,
+    GlobalVarSemiColon,
+    // global structs
+    // global enums
 };
 
 enum class TypeType

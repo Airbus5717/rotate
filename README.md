@@ -3,7 +3,7 @@
 - a work in progress language 
 - inspired by C, odin and zig
 ```odin
-io :: import("std");
+io :: import("std/io");
 
 main :: fn() {
 	io.print("Hello, World\n");
