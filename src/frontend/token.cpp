@@ -4,7 +4,8 @@
 namespace rotate
 {
 
-const char *tkn_type_describe(const TknType type) noexcept
+const char *
+tkn_type_describe(const TknType type) noexcept
 {
     switch (type)
     {
@@ -73,7 +74,8 @@ const char *tkn_type_describe(const TknType type) noexcept
     }
 }
 
-const char *get_keyword_or_type(const char *string, const Token &tkn)
+const char *
+get_keyword_or_type(const char *string, const Token &tkn)
 {
 
     switch (tkn.type)
@@ -149,7 +151,8 @@ const char *get_keyword_or_type(const char *string, const Token &tkn)
     }
 }
 
-const char *lexer_err_msg(const LexErr error) noexcept
+const char *
+lexer_err_msg(const LexErr error) noexcept
 {
     switch (error)
     {
@@ -171,7 +174,8 @@ const char *lexer_err_msg(const LexErr error) noexcept
     return "TODO: error msg implementation.";
 }
 
-const char *lexer_err_advice(const LexErr error) noexcept
+const char *
+lexer_err_advice(const LexErr error) noexcept
 {
     switch (error)
     {

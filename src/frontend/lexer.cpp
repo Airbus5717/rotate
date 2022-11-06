@@ -19,7 +19,8 @@ Lexer::~Lexer() noexcept
     delete tokens;
 }
 
-void Lexer::save_log(FILE *output)
+void
+Lexer::save_log(FILE *output)
 {
     for (usize i = 0; i < tokens->size(); i++)
     {
@@ -27,7 +28,8 @@ void Lexer::save_log(FILE *output)
     }
 }
 
-u8 Lexer::lex()
+u8
+Lexer::lex()
 {
     do
     {
@@ -45,7 +47,8 @@ u8 Lexer::lex()
     return EXIT_FAILURE;
 }
 
-inline void Lexer::skip_whitespace() noexcept
+inline void
+Lexer::skip_whitespace() noexcept
 {
     while (true)
     {
@@ -64,7 +67,8 @@ inline void Lexer::skip_whitespace() noexcept
     }
 }
 
-u8 Lexer::lex_director()
+u8
+Lexer::lex_director()
 {
     skip_whitespace();
     len = 0, begin_tok_line = line;
@@ -85,12 +89,14 @@ u8 Lexer::lex_director()
     return lex_symbols();
 }
 
-std::vector<Token> *Lexer::getTokens()
+std::vector<Token> *
+Lexer::getTokens()
 {
     return tokens;
 }
 
-u8 Lexer::lex_identifiers()
+u8
+Lexer::lex_identifiers()
 {
     advance_len_inc();
     while (isalnum(current()) || current() == '_')
@@ -227,7 +233,8 @@ u8 Lexer::lex_identifiers()
     return add_token(_type);
 }
 
-u8 Lexer::lex_numbers()
+u8
+Lexer::lex_numbers()
 {
     const char c = current();
     const char p = peek();
@@ -255,7 +262,8 @@ u8 Lexer::lex_numbers()
     return add_token(reached_dot ? TknType::Float : TknType::Integer);
 }
 
-u8 Lexer::lex_hex_numbers()
+u8
+Lexer::lex_hex_numbers()
 {
     // skip '0x'
     advance_len_inc();
@@ -275,7 +283,8 @@ u8 Lexer::lex_hex_numbers()
     return add_token(TknType::Integer);
 }
 
-u8 Lexer::lex_binary_numbers()
+u8
+Lexer::lex_binary_numbers()
 {
     // skip '0b'
     advance_len_inc();
@@ -295,7 +304,8 @@ u8 Lexer::lex_binary_numbers()
     return add_token(TknType::Integer);
 }
 
-u8 Lexer::lex_strings()
+u8
+Lexer::lex_strings()
 {
     advance_len_inc();
     while (current() != '"' && past() != '\\')
@@ -326,7 +336,8 @@ u8 Lexer::lex_strings()
     return add_token(TknType::String);
 }
 
-u8 Lexer::lex_multiline_strings()
+u8
+Lexer::lex_multiline_strings()
 {
     advance_len_inc();
     while (current() != '`' && past() != '\\')
@@ -351,7 +362,8 @@ u8 Lexer::lex_multiline_strings()
     return add_token(TknType::String);
 }
 
-u8 Lexer::lex_chars()
+u8
+Lexer::lex_chars()
 {
     advance_len_inc();
     if (current() != '\\' && peek() == '\'')
@@ -395,7 +407,8 @@ u8 Lexer::lex_chars()
     return EXIT_FAILURE;
 }
 
-u8 Lexer::lex_symbols()
+u8
+Lexer::lex_symbols()
 {
     const char c = current();
     const char p = peek();
@@ -528,7 +541,8 @@ u8 Lexer::lex_symbols()
     return EXIT_FAILURE;
 }
 
-u8 Lexer::lex_builtin_funcs()
+u8
+Lexer::lex_builtin_funcs()
 {
     advance(); // skip '@'
 
@@ -542,19 +556,22 @@ u8 Lexer::lex_builtin_funcs()
     return add_token(TknType::BuiltinFunc);
 }
 
-inline void Lexer::advance()
+inline void
+Lexer::advance()
 {
     const char c = current();
     index++;
     if (c == '\n') line++;
 }
 
-inline void Lexer::advance_len_times()
+inline void
+Lexer::advance_len_times()
 {
     index += len;
 }
 
-inline void Lexer::advance_len_inc()
+inline void
+Lexer::advance_len_inc()
 {
     const char c = current();
     index++;
@@ -562,44 +579,52 @@ inline void Lexer::advance_len_inc()
     line += c == '\n'; // if (c == '\n') line++;
 }
 
-inline char Lexer::peek() const
+inline char
+Lexer::peek() const
 {
     return file->contents[index + 1];
 }
 
-inline char Lexer::current() const
+inline char
+Lexer::current() const
 {
     return file->contents[index];
 }
 
-inline char Lexer::past() const
+inline char
+Lexer::past() const
 {
     return file->contents[index - 1];
 }
 
-inline bool Lexer::is_not_eof() const
+inline bool
+Lexer::is_not_eof() const
 {
     return index < file_length;
 }
 
-inline bool Lexer::keyword_match(const char *string, Uint length)
+inline bool
+Lexer::keyword_match(const char *string, Uint length)
 {
     return strncmp(file->contents + index, string, length) == 0;
 }
 
-void Lexer::save_state()
+void
+Lexer::save_state()
 {
     save_index = index;
     save_line  = line;
 }
 
-void Lexer::restore_state_for_err()
+void
+Lexer::restore_state_for_err()
 {
     index = save_index;
     line  = save_line;
 }
 
-u8 Lexer::report_error()
+u8
+Lexer::report_error()
 {
     //
     Uint low = index, col = 0;
@@ -645,7 +670,8 @@ u8 Lexer::report_error()
     return EXIT_FAILURE;
 }
 
-u8 Lexer::add_token(const TknType type)
+u8
+Lexer::add_token(const TknType type)
 {
     // index at the end of the token
     // NOTE(Airbus5717): emplace_back constructs the token in the vector

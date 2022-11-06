@@ -3,7 +3,8 @@
 namespace rotate
 {
 
-file_t file_read(const char *name) noexcept
+file_t
+file_read(const char *name) noexcept
 {
 
     usize len = strlen(name);

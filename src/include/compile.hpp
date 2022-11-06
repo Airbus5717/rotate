@@ -5,7 +5,8 @@
 namespace rotate
 {
 
-static void print_version_and_exit()
+static void
+print_version_and_exit()
 {
     fprintf(stdout, "Rotate Compiler \nVersion: %s\n", VERSION);
     exit(0);

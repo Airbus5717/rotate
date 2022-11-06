@@ -9,7 +9,8 @@
 namespace rotate
 {
 
-void log_compilation(FILE *file, file_t *code_file, Lexer *lexer)
+void
+log_compilation(FILE *file, file_t *code_file, Lexer *lexer)
 {
     time_t rawtime;
     time(&rawtime);
@@ -49,7 +50,8 @@ void log_compilation(FILE *file, file_t *code_file, Lexer *lexer)
     log_info("Logging complete");
 }
 
-u8 handle_err(u8 exit, const char *err_string)
+u8
+handle_err(u8 exit, const char *err_string)
 {
     if (exit == 1)
     {
@@ -58,7 +60,8 @@ u8 handle_err(u8 exit, const char *err_string)
     return exit;
 }
 
-u8 compile(compile_options *options) noexcept
+u8
+compile(compile_options *options) noexcept
 {
     // Parser *parser;
     u8 exit = 0;

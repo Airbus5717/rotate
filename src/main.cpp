@@ -1,7 +1,8 @@
 #include "include/common.hpp"
 #include "include/compile.hpp"
 
-int main(const int argc, char **const argv)
+int
+main(const int argc, char **const argv)
 {
     using namespace rotate;
 
@@ -32,7 +33,8 @@ int main(const int argc, char **const argv)
     return EXIT_SUCCESS;
 }
 
-const char *rotate::main_err(rotate::Stage s)
+const char *
+rotate::main_err(rotate::Stage s)
 {
     using namespace rotate;
     switch (s)

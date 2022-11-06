@@ -13,7 +13,8 @@ Parser::Parser(file_t *file, Lexer *lexer) : file(file), tokens(lexer->getTokens
 
 Parser::~Parser() = default;
 
-u8 Parser::parse_lexer()
+u8
+Parser::parse_lexer()
 {
     // NOTE(5717): error handling in parser
     // The parser will stop at the first error occured
@@ -21,7 +22,8 @@ u8 Parser::parse_lexer()
     return parse_director();
 }
 
-u8 Parser::parse_director()
+u8
+Parser::parse_director()
 {
     while (true)
     {
@@ -60,7 +62,8 @@ u8 Parser::parse_director()
 }
 
 // Import statements
-u8 Parser::parse_import()
+u8
+Parser::parse_import()
 {
     advance(); // skip 'import'
     // Skip '('
@@ -76,58 +79,68 @@ u8 Parser::parse_import()
     return EXIT_SUCCESS;
 }
 
-u8 Parser::parse_gl_var()
+u8
+Parser::parse_gl_var()
 {
     TODO("parse global variables");
     return EXIT_FAILURE;
 }
 
 // Functions
-u8 Parser::parse_function()
+u8
+Parser::parse_function()
 {
     TODO("parse functions");
     return EXIT_FAILURE;
 }
 
 // Enums
-u8 Parser::parse_enum()
+u8
+Parser::parse_enum()
 {
     TODO("parse enums");
     return EXIT_FAILURE;
 }
 
-u8 Parser::parse_struct()
+u8
+Parser::parse_struct()
 {
     TODO("parse structs");
     return EXIT_FAILURE;
 }
 
-Token Parser::current() const
+Token
+Parser::current() const
 {
     return tokens->at(idx);
 }
 
-Token Parser::past() const
+Token
+Parser::past() const
 {
     return tokens->at(idx - 1);
 }
 
-Token Parser::peek() const
+Token
+Parser::peek() const
 {
     return tokens->at(idx + 1);
 }
 
-void Parser::advance()
+void
+Parser::advance()
 {
     idx++;
 }
 
-u8 Parser::parse_error_expect_token(TknType expected)
+u8
+Parser::parse_error_expect_token(TknType expected)
 {
     return parser_error(convert_tkn_type_to_parse_error(expected));
 }
 
-PrsErr Parser::convert_tkn_type_to_parse_error(TknType tkn)
+PrsErr
+Parser::convert_tkn_type_to_parse_error(TknType tkn)
 {
     switch (tkn)
     {
@@ -136,7 +149,8 @@ PrsErr Parser::convert_tkn_type_to_parse_error(TknType tkn)
     return PrsErr::Unknown;
 }
 
-u8 Parser::parser_error(PrsErr err)
+u8
+Parser::parser_error(PrsErr err)
 {
     Token c  = current();
     Uint low = c.index, line = c.line, len = c.length;
@@ -185,7 +199,8 @@ u8 Parser::parser_error(PrsErr err)
     return EXIT_FAILURE;
 }
 
-const char *Parser::parser_error_msg(PrsErr err)
+const char *
+Parser::parser_error_msg(PrsErr err)
 {
     switch (err)
     {
@@ -199,7 +214,8 @@ const char *Parser::parser_error_msg(PrsErr err)
     return "TODO: Parser error msg";
 }
 
-const char *Parser::parser_error_advice(PrsErr err)
+const char *
+Parser::parser_error_advice(PrsErr err)
 {
     using rotate::PrsErr;
     switch (err)
@@ -214,7 +230,8 @@ const char *Parser::parser_error_advice(PrsErr err)
     return "TODO: Parser error msg";
 }
 
-u8 Parser::parse_error_use_global_err()
+u8
+Parser::parse_error_use_global_err()
 {
     return parser_error(error);
 }
