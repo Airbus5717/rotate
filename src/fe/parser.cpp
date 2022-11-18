@@ -202,31 +202,16 @@ Parser::parser_error(PrsErr err)
 const char *
 Parser::parser_error_msg(PrsErr err)
 {
-    switch (err)
-    {
-        case PrsErr::Unknown: return "TODO";
-        case PrsErr::GlobalScopeNotAllowed: return "Found a non Global Statement";
-        case PrsErr::ImportStringExpect: return "Import statement requires a path";
-        case PrsErr::SemicolonExpect: return "Statement requires a SemiColon";
-        case PrsErr::OpenParents: return "Missing open parentheses";
-        default: TODO("parser error msg");
-    }
+    for (auto const &p : parser_errors)
+        if (p.err == err) return p.msg;
     return "TODO: Parser error msg";
 }
 
 const char *
 Parser::parser_error_advice(PrsErr err)
 {
-    using rotate::PrsErr;
-    switch (err)
-    {
-        case PrsErr::Unknown: return "TODO";
-        case PrsErr::GlobalScopeNotAllowed: return "This Token is not Allowed in global scope";
-        case PrsErr::ImportStringExpect: return "Write the path between the parentheses";
-        case PrsErr::SemicolonExpect: return "Add a SemiColon at the end of the statement";
-        case PrsErr::OpenParents: return "Add an open parentheses '('";
-        default: TODO("Parser error advice");
-    }
+    for (auto const &p : parser_errors)
+        if (p.err == err) return p.advice;
     return "TODO: Parser error msg";
 }
 

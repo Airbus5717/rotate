@@ -1,10 +1,9 @@
-#include "include/compile.hpp"
-#include "include/common.hpp"
-#include "include/defines.hpp"
-#include "include/file.hpp"
+#include "../include/compile.hpp"
+#include "../include/common.hpp"
+#include "../include/defines.hpp"
+#include "../include/file.hpp"
 
-#include "frontend/lexer.hpp"
-#include "frontend/parser.hpp"
+#include "../fe/parser.hpp"
 
 namespace rotate
 {

@@ -1,6 +1,6 @@
-#include "include/common.hpp"
+#include "../include/common.hpp"
 
-#include "frontend/token.hpp"
+#include "../fe/token.hpp"
 //* USEFUL COMMON UTILS FOR ROTATE-LANG
 
 namespace rotate

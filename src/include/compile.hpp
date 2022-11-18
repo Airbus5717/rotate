@@ -42,7 +42,7 @@ struct compile_options
             {
                 timer = true;
             }
-            else if (strcmp(string, "--lex-only") == 0)
+            else if (strcmp(string, "--lex") == 0)
             {
                 lex_only = true;
             }
