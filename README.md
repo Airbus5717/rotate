@@ -1,6 +1,6 @@
 
 ## Rotate (C++)
-- a work in progress language 
+- **Warning** Work is still in progress do not use for any serious project 
 - inspired by C, odin and zig
 ```odin
 io :: import("std/io");
