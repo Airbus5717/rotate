@@ -7,5 +7,5 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_FLAGS "-Wall -Wextra -O2 -march=native -mtune=native -g -DDEBUG -Wconversion")
 
 file(GLOB_RECURSE SOURCES "src/*.cpp")
-add_executable(rotate ${SOURCES})
+add_executable(vr ${SOURCES})
 

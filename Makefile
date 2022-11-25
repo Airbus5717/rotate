@@ -1,16 +1,18 @@
 .PHONY: redo clean debug all
 
 ARG := 
-
 CXX ?= clang++
-CFLAGS := -Wall -Wextra -Wpedantic -fshort-enums -ffast-math -Wno-unused 
-CFLAGS += -finline-functions -fno-strict-aliasing -funroll-loops -ftree-vectorize 
-CFLAGS += -march=native -mtune=native -Wwrite-strings -fno-exceptions
-CFLAGS += -Wno-builtin-macro-redefined -pedantic-errors -Wcast-function-type -Wconversion
-
 SRC = $(wildcard src/*.cpp)
 SRC += $(wildcard src/**/*.cpp)
 SRC_C_H = src/**/*.cpp src/**/*.hpp
+STRICT  = -Werror
+CSTD = -std=c++11
+CSTD_LINT = --std=c++11
+DEBUG  = -g -DDEBUG -ggdb3 -pg	
+BIN  = ./build/vr
+CFLAGS := -Wall -Wextra -Wpedantic -fshort-enums -ffast-math -Wno-unused 
+CFLAGS += -finline-functions -fno-strict-aliasing -funroll-loops -ftree-vectorize 
+CFLAGS += -march=native -mtune=native -Wwrite-strings -fno-exceptions
 
 
 ANALYZE := 
@@ -24,12 +26,6 @@ else
 CFLAGS += 
 endif
 
-
-STRICT  = -Werror
-CSTD = -std=c++11
-CSTD_LINT = --std=c++11
-DEBUG  = -g -DDEBUG -ggdb3 -pg	
-BIN  = ./build/rotate
 
 
 all: format

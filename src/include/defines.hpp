@@ -42,7 +42,7 @@ typedef uint64_t u64;
 typedef unsigned long long int usize;
 typedef signed long long int isize;
 
-typedef uint32_t Uint; // global unsigned integer for this project
+typedef u32 Uint; // global unsigned integer for this project
 #define Uint_MAX UINT32_MAX
 // due to unsigned integer
 #define Uint_MIN 0

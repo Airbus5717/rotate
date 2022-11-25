@@ -424,6 +424,8 @@ Lexer::lex_symbols()
         case ';': return add_token(TknType::SemiColon);
         case ',': return add_token(TknType::Comma);
         // TODO(5717) bug below needs to check an eql during peeking
+
+        // more than one length char
         case '.': {
             if (p == '.')
             {
@@ -534,6 +536,11 @@ Lexer::lex_symbols()
                 case '\0': return EXIT_DONE;
                 case '\t': this->error = LexErr::TABS; break;
                 case '\r': this->error = LexErr::WINDOWS_CRAP; break;
+                case '#': {
+                    while (current() != '\n')
+                        advance();
+                    break;
+                }
                 default: this->error = LexErr::LEXER_INVALID_CHAR;
             }
         }
@@ -561,7 +568,7 @@ Lexer::advance()
 {
     const char c = current();
     index++;
-    if (c == '\n') line++;
+    line += (c == '\n'); // if (c == '\n') line++;
 }
 
 inline void
@@ -576,7 +583,7 @@ Lexer::advance_len_inc()
     const char c = current();
     index++;
     len++;
-    line += c == '\n'; // if (c == '\n') line++;
+    line += (c == '\n'); // if (c == '\n') line++;
 }
 
 inline char
