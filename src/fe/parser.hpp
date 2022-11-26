@@ -22,8 +22,6 @@ struct BinaryExpr;
 struct UnaryExpr;
 
 // Ast and Symbol table
-struct Symbol;
-struct SymbolTable;
 struct Ast;
 struct AstImport;
 struct AstGlVar;
@@ -60,7 +58,7 @@ struct ParserErr
     const char *advice;
 };
 
-constexpr ParserErr parser_errors[] = {
+static constexpr ParserErr parser_errors[] = {
     {
         .err    = PrsErr::Unknown,
         .msg    = "Unknown Error Message",
@@ -93,37 +91,58 @@ constexpr ParserErr parser_errors[] = {
     },
 };
 
-enum class TypeType
+enum SymbolKind
 {
-    undecided,
-    _boolean,
-    _integer,
-    _float,
-    _chr,
-    _array,
-    _struct,
-    _enum,
+    Array = 0,
+    Struct,
+    Enum,
+    Alias,
+    Other,
 };
 
-struct LiteralType
+enum TypePrimaryKind : u8
 {
 };
 
-struct ArrayType
+enum TypeKind : u8
 {
+    RT_Primary = 0,
+    RT_Array,
+    RT_Array_Str,
+    RT_Pointer,
+    RT_Structure,
+    RT_Enum,
+    RT_Alias,
+};
+
+enum TypeModifier : u8
+{
+
+    pub      = 1 << 0, // globals specific
+    constant = 1 << 1,
+
+    // TODO:
+
+    comptime = 1 << 2, //
+    _static  = 1 << 3, // globals specific
+    _inline  = 1 << 4, // function specific
+};
+
+struct Array
+{
+    usize size;
+    u8 pointer_level;
     Type *type;
-    // NOTE(5717): NULL means heap array
-    Uint *length;
 };
 
 struct Type
 {
-    TypeType type;
-    union UType {
-        LiteralType lit;
-        ArrayType arr;
-    };
+    TypeKind kind;
+    TypeModifier mod;
+
+    void *extra;
 };
+
 /*
  * Expressions
  */
@@ -184,25 +203,10 @@ struct Expr
 };
 
 /*
- * Symbols section
- *  */
-struct Symbol
-{
-    Uint id_idx;
-};
-
-// NOTE(5717): database of symbols
-struct SymbolTable
-{
-    std::vector<Symbol> symbols;
-};
-
-/*
  * Abstract Syntax tree
  */
 struct Ast
 {
-    SymbolTable smbl_table;
     std::vector<AstImport> imports;
     std::vector<AstGlVar> gl_variables;
     std::vector<AstStruct> structs;
@@ -251,7 +255,6 @@ struct AstBlock
 struct AstFn
 {
     AstBlock block;
-    SymbolTable sub_table;
 };
 
 class Parser

@@ -32,30 +32,30 @@ Parser::parse_director()
         error = PrsErr::Unknown;
         switch (c.type)
         {
-            case TknType::Identifier: {
-                if (p.type == TknType::ColonColon)
+        case TknType::Identifier: {
+            if (p.type == TknType::ColonColon)
+            {
+                advance();
+                advance();
+                switch (current().type)
                 {
-                    advance();
-                    advance();
-                    switch (current().type)
-                    {
-                        case TknType::Import: exit = parse_import(); break;
-                        case TknType::Function: exit = parse_function(); break;
-                        case TknType::Struct: exit = parse_struct(); break;
-                        case TknType::Enum: exit = parse_enum(); break;
-                        // TODO Global variables
-                        default: exit = parse_gl_var();
-                    }
-                    if (exit == EXIT_FAILURE) return parse_error_use_global_err();
+                case TknType::Import: exit = parse_import(); break;
+                case TknType::Function: exit = parse_function(); break;
+                case TknType::Struct: exit = parse_struct(); break;
+                case TknType::Enum: exit = parse_enum(); break;
+                // TODO Global variables
+                default: exit = parse_gl_var();
                 }
-                else
-                {
-                    return parse_error_expect_token(TknType::ColonColon);
-                }
+                if (exit == EXIT_FAILURE) return parse_error_use_global_err();
             }
-            break;
-            case TknType::EOT: return EXIT_SUCCESS;
-            default: return parse_error_expect_token(TknType::Identifier);
+            else
+            {
+                return parse_error_expect_token(TknType::ColonColon);
+            }
+        }
+        break;
+        case TknType::EOT: return EXIT_SUCCESS;
+        default: return parse_error_expect_token(TknType::Identifier);
         }
     }
     return EXIT_FAILURE;
@@ -144,7 +144,7 @@ Parser::convert_tkn_type_to_parse_error(TknType tkn)
 {
     switch (tkn)
     {
-        default: TODO("Parser handle tkn Type conversion");
+    default: TODO("Parser handle tkn Type conversion");
     }
     return PrsErr::Unknown;
 }

@@ -37,7 +37,7 @@ file_read(const char *name) noexcept
     }
     const usize length = (usize)ftell(file);
 
-    if (length + 3 > (Uint_MAX))
+    if (length > (Uint_MAX - 3))
     {
         log_error("File too large");
         fclose(file);
