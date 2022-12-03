@@ -39,12 +39,12 @@ rotate::main_err(rotate::Stage s)
     using namespace rotate;
     switch (s)
     {
-        case Stage::file: return "FILE READ";
-        case Stage::lexer: return "LEXER";
-        case Stage::parser: return "PARSER";
-        case Stage::tchecker: return "TYPE CHECKER";
-        case Stage::logger: return "LOGGER";
-        default: return "UNKNOWN";
+    case Stage::file: return "FILE READ";
+    case Stage::lexer: return "LEXER";
+    case Stage::parser: return "PARSER";
+    case Stage::tchecker: return "TYPE CHECKER";
+    case Stage::logger: return "LOGGER";
+    default: return "UNKNOWN";
     }
     return "UNKNOWN";
 }
