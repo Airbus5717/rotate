@@ -39,6 +39,8 @@ Lexer::lex()
         case EXIT_DONE:
             len = 0;
             add_token(TknType::EOT);
+            add_token(TknType::EOT);
+            add_token(TknType::EOT);
             tokens->shrink_to_fit();
             return EXIT_SUCCESS;
         case EXIT_FAILURE: return report_error();

@@ -83,6 +83,7 @@ u8
 Parser::parse_gl_var()
 {
     TODO("parse global variables");
+
     return EXIT_FAILURE;
 }
 
