@@ -6,8 +6,8 @@ SRC = $(wildcard src/*.cpp)
 SRC += $(wildcard src/**/*.cpp)
 SRC_C_H = src/**/*.cpp src/**/*.hpp
 STRICT  = -Werror
-CSTD = -std=c++11
-CSTD_LINT = --std=c++11
+CSTD = -std=c++20
+CSTD_LINT = --std=c++17
 DEBUG  = -g -DDEBUG -ggdb3 -pg	
 BIN  = ./build/vr
 CFLAGS := -Wall -Wextra -Wpedantic -fshort-enums -ffast-math -Wno-unused 
