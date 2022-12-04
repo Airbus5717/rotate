@@ -8,7 +8,7 @@ namespace rotate
 static void
 print_version_and_exit()
 {
-    fprintf(stdout, "Rotate Compiler \nVersion: %s\n", VERSION);
+    fprintf(stdout, "Rotate Compiler \nVersion: %s\n", RTVERSION);
     exit(0);
 }
 
@@ -61,7 +61,6 @@ struct compile_options
     }
 };
 
-//
 u8 compile(compile_options *options) noexcept;
 
 } // namespace rotate

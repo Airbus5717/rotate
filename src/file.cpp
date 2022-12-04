@@ -1,4 +1,4 @@
-#include "../include/file.hpp"
+#include "include/file.hpp"
 
 namespace rotate
 {
@@ -39,7 +39,7 @@ file_read(const char *name) noexcept
 
     if (length > (Uint_MAX - 3))
     {
-        log_error("File too large");
+        log_error("File is too large");
         fclose(file);
         return file_t(nullptr, nullptr, 0, valid::failure);
     }

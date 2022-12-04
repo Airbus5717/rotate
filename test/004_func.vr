@@ -1,19 +1,11 @@
 io :: import("std/io");
 
-// TODO: another option 
-/* 
-add :: fn(x, y: int) int { 
-	return x + y;
-}
-*/
-
 add :: fn(x: int, y: int) int { 
     return x + y;
 }
 
 main :: fn() {
-    x := add(1, 2);
-	io.print_int(x);
+	io.print_int(add(1, 2)); // Should print `3\n`
 	io.println("");
 }
 

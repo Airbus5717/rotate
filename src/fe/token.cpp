@@ -180,10 +180,10 @@ lexer_err_advice(const LexErr error) noexcept
     switch (error)
     {
     case LexErr::LEXER_INVALID_CHAR: return "remove this character";
-    case LexErr::OUT_OF_MEMORY: return "The compiler needs more RAM";
+    case LexErr::OUT_OF_MEMORY: return "The compiler needs more memory";
     case LexErr::TOO_LONG_IDENTIFIER: return "Identifier must not exceed 100 characters";
     case LexErr::TOO_LONG_NUMBER: return "Number must not exceed 100 digits";
-    case LexErr::TOO_LONG_STRING: return "String must not exceed (UINT_MAX / 100000) characters";
+    case LexErr::TOO_LONG_STRING: return "String must not exceed (UINT_MAX / 2) characters";
     case LexErr::NOT_CLOSED_CHAR: return "Close the char with a quote";
     case LexErr::NOT_CLOSED_STRING: return "Close the string with a double quote";
     case LexErr::END_OF_FILE: return "Needs more code for compiling";

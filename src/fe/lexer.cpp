@@ -11,6 +11,7 @@ Lexer::Lexer(file_t *file)
 {
     ASSERT_NULL(file, "Lexer File passed is a null pointer");
     ASSERT_NULL(tokens, "Lexer vec of tokens passed is a null pointer");
+
     tokens->reserve(file->length / 2);
 }
 
@@ -36,13 +37,14 @@ Lexer::lex()
         switch (lex_director())
         {
         case EXIT_SUCCESS: break;
-        case EXIT_DONE:
+        case EXIT_DONE: {
             len = 0;
             add_token(TknType::EOT);
             add_token(TknType::EOT);
             add_token(TknType::EOT);
             tokens->shrink_to_fit();
             return EXIT_SUCCESS;
+        }
         case EXIT_FAILURE: return report_error();
         }
     } while (true);
@@ -82,7 +84,6 @@ Lexer::lex_director()
     //
     if (c == '\'') return lex_chars();
     if (c == '"') return lex_strings();
-    if (c == '`') return lex_multiline_strings();
 
     //
     if (c == '_' || isalpha(c)) return lex_identifiers();
@@ -310,7 +311,7 @@ u8
 Lexer::lex_strings()
 {
     advance_len_inc();
-    while (current() != '"' && past() != '\\')
+    while (true)
     {
         if (current() == '\0')
         {
@@ -318,49 +319,30 @@ Lexer::lex_strings()
             error = LexErr::NOT_CLOSED_STRING;
             return EXIT_FAILURE;
         }
-        if (current() == '\n')
+
+        if (current() == '"')
         {
-            restore_state_for_err();
-            error = LexErr::NOT_CLOSED_STRING;
-            return EXIT_FAILURE;
+            if (past() == '\\')
+            {
+                advance_len_inc();
+                continue;
+            }
+            else
+                break;
         }
         advance_len_inc();
     }
     advance_len_inc();
+    printf("current(): %c\n", current());
 
-    if (len > UINT16_MAX)
+    if (len > (Uint_MAX / 2))
     {
-        log_error("Too long string");
+        restore_state_for_err();
+        log_error("A string is not allowed to be longer than (Uint_MAX / 2)");
+        error = LexErr::TOO_LONG_STRING;
         return EXIT_FAILURE;
     }
     index -= len;
-
-    return add_token(TknType::String);
-}
-
-u8
-Lexer::lex_multiline_strings()
-{
-    advance_len_inc();
-    while (current() != '`' && past() != '\\')
-    {
-        if (current() == '\0')
-        {
-            restore_state_for_err();
-            error = LexErr::NOT_CLOSED_STRING;
-            return EXIT_FAILURE;
-        }
-        advance_len_inc();
-    }
-    advance_len_inc();
-
-    if (len > UINT32_MAX)
-    {
-        log_error("Too long multiline string");
-        return EXIT_FAILURE;
-    }
-    index -= len;
-
     return add_token(TknType::String);
 }
 
@@ -561,7 +543,7 @@ Lexer::lex_builtin_funcs()
         advance_len_inc();
     }
     index -= len;
-
+    // NOTE(5717): check if needed to specify the type
     return add_token(TknType::BuiltinFunc);
 }
 

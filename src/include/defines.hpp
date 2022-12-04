@@ -22,8 +22,10 @@
 namespace rotate
 {
 
-#define VERSION "0.0.1"
-const auto _VERSION = VERSION;
+#ifndef RTVERSION
+#define RTVERSION "0.0.1"
+const auto _VERSION = RTVERSION;
+#endif
 
 typedef float f32;
 typedef double f64;
