@@ -10,8 +10,8 @@ CSTD = -std=c++20
 CSTD_LINT = --std=c++17
 DEBUG  = -g -DDEBUG -ggdb3 -pg	
 BIN  = ./build/vr
-CFLAGS := -Wall -Wextra -Wpedantic -fshort-enums -ffast-math -Wno-unused 
-CFLAGS += -finline-functions -fno-strict-aliasing -funroll-loops -ftree-vectorize 
+CFLAGS := -Wall -Wextra -Wpedantic -ffast-math -Wno-unused 
+CFLAGS += -finline-functions -fno-strict-aliasing -funroll-loops
 CFLAGS += -march=native -mtune=native -Wwrite-strings -fno-exceptions
 
 

@@ -1,6 +1,4 @@
 #include "include/compile.hpp"
-#include "include/common.hpp"
-#include "include/defines.hpp"
 #include "include/file.hpp"
 
 #include "fe/parser.hpp"
