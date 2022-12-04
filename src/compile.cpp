@@ -1,9 +1,9 @@
-#include "../include/compile.hpp"
-#include "../include/common.hpp"
-#include "../include/defines.hpp"
-#include "../include/file.hpp"
+#include "include/compile.hpp"
+#include "include/common.hpp"
+#include "include/defines.hpp"
+#include "include/file.hpp"
 
-#include "../fe/parser.hpp"
+#include "fe/parser.hpp"
 
 namespace rotate
 {
@@ -24,6 +24,7 @@ log_compilation(FILE *file, file_t *code_file, Lexer *lexer)
     log_warn("Logging will slow down compiliation and use alot of memory");
     fprintf(file, "#+TITLE: COMPILATION LOG\n");
     fprintf(file, "#+OPTIONS: toc:nil num:nil\n");
+    fprintf(file, "#+AUTHOR: Rotate compiler\n");
     fprintf(file, "#+DATE: %s\n", asctime(localtime(&rawtime)));
     fprintf(file, "** Meta\n");
     fprintf(file, "- filename: =%s=\n", code_file->name);

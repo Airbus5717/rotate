@@ -333,7 +333,6 @@ Lexer::lex_strings()
         advance_len_inc();
     }
     advance_len_inc();
-    printf("current(): %c\n", current());
 
     if (len > (Uint_MAX / 2))
     {
