@@ -37,7 +37,7 @@ file_read(const char *name) noexcept
     }
     const usize length = (usize)ftell(file);
 
-    if (length > (Uint_MAX - 3))
+    if (length > (UINT_MAX - 3))
     {
         log_error("File is too large");
         fclose(file);
@@ -74,7 +74,7 @@ file_read(const char *name) noexcept
 
     // Close the file
     fclose(file);
-    return file_t(name, buffer, (Uint)length, valid::success);
+    return file_t(name, buffer, (UINT)length, valid::success);
 }
 
 } // namespace rotate

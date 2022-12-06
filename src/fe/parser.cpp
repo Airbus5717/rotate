@@ -154,10 +154,10 @@ u8
 Parser::parser_error(PrsErr err)
 {
     Token c  = current();
-    Uint low = c.index, line = c.line, len = c.length;
+    UINT low = c.index, line = c.line, len = c.length;
 
     //
-    Uint col = 0;
+    UINT col = 0;
     while (file->contents[low] != '\n' && low > 0)
     {
         low--;
@@ -166,7 +166,7 @@ Parser::parser_error(PrsErr err)
     low = low > 1 ? low + 1 : 0;
 
     //
-    Uint _length = c.index;
+    UINT _length = c.index;
     while (file->contents[_length] != '\n' && _length + 1 < file->length)
         _length++;
 
@@ -179,10 +179,10 @@ Parser::parser_error(PrsErr err)
     // line from source code
     fprintf(stderr, " %s%u%s | %.*s\n", LYELLOW, line, RESET, _length, (file->contents + low));
 
-    Uint num_line_digits = get_digits_from_number(line);
+    UINT num_line_digits = get_digits_from_number(line);
 
     // arrows pointing to error location
-    Uint spaces = c.index - low + 1;
+    UINT spaces = c.index - low + 1;
     if (len < 101)
     {
         char *arrows = (char *)alloca(len + 1);

@@ -8,7 +8,7 @@ namespace rotate
 enum class BaseType : u8
 {
     TInt = 0,
-    TUint,
+    TUINT,
     TFloat,
     TChar, // u8
     TBool,

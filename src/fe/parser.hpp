@@ -118,7 +118,7 @@ enum class UnaryOpType
 struct LitExpr
 {
     LiteralExprType type;
-    Uint val_idx;
+    UINT val_idx;
 };
 
 struct UnaryExpr
@@ -159,10 +159,10 @@ struct AstImport
     // 0  1  2     34    56
     // io :: import("std");
     // ^^id          ^^^value
-    Uint id_idx;
-    Uint val_idx;
+    UINT id_idx;
+    UINT val_idx;
 
-    AstImport(Uint val) : id_idx(val - 4), val_idx(val)
+    AstImport(UINT val) : id_idx(val - 4), val_idx(val)
     {
     }
 
@@ -174,7 +174,7 @@ struct AstGlVar
     // NOTE(5717): GL Variables must be const
     // and at comptime known their value
     // id, (comptime)value, type
-    Uint id_idx;
+    UINT id_idx;
     Type type;
 };
 
@@ -204,7 +204,7 @@ class Parser
     Ast ast;
     std::vector<Token> *tokens;
     PrsErr error;
-    Uint idx;
+    UINT idx;
 
     u8 parse_director();
     // global stmts

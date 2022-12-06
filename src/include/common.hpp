@@ -27,6 +27,6 @@ void log_info(const char *);
 void log_warn(const char *);
 
 //
-Uint get_digits_from_number(Uint);
+UINT get_digits_from_number(UINT);
 
 } // namespace rotate

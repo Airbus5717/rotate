@@ -44,9 +44,9 @@ typedef uint64_t u64;
 typedef unsigned long long int usize;
 typedef signed long long int isize;
 
-typedef u32 Uint; // global unsigned integer for this project
-#define Uint_MAX UINT32_MAX
-#define Uint_MIN 0
+typedef u32 UINT; // global unsigned integer for this project
+#define RUUINT_MAX UUINT32_MAX
+#define RUUINT_MIN 0
 
 #define ASSERT(expr, msg)                                                                          \
     do                                                                                             \
@@ -151,8 +151,8 @@ typedef u32 Uint; // global unsigned integer for this project
 //
 #define RESET "\x1b[0m"
 //
-#define BOLD  "\x1b[1m"
-#define FAINT "\x1b[2m"
+#define BOLD   "\x1b[1m"
+#define FAUINT "\x1b[2m"
 //
 #define BLACK    "\x1b[30m"
 #define WHITE    "\x1b[37m"

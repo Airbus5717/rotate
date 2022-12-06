@@ -66,7 +66,7 @@ tkn_type_describe(const TknType type) noexcept
     case TknType::Enum: return "enum";
     case TknType::Nil: return "nil (null)";
     case TknType::ColonColon: return "ConstDef";
-    case TknType::UintKeyword: return "uint";
+    case TknType::UINTKeyword: return "uint";
     case TknType::GreaterEql: return ">=";
     case TknType::LessEql: return "<=";
     case TknType::EOT: return "End OF Tokens";
@@ -86,7 +86,7 @@ get_keyword_or_type(const char *string, const Token &tkn)
     case TknType::GreaterEql: return ">=";
     case TknType::LessEql: return "<=";
     case TknType::ColonColon: return "::";
-    case TknType::UintKeyword: return "uint";
+    case TknType::UINTKeyword: return "uint";
     case TknType::Function: return "fn";
     case TknType::If: return "if";
     case TknType::Or: return "or";
@@ -183,7 +183,7 @@ lexer_err_advice(const LexErr error) noexcept
     case LexErr::OUT_OF_MEMORY: return "The compiler needs more memory";
     case LexErr::TOO_LONG_IDENTIFIER: return "Identifier must not exceed 100 characters";
     case LexErr::TOO_LONG_NUMBER: return "Number must not exceed 100 digits";
-    case LexErr::TOO_LONG_STRING: return "String must not exceed (UINT_MAX / 2) characters";
+    case LexErr::TOO_LONG_STRING: return "String must not exceed (UUUINT_MAX / 2) characters";
     case LexErr::NOT_CLOSED_CHAR: return "Close the char with a quote";
     case LexErr::NOT_CLOSED_STRING: return "Close the string with a double quote";
     case LexErr::END_OF_FILE: return "Needs more code for compiling";

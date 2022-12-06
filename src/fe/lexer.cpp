@@ -176,7 +176,7 @@ Lexer::lex_identifiers()
             if (keyword_match("bool", 4)) _type = TknType::BoolKeyword;
             break;
         case 'u':
-            if (keyword_match("uint", 4)) _type = TknType::UintKeyword;
+            if (keyword_match("uint", 4)) _type = TknType::UINTKeyword;
             break;
         }
         break;
@@ -334,10 +334,10 @@ Lexer::lex_strings()
     }
     advance_len_inc();
 
-    if (len > (Uint_MAX / 2))
+    if (len > (UINT_MAX / 2))
     {
         restore_state_for_err();
-        log_error("A string is not allowed to be longer than (Uint_MAX / 2)");
+        log_error("A string is not allowed to be longer than (UUINT_MAX / 2)");
         error = LexErr::TOO_LONG_STRING;
         return EXIT_FAILURE;
     }
@@ -594,7 +594,7 @@ Lexer::is_not_eof() const
 }
 
 inline bool
-Lexer::keyword_match(const char *string, Uint length)
+Lexer::keyword_match(const char *string, UINT length)
 {
     return strncmp(file->contents + index, string, length) == 0;
 }
@@ -617,7 +617,7 @@ u8
 Lexer::report_error()
 {
     //
-    Uint low = index, col = 0;
+    UINT low = index, col = 0;
     while (file->contents[low] != '\n' && low > 0)
     {
         low--;
@@ -626,7 +626,7 @@ Lexer::report_error()
     low = low > 1 ? low + 1 : 0;
 
     //
-    Uint _length = index;
+    UINT _length = index;
     while (file->contents[_length] != '\n' && _length + 1 < file->length)
         _length++;
 
@@ -639,10 +639,10 @@ Lexer::report_error()
     // line from source code
     fprintf(stderr, " %s%u%s | %.*s\n", LYELLOW, line, RESET, _length, (file->contents + low));
 
-    Uint num_line_digits = get_digits_from_number(line);
+    UINT num_line_digits = get_digits_from_number(line);
 
     // arrows pointing to error location
-    Uint spaces = index - low + 1;
+    UINT spaces = index - low + 1;
     if (len < 101)
     {
         char *arrows = (char *)alloca(len + 1);
@@ -667,7 +667,7 @@ Lexer::add_token(const TknType type)
     // NOTE(Airbus5717): emplace_back constructs the token in the vector
     tokens->emplace_back(type, index, len, begin_tok_line);
 
-    for (Uint i = 0; i < len; i++)
+    for (UINT i = 0; i < len; i++)
         advance();
 
     return EXIT_SUCCESS;

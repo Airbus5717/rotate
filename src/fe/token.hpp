@@ -19,7 +19,7 @@ enum class TknType : u8
     //    HexInteger,       // refers to Hexidecimal ints
     //    BinaryInteger,    // refers to binary ints
     IntKeyword,       // 'int'
-    UintKeyword,      // 'uint'
+    UINTKeyword,      // 'uint'
     Float,            // refer to floats
     FloatKeyword,     // 'float'
     String,           // refer to strings
@@ -78,9 +78,9 @@ const char *tkn_type_describe(const TknType type) noexcept;
 struct Token
 {
     TknType type;
-    Uint index, length, line;
+    UINT index, length, line;
 
-    Token(TknType type, Uint index, Uint length, Uint line)
+    Token(TknType type, UINT index, UINT length, UINT line)
         : type(type), index(index), length(length), line(line)
     {
     }

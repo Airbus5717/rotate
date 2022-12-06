@@ -49,11 +49,11 @@ log_token(FILE *output, const rotate::Token tkn, const char *str)
             tkn_type_describe(tkn.type), tkn.length, str + tkn.index);
 }
 
-Uint
-get_digits_from_number(Uint num)
+UINT
+get_digits_from_number(UINT num)
 {
     // TODO: check
-    return (Uint)std::floor(std::log10(num) + 1);
+    return (UINT)std::floor(std::log10(num) + 1);
 }
 
 } // namespace rotate

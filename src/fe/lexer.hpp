@@ -8,10 +8,10 @@ namespace rotate
 class Lexer
 {
     // lexer state variables
-    Uint index, len, line, begin_tok_line, file_length;
+    UINT index, len, line, begin_tok_line, file_length;
     file_t *file; // not owned by the lexer
     LexErr error    = LexErr::UNKNOWN;
-    Uint save_index = 0, save_line = 0;
+    UINT save_index = 0, save_line = 0;
     std::vector<Token> *tokens;
 
     //
@@ -43,14 +43,14 @@ class Lexer
     char current() const;
     bool is_not_eof() const;
     void skip_whitespace() noexcept;
-    bool keyword_match(const char *, Uint);
+    bool keyword_match(const char *, UINT);
 
   public:
     //
     Lexer(file_t *);
     ~Lexer() noexcept;
     std::vector<Token> *getTokens();
-    Uint get_num_of_lines();
+    UINT get_num_of_lines();
     u8 lex();
     void save_log(FILE *);
 };
