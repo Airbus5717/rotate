@@ -20,6 +20,7 @@ const char *main_err(Stage);
  */
 
 //
+void log_stage(const char *);
 void log_error(const char *);
 void exit_error(const char *);
 void log_debug(const char *);

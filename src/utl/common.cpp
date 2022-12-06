@@ -7,6 +7,12 @@ namespace rotate
 {
 
 void
+log_stage(const char *str)
+{
+    fprintf(stderr, "[%sSTAGE%s]: %s\n", LRED, RESET, str);
+}
+
+void
 log_error(const char *str)
 {
     fprintf(stderr, "[%sERROR%s]: %s\n", LRED, RESET, str);

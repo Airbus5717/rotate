@@ -18,7 +18,7 @@ main(const int argc, char **const argv)
         // compile
         u8 _exit = compile(&comp_opt);
         if (_exit == EXIT_FAILURE)
-            log_error(main_err(comp_opt.st));
+            log_stage(main_err(comp_opt.st));
         else if (_exit == EXIT_SUCCESS)
             log_info("SUCCESS");
 
