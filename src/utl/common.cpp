@@ -9,13 +9,13 @@ namespace rotate
 void
 log_stage(const char *str)
 {
-    fprintf(stderr, "[%sSTAGE%s]: %s\n", LRED, RESET, str);
+    fprintf(rstderr, "[%sSTAGE%s]: %s\n", LRED, RESET, str);
 }
 
 void
 log_error(const char *str)
 {
-    fprintf(stderr, "[%sERROR%s]: %s\n", LRED, RESET, str);
+    fprintf(rstderr, "[%sERROR%s]: %s\n", LRED, RESET, str);
 }
 
 void
@@ -28,7 +28,7 @@ exit_error(const char *str)
 void
 log_warn(const char *str)
 {
-    fprintf(stderr, "[%sWARN%s] : %s\n", LYELLOW, RESET, str);
+    fprintf(rstderr, "[%sWARN%s] : %s\n", LYELLOW, RESET, str);
 }
 
 void
@@ -44,7 +44,7 @@ log_debug(const char *str)
 void
 log_info(const char *str)
 {
-    fprintf(stderr, "[%sINFO%s] : %s\n", LGREEN, RESET, str);
+    fprintf(rstderr, "[%sINFO%s] : %s\n", LGREEN, RESET, str);
 }
 
 // func definition in ./frontend/include/lexer.hpp

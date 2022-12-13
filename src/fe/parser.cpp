@@ -19,13 +19,13 @@ Parser::parse_lexer()
     // NOTE(5717): error handling in parser
     // The parser will stop at the first error occured
     if (tokens->size() < 2) return EXIT_FAILURE;
-    return parse_director();
+    return parse_starter();
 }
 
 u8
-Parser::parse_director()
+Parser::parse_starter()
 {
-    while (true)
+    for (;;)
     {
         u8 exit       = EXIT_SUCCESS;
         const Token c = current(), p = peek();
@@ -49,12 +49,13 @@ Parser::parse_director()
                 if (exit == EXIT_FAILURE) return parse_error_use_global_err();
             }
             else
-            {
                 return parse_error_expect_token(TknType::ColonColon);
-            }
+            break;
         }
-        break;
-        case TknType::EOT: return EXIT_SUCCESS;
+        case TknType::EOT: {
+            log_debug("Parser End");
+            return EXIT_SUCCESS;
+        }
         default: return parse_error_expect_token(TknType::Identifier);
         }
     }
@@ -99,7 +100,6 @@ Parser::parse_function()
 u8
 Parser::parse_enum()
 {
-    TODO("parse enums");
     return EXIT_FAILURE;
 }
 
@@ -173,11 +173,11 @@ Parser::parser_error(PrsErr err)
     _length -= low;
 
     // error msg
-    fprintf(stderr, "> %s%s%s:%u:%u: %serror: %s%s%s\n", BOLD, WHITE, file->name, line, col, LRED,
+    fprintf(rstderr, "> %s%s%s:%u:%u: %serror: %s%s%s\n", BOLD, WHITE, file->name, line, col, LRED,
             LBLUE, parser_error_msg(err), RESET);
 
     // line from source code
-    fprintf(stderr, " %s%u%s | %.*s\n", LYELLOW, line, RESET, _length, (file->contents + low));
+    fprintf(rstderr, " %s%u%s | %.*s\n", LYELLOW, line, RESET, _length, (file->contents + low));
 
     UINT num_line_digits = get_digits_from_number(line);
 
@@ -189,14 +189,15 @@ Parser::parser_error(PrsErr err)
         memset(arrows, '^', len);
         arrows[len] = '\0';
 
-        fprintf(stderr, " %*c |%*c%s%s%s\n", num_line_digits, ' ', spaces, ' ', LRED, BOLD, arrows);
+        fprintf(rstderr, " %*c |%*c%s%s%s\n", num_line_digits, ' ', spaces, ' ', LRED, BOLD,
+                arrows);
     }
     else
     {
-        fprintf(stderr, " %*c |%*c%s%s^^^---...\n", num_line_digits, ' ', spaces, ' ', LRED, BOLD);
+        fprintf(rstderr, " %*c |%*c%s%s^^^---...\n", num_line_digits, ' ', spaces, ' ', LRED, BOLD);
     }
     // error lexer_err_advice
-    fprintf(stderr, "> Advice: %s%s\n", RESET, parser_error_advice(err));
+    fprintf(rstderr, "> Advice: %s%s\n", RESET, parser_error_advice(err));
     return EXIT_FAILURE;
 }
 

@@ -1,4 +1,5 @@
 #include "include/compile.hpp"
+#include "include/common.hpp"
 #include "include/file.hpp"
 
 #include "fe/parser.hpp"
@@ -80,6 +81,7 @@ compile(compile_options *options) noexcept
     if (lexer.getTokens()->size() < 2) log_error("file is empty");
     if (exit == EXIT_FAILURE) return EXIT_FAILURE;
     // parse lexed tokens to Abstract Syntax tree
+
     /*
     **
     ** PARSING
@@ -102,6 +104,8 @@ compile(compile_options *options) noexcept
             log_compilation(output, &file, &lexer);
             fclose(output);
         }
+        else
+            log_error("Log failed");
     }
 
     return exit;

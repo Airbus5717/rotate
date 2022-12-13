@@ -143,12 +143,13 @@ get_keyword_or_type(const char *string, const Token &tkn)
     case TknType::Identifier:
     case TknType::String:
     case TknType::Char:
-    case TknType::BuiltinFunc: return strndup(string + tkn.index, tkn.length);
-    default: {
-        __builtin_unreachable();
-        return "TODO: IMPLEMENT";
+    case TknType::BuiltinFunc:
+        return strndup(string + tkn.index, tkn.length);
+        /*default: {
+            return "TODO: IMPLEMENT";
+        }*/
     }
-    }
+    ASSERT(false, "implement Type to string situation");
 }
 
 const char *
@@ -168,9 +169,11 @@ lexer_err_msg(const LexErr error) noexcept
     case LexErr::BAD_TOKEN_AT_GLOBAL: return "Found global token at its forbidden scope";
     case LexErr::TABS: return "Tabs '\\t' are unsupported";
     case LexErr::NOT_VALID_ESCAPE_CHAR: return "Invalid escaped char";
-    default: break;
+    case LexErr::WINDOWS_CRAP: return "Windows style files are not accepted \\r";
+    case LexErr::NOT_CLOSED_COMMENT: return "Comment not closed";
+    case LexErr::UNSUPPORTED: break;
+    case LexErr::UNKNOWN: break;
     }
-    __builtin_unreachable();
     return "TODO: error msg implementation.";
 }
 
@@ -179,22 +182,24 @@ lexer_err_advice(const LexErr error) noexcept
 {
     switch (error)
     {
+    case LexErr::NOT_VALID_ESCAPE_CHAR: return "Change the letter after \\";
+    case LexErr::NOT_CLOSED_COMMENT: return "Close the comment with delimiter";
     case LexErr::LEXER_INVALID_CHAR: return "remove this character";
     case LexErr::OUT_OF_MEMORY: return "The compiler needs more memory";
     case LexErr::TOO_LONG_IDENTIFIER: return "Identifier must not exceed 100 characters";
     case LexErr::TOO_LONG_NUMBER: return "Number must not exceed 100 digits";
-    case LexErr::TOO_LONG_STRING: return "String must not exceed (UUUINT_MAX / 2) characters";
+    case LexErr::TOO_LONG_STRING: return "String must not exceed (UINT_MAX / 2) characters";
     case LexErr::NOT_CLOSED_CHAR: return "Close the char with a quote";
     case LexErr::NOT_CLOSED_STRING: return "Close the string with a double quote";
     case LexErr::END_OF_FILE: return "Needs more code for compiling";
     case LexErr::FILE_EMPTY: return "Do not compile empty files";
     case LexErr::BAD_TOKEN_AT_GLOBAL: return "Do not put this token in global scope";
     case LexErr::TABS: return "Convert the tabs to spaces";
-    default: break;
+    case LexErr::WINDOWS_CRAP: return "Files must be LF style";
+    case LexErr::UNSUPPORTED: break;
+    case LexErr::UNKNOWN: break;
     }
-    return ("\x1b[33m"
-            "TODO: error msg implementation."
-            "\x1b[0m");
+    return (YELLOW "TODO: error msg implementation." RESET);
 }
 
 } // namespace rotate

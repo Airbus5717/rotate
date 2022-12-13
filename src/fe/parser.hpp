@@ -3,18 +3,12 @@
 #include "errmsgs.hpp"
 #include "lexer.hpp"
 #include "token.hpp"
+#include "type.hpp"
 
 namespace rotate
 {
 //! Keep code as simple as possible
 //! for scope level bases
-//
-//
-
-// types
-struct Type;
-struct ArrayType;
-struct LiteralType;
 
 // Expressions
 struct Expr;
@@ -30,81 +24,22 @@ struct AstStruct;
 struct AstEnum;
 struct AstFn;
 
-enum SymbolKind
-{
-    Array = 0,
-    Struct,
-    Enum,
-    Alias,
-    Other,
-};
-
-enum TypePrimaryKind : u8
-{
-};
-
-enum TypeKind : u8
-{
-    RT_Primary = 0,
-    RT_Array,
-    RT_Array_Str,
-    RT_Pointer,
-    RT_Structure,
-    RT_Enum,
-    RT_Alias,
-};
-
-enum TypeModifier : u8
-{
-
-    pub      = 1 << 0, // globals specific
-    constant = 1 << 1,
-
-    // TODO:
-
-    comptime = 1 << 2, //
-    _static  = 1 << 3, // globals specific
-    _inline  = 1 << 4, // function specific
-};
-
-struct Array
-{
-    usize size;
-    u8 pointer_level;
-    Type *type;
-};
-
-struct Type
-{
-    TypeKind kind;
-    TypeModifier mod;
-
-    void *extra;
-};
-
 /*
  * Expressions
  */
-enum class LiteralExprType
-{
-    // TODO:
-    _integer,
-    _float,
-    _array,
-};
 
 enum class BinaryOpType
 {
-    // TODO:
-    add,  // +
-    sub,  // -
-    mult, // *
-    div,  // '/'
-    eqleql,
-    greater,
-    greql,
-    less,
-    leseql,
+    // TODO: add all
+    add,     // +
+    sub,     // -
+    mult,    // *
+    div,     // '/'
+    eqleql,  // ==
+    greater, // >
+    greql,   // >=
+    less,    // <
+    leseql,  // <=
 };
 
 enum class UnaryOpType
@@ -116,8 +51,8 @@ enum class UnaryOpType
 };
 
 struct LitExpr
-{
-    LiteralExprType type;
+{ //
+    // LiteralExprType type;
     UINT val_idx;
 };
 
@@ -159,10 +94,13 @@ struct AstImport
     // 0  1  2     34    56
     // io :: import("std");
     // ^^id          ^^^value
+    // index is the index of string token
+    // It requires a single string Token for path
+    // the path must be known at compile time
     UINT id_idx;
     UINT val_idx;
 
-    AstImport(UINT val) : id_idx(val - 4), val_idx(val)
+    AstImport(UINT val_idx) : id_idx(val_idx - 4), val_idx(val_idx)
     {
     }
 
@@ -171,11 +109,8 @@ struct AstImport
 
 struct AstGlVar
 {
-    // NOTE(5717): GL Variables must be const
-    // and at comptime known their value
-    // id, (comptime)value, type
     UINT id_idx;
-    Type type;
+    // Type type;
 };
 
 struct AstStruct
@@ -206,7 +141,7 @@ class Parser
     PrsErr error;
     UINT idx;
 
-    u8 parse_director();
+    u8 parse_starter();
     // global stmts
     u8 parse_import();
     u8 parse_function();

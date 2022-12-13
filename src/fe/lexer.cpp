@@ -32,7 +32,7 @@ Lexer::save_log(FILE *output)
 u8
 Lexer::lex()
 {
-    do
+    for (;;)
     {
         switch (lex_director())
         {
@@ -47,14 +47,14 @@ Lexer::lex()
         }
         case EXIT_FAILURE: return report_error();
         }
-    } while (true);
+    }
     return EXIT_FAILURE;
 }
 
 inline void
 Lexer::skip_whitespace() noexcept
 {
-    while (true)
+    for (;;)
     {
         const char c = current();
         if (c == '\n')
@@ -241,8 +241,18 @@ Lexer::lex_numbers()
 {
     const char c = current();
     const char p = peek();
-    if (c == '0' && p == 'x') return lex_hex_numbers();
-    if (c == '0' && p == 'b') return lex_binary_numbers();
+
+    // 0x or 0b switch state of lexing to specific radix
+    // x -> hexadecimal(r16) | b -> binary(r2)
+    if (c == '0')
+    {
+        switch (p)
+        {
+        case 'x': return lex_hex_numbers();
+        case 'b': return lex_binary_numbers();
+        default: break;
+        }
+    }
 
     bool reached_dot = false;
     while (isdigit(current()) || current() == '.')
@@ -262,7 +272,7 @@ Lexer::lex_numbers()
         return EXIT_FAILURE;
     }
     index -= len;
-    return add_token(reached_dot ? TknType::Float : TknType::Integer);
+    return add_token(reached_dot ? TknType::Integer : TknType::Float);
 }
 
 u8
@@ -311,7 +321,7 @@ u8
 Lexer::lex_strings()
 {
     advance_len_inc();
-    while (true)
+    for (;;)
     {
         if (current() == '\0')
         {
@@ -551,7 +561,7 @@ Lexer::advance()
 {
     const char c = current();
     index++;
-    line += (c == '\n'); // if (c == '\n') line++;
+    line += (c == '\n');
 }
 
 inline void
@@ -566,7 +576,7 @@ Lexer::advance_len_inc()
     const char c = current();
     index++;
     len++;
-    line += (c == '\n'); // if (c == '\n') line++;
+    line += (c == '\n');
 }
 
 inline char
@@ -633,11 +643,11 @@ Lexer::report_error()
     _length -= low;
 
     // error msg
-    fprintf(stderr, "> %s%s%s:%u:%u: %serror: %s%s%s\n", BOLD, WHITE, file->name, line, col, LRED,
+    fprintf(rstderr, "> %s%s%s:%u:%u: %serror: %s%s%s\n", BOLD, WHITE, file->name, line, col, LRED,
             LBLUE, lexer_err_msg(error), RESET);
 
     // line from source code
-    fprintf(stderr, " %s%u%s | %.*s\n", LYELLOW, line, RESET, _length, (file->contents + low));
+    fprintf(rstderr, " %s%u%s | %.*s\n", LYELLOW, line, RESET, _length, (file->contents + low));
 
     UINT num_line_digits = get_digits_from_number(line);
 
@@ -649,14 +659,15 @@ Lexer::report_error()
         memset(arrows, '^', len);
         arrows[len] = '\0';
 
-        fprintf(stderr, " %*c |%*c%s%s%s\n", num_line_digits, ' ', spaces, ' ', LRED, BOLD, arrows);
+        fprintf(rstderr, " %*c |%*c%s%s%s\n", num_line_digits, ' ', spaces, ' ', LRED, BOLD,
+                arrows);
     }
     else
     {
-        fprintf(stderr, " %*c |%*c%s%s^^^---...\n", num_line_digits, ' ', spaces, ' ', LRED, BOLD);
+        fprintf(rstderr, " %*c |%*c%s%s^^^---...\n", num_line_digits, ' ', spaces, ' ', LRED, BOLD);
     }
     // error lexer_err_advice
-    fprintf(stderr, "> Advice: %s%s\n", RESET, lexer_err_advice(error));
+    fprintf(rstderr, "> Advice: %s%s\n", RESET, lexer_err_advice(error));
     return EXIT_FAILURE;
 }
 

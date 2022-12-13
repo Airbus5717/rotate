@@ -44,16 +44,21 @@ typedef uint64_t u64;
 typedef unsigned long long int usize;
 typedef signed long long int isize;
 
-typedef u32 UINT; // global unsigned integer for this project
-#define RUUINT_MAX UUINT32_MAX
-#define RUUINT_MIN 0
+// use this for the project
+typedef u32 UINT;
+const auto RUINT_MAX = UINT32_MAX;
+const auto RUINT_MIN = 0;
+
+const auto rstdin  = stdin;
+const auto rstdout = stdout;
+const auto rstderr = stderr;
 
 #define ASSERT(expr, msg)                                                                          \
     do                                                                                             \
     {                                                                                              \
         if (!(expr))                                                                               \
         {                                                                                          \
-            std::fprintf(stderr, "%sAssert failure: %s\n@file: %s:%d%s\n", LRED, msg, __FILE__,    \
+            std::fprintf(rstderr, "%sAssert failure: %s\n@file: %s:%d%s\n", LRED, msg, __FILE__,   \
                          __LINE__, RESET);                                                         \
             exit(1);                                                                               \
         }                                                                                          \
@@ -64,7 +69,7 @@ typedef u32 UINT; // global unsigned integer for this project
     {                                                                                              \
         if ((expr1) != (expr2))                                                                    \
         {                                                                                          \
-            std::fprintf(stderr, "%sAssert failure: %s\n@file: %s:%d%s\n", LRED, msg, __FILE__,    \
+            std::fprintf(rstderr, "%sAssert failure: %s\n@file: %s:%d%s\n", LRED, msg, __FILE__,   \
                          __LINE__, RESET);                                                         \
             exit(1);                                                                               \
         }                                                                                          \
@@ -75,7 +80,7 @@ typedef u32 UINT; // global unsigned integer for this project
     {                                                                                              \
         if ((expr) == NULL)                                                                        \
         {                                                                                          \
-            std::fprintf(stderr, "%sAssert failure: %s\n@file: %s:%d%s\n", LRED, msg, __FILE__,    \
+            std::fprintf(rstderr, "%sAssert failure: %s\n@file: %s:%d%s\n", LRED, msg, __FILE__,   \
                          __LINE__, RESET);                                                         \
             exit(1);                                                                               \
         }                                                                                          \
@@ -84,10 +89,10 @@ typedef u32 UINT; // global unsigned integer for this project
 #define STR_ASSERT(string1, string2, msg)                                                          \
     do                                                                                             \
     {                                                                                              \
-        if (std::strcmp(string1, string2) != 0)                                                    \
+        if (strcmp(string1, string2) != 0)                                                         \
         {                                                                                          \
-            std::fprintf(stderr, "%sAssert failure: %s\n@file: %s:%d%s\n", LRED, msg, __FILE__,    \
-                         __LINE__, RESET);                                                         \
+            fprintf(rstderr, "%sAssert failure: %s\n@file: %s:%d%s\n", LRED, msg, __FILE__,        \
+                    __LINE__, RESET);                                                              \
             exit(1);                                                                               \
         }                                                                                          \
     } while (0)
@@ -105,7 +110,7 @@ typedef u32 UINT; // global unsigned integer for this project
 #define TODO(str)                                                                                  \
     do                                                                                             \
     {                                                                                              \
-        std::fprintf(stderr, "%sTODO: %s\n@file: %s:%d%s\n", YELLOW, str, __FILE__, __LINE__,      \
+        std::fprintf(rstderr, "%sTODO: %s\n@file: %s:%d%s\n", YELLOW, str, __FILE__, __LINE__,     \
                      RESET);                                                                       \
         exit(1);                                                                                   \
     } while (0)

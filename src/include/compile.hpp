@@ -8,7 +8,7 @@ namespace rotate
 static void
 print_version_and_exit()
 {
-    fprintf(stdout, "Rotate Compiler \nVersion: %s\n", RTVERSION);
+    fprintf(rstdout, "Rotate Compiler \nVersion: %s\n", RTVERSION);
     exit(0);
 }
 
@@ -57,7 +57,7 @@ struct compile_options
 
     void log_error_unknown_flag(const char *str)
     {
-        fprintf(stderr, "[%sWARN%s] : Ignored flag: `%s`\n", LYELLOW, RESET, str);
+        fprintf(rstderr, "[%sWARN%s] : Ignored flag: `%s`\n", LYELLOW, RESET, str);
     }
 };
 
