@@ -21,12 +21,12 @@ main :: fn() {
 
 ## C Style 
 - Most of the code is pure C-Style except with some syntax sugar from C++ to make code easier to develop
-- The only util i use from C++ stdlib is the std::vector<T>
-- std::string is used only in the debugging infrastructure only 
-- C++20 is chosen to silent the compiler warnings 
+- The only util i use from C++ stdlib is the std::vector (for now)
 
-## TODOS
+
+## Goals
 - TODO: make the compiler compile on C++11 or maybe older versions
 - TODO: Reduce as much macros as possible
-- TODO: 
-
+- TODO: Make the language usable for personal projects 
+- TODO: Remove the C++ std library dependency 
+- Rely on C std library only

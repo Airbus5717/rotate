@@ -66,7 +66,7 @@ tkn_type_describe(const TknType type) noexcept
     case TknType::Enum: return "enum";
     case TknType::Nil: return "nil (null)";
     case TknType::ColonColon: return "ConstDef";
-    case TknType::UINTKeyword: return "uint";
+    case TknType::UintKeyword: return "uint";
     case TknType::GreaterEql: return ">=";
     case TknType::LessEql: return "<=";
     case TknType::EOT: return "End OF Tokens";
@@ -86,7 +86,7 @@ get_keyword_or_type(const char *string, const Token &tkn)
     case TknType::GreaterEql: return ">=";
     case TknType::LessEql: return "<=";
     case TknType::ColonColon: return "::";
-    case TknType::UINTKeyword: return "uint";
+    case TknType::UintKeyword: return "uint";
     case TknType::Function: return "fn";
     case TknType::If: return "if";
     case TknType::Or: return "or";

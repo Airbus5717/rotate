@@ -2,6 +2,16 @@
 
 namespace rotate
 {
+const char *
+get_type_string(Type t)
+{
+    switch (t.type)
+    {
+    default: break;
+    }
+    TODO("IMPLEMENT GET TYPE STRING");
+    return nullptr;
+}
 
 const char *
 get_type_modifier_attr_string(TypeAttr a)

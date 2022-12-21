@@ -19,7 +19,7 @@ enum class TknType : u8
     //    HexInteger,       // refers to Hexidecimal ints
     //    BinaryInteger,    // refers to binary ints
     IntKeyword,       // 'int'
-    UINTKeyword,      // 'uint'
+    UintKeyword,      // 'uint'
     Float,            // refer to floats
     FloatKeyword,     // 'float'
     String,           // refer to strings
@@ -83,18 +83,6 @@ struct Token
     Token(TknType type, UINT index, UINT length, UINT line)
         : type(type), index(index), length(length), line(line)
     {
-    }
-
-    const char *alloc_get_value(file_t *f) const
-    {
-        return strndup(f->contents + index, length);
-    }
-
-    const std::string to_string() const
-    {
-        return std::string{"Token{type: " + std::string(tkn_type_describe(type)) + ", index: " +
-                           std::to_string(index) + ", length: " + std::to_string(length) +
-                           ", line: " + std::to_string(line)};
     }
 };
 

@@ -23,7 +23,7 @@ Lexer::~Lexer() noexcept
 void
 Lexer::save_log(FILE *output)
 {
-    for (usize i = 0; i < tokens->size(); i++)
+    for (UINT i = 0; i < tokens->size(); i++)
     {
         log_token(output, tokens->at(i), file->contents);
     }
@@ -109,7 +109,7 @@ Lexer::lex_identifiers()
     index -= len;
     TknType _type = TknType::Identifier;
 
-    // TODO: optimize matching keywords
+    // TODO: optimize searching for matching keywords
     switch (len)
     {
     case 2: {
@@ -176,7 +176,7 @@ Lexer::lex_identifiers()
             if (keyword_match("bool", 4)) _type = TknType::BoolKeyword;
             break;
         case 'u':
-            if (keyword_match("uint", 4)) _type = TknType::UINTKeyword;
+            if (keyword_match("uint", 4)) _type = TknType::UintKeyword;
             break;
         }
         break;
