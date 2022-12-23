@@ -4,7 +4,7 @@ project(rotate VERSION 0.1.0)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_FLAGS "-Wall -Wextra -O2 -march=native -mtune=native -g -DDEBUG -Wconversion")
+set(CMAKE_CXX_FLAGS "-Wall -Wextra -O2 -march=native -mtune=native -g -DDEBUG -Wconversion -static")
 
 file(GLOB_RECURSE SOURCES "src/*.cpp")
 add_executable(vr ${SOURCES})

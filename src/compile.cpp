@@ -56,7 +56,8 @@ compile(compile_options *options) noexcept
 
     // log compiliation
     if (options->debug_info)
-    {
+    { 
+        // LOGS ONLY DURING SUCCESS OF THE PREVIOUS STAGES
         options->st = Stage::logger;
         if (FILE *output = fopen("output.org", "wb"))
         {
