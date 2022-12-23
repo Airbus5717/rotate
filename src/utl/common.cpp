@@ -49,7 +49,7 @@ log_info(const char *str)
 
 // func definition in ./frontend/include/lexer.hpp
 void
-log_token(FILE *output, const rotate::Token tkn, const char *str)
+log_token(FILE *output, const Token tkn, const char *str)
 {
     fprintf(output, "[TOKEN]: idx: %u, len: %u, type: %s, val: `%.*s`\n", tkn.index, tkn.length,
             tkn_type_describe(tkn.type), tkn.length, str + tkn.index);

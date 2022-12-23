@@ -8,7 +8,11 @@ namespace rotate
 static void
 print_version_and_exit()
 {
-    fprintf(rstdout, "Rotate Compiler \nVersion: %s\n", RTVERSION);
+    const char *out = " Rotate Compiler \n Version: %s\n --lex for lexical analysis\n --output for "
+                      "dumping compilation info as output in orgmode format in output.org \n "
+                      "https://github.com/Airbus5717/rotate.git"
+                      "\n";
+    fprintf(rstdout, out, RTVERSION);
     exit(0);
 }
 

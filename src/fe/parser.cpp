@@ -4,7 +4,6 @@
 namespace rotate
 {
 
-// constructor
 Parser::Parser(file_t *file, Lexer *lexer) : file(file), tokens(lexer->getTokens()), idx(0)
 {
     ASSERT_NULL(lexer, "Passed lexer to parser was null");
