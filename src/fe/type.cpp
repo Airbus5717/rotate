@@ -2,12 +2,21 @@
 
 namespace rotate
 {
+
 const char *
 get_type_string(Type t)
 {
     switch (t.type)
     {
-    default: break;
+    case BaseType::TVoid: return "VOID";
+    case BaseType::TInt: return "INT";
+    case BaseType::TBool: return "BOOL";
+    case BaseType::TChar: return "CHAR";
+    case BaseType::TUInt: return "UINT";
+    case BaseType::TFloat: return "FLOAT";
+    case BaseType::TArray: return "ARRAY";
+    case BaseType::TEnum: return "ENUM";
+    case BaseType::TStruct: return "STRUCT";
     }
     TODO("IMPLEMENT GET TYPE STRING");
     return nullptr;
@@ -22,7 +31,6 @@ get_type_modifier_attr_string(TypeAttr a)
     case TypeAttr::constVar: return "const";
     case TypeAttr::staticMutable: return "static";
     case TypeAttr::mutableVariable: return "mutable";
-    default: break;
     }
     TODO("implement get type modifier as string method");
     return "UNKNOWN";

@@ -9,6 +9,7 @@ tkn_type_describe(const TknType type) noexcept
 {
     switch (type)
     {
+    case TknType::As: return "as";
     case TknType::In: return "in";
     case TknType::To: return "to";
     case TknType::Delete: return "delete";
@@ -70,7 +71,8 @@ tkn_type_describe(const TknType type) noexcept
     case TknType::GreaterEql: return ">=";
     case TknType::LessEql: return "<=";
     case TknType::EOT: return "End OF Tokens";
-    default: __builtin_unreachable(); return "man IDK";
+
+    default: return "UNKNOWN";
     }
 }
 
@@ -80,6 +82,7 @@ get_keyword_or_type(const char *string, const Token &tkn)
 
     switch (tkn.type)
     {
+    case TknType::As: return "as";
     case TknType::In: return "in";
     case TknType::To: return "..";
     case TknType::Delete: return "delete";

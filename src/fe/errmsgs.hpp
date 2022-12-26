@@ -16,7 +16,12 @@ enum class PrsErr : u16
     OpenParents,
     CloseParents,
     ImportStringExpect,
-
+    ImportId, // alias
+    // functions
+    FnId,
+    OpenCurly,
+    CloseCurly,
+    IncorrectType,
     // global variables
     GlobalMutableVar,
     GlobalVarType,
@@ -31,39 +36,27 @@ struct ParserErr
     PrsErr err;
     const char *msg;
     const char *advice;
+    ParserErr(PrsErr err, const char *msg, const char *advice) : err(err), msg(msg), advice(advice)
+    {
+    }
 };
 
 const static ParserErr parser_errors[] = {
-    {
-        .err    = PrsErr::Unknown,
-        .msg    = "Unknown Error Message",
-        .advice = "Unknown Error Advice",
-    },
-    {
-        .err    = PrsErr::SemicolonExpect,
-        .msg    = "Statement requires a SemiColon",
-        .advice = "Add a SemiColon at the end of the statement ",
-    },
-    {
-        .err    = PrsErr::GlobalScopeNotAllowed,
-        .msg    = "Found a non Global Statement",
-        .advice = "This Token is not Allowed in global scope",
-    },
-    {
-        .err    = PrsErr::ImportStringExpect,
-        .msg    = "Import statement requires a path",
-        .advice = "Add a path as string in the import statement",
-    },
-    {
-        .err    = PrsErr::OpenParents,
-        .msg    = "Missing open parentheses",
-        .advice = "Add an open parentheses '('",
-    },
-    {
-        .err    = PrsErr::CloseParents,
-        .msg    = "Missing close parentheses",
-        .advice = "Add a close parenthese ')'",
-    },
+    ParserErr(PrsErr::Unknown, "Unknown Error Message", "Unknown Error Advice"),
+    ParserErr(PrsErr::SemicolonExpect, "Statement requires a SemiColon';'",
+              "Add a Semicolon at the end of the statement"),
+    ParserErr(PrsErr::GlobalScopeNotAllowed, "Found a non global statement",
+              "This Token is not allowed in global scope"),
+    ParserErr(PrsErr::ImportStringExpect, "Import statement requires a string path",
+              "Add a path as a string literal in the import statement"),
+    ParserErr(PrsErr::OpenParents, "Missing open parentheses (", "Add an open parentheses '('"),
+    ParserErr(PrsErr::CloseParents, "Missing close parentheses )", "Add an close parentheses ')'"),
+    ParserErr(PrsErr::OpenCurly, "Expected open curly brackets {",
+              "Add an open curly brackets '{'"),
+    ParserErr(PrsErr::CloseCurly, "Expected close curly brackets }",
+              "Add an open curly brackets '}'"),
+    ParserErr(PrsErr::ImportId, "Import aliased string requires an Id as alias",
+              "Add an identifier after 'as' keyword"),
 };
 
 } // namespace rotate

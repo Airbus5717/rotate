@@ -5,6 +5,7 @@
 
 namespace rotate
 {
+typedef UINT TknIdx;
 
 enum class TknType : u8
 {
@@ -12,6 +13,7 @@ enum class TknType : u8
     BuiltinFunc,    // @ids
     To,             // ..
     In,             // in
+    As,             // 'as'
     Delete,         // 'delete'
     Equal,          // =
     Integer,        // refers to 10 digits ints

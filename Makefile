@@ -72,7 +72,7 @@ lint:
 	@cppcheck  $(SRC_C_H) $(CSTD_LINT) --enable=all --check-config --quiet 
 
 format:
-	@clang-format -i src/**/**.cpp src/**/**.hpp 
+	@clang-format -i src/**/*.cpp src/**/*.hpp 
 
 release:
 	$(CXX) $(SRC) -O2 -Ofast -o $(BIN) $(CFLAGS) $(CSTD) $(LIB) $(ANALYZE) -Werror $(STRICT)

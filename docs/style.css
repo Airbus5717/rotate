@@ -1,12 +1,12 @@
 @import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@700&display=swap");
 
-body {
+html {
   margin: 40px auto;
   max-width: 60rem;
   line-height: 1.6;
   font-size: 1.2rem;
   background-color: #0f141b;
-  padding: 0 10px;
+  padding: 0 10rem;
   /* font-family: "Inter", sans-serif; */
 }
 

@@ -53,7 +53,7 @@ enum class UnaryOpType
 struct LitExpr
 { //
     // LiteralExprType type;
-    UINT val_idx;
+    TknIdx val_idx;
 };
 
 struct UnaryExpr
@@ -92,15 +92,20 @@ struct AstImport
 {
 
     // 0  1  2     34    56
-    // io :: import("std");
-    // ^^id          ^^^value
+    // import "std/io" as io;
+    //         ^^^^^^val   ^^id
     // index is the index of string token
     // It requires a single string Token for path
     // the path must be known at compile time
-    UINT id_idx;
-    UINT val_idx;
+    TknIdx id_idx;
+    TknIdx val_idx;
+    bool aliased;
 
-    AstImport(UINT val_idx) : id_idx(val_idx - 4), val_idx(val_idx)
+    AstImport(UINT val_idx) : val_idx(val_idx), aliased(false)
+    {
+    }
+
+    AstImport(TknIdx id_idx, TknIdx val_idx) : id_idx(id_idx), val_idx(val_idx), aliased(true)
     {
     }
 
@@ -109,7 +114,7 @@ struct AstImport
 
 struct AstGlVar
 {
-    UINT id_idx;
+    TknIdx id_idx;
     // Type type;
 };
 
@@ -124,11 +129,15 @@ struct AstEnum
 
 struct AstBlock
 {
+    // TODO
 };
 
 struct AstFn
 {
+    TknIdx id;
+    Type return_type;
     AstBlock block;
+    // TODO: parameters
 };
 
 class Parser
@@ -151,6 +160,11 @@ class Parser
     // non global
     u8 parse_block();
 
+    // Types
+    u8 parse_type(Type *);
+    BaseType parse_base_type();
+    TypeAttr parse_type_attr();
+
     // expressions
     u8 parse_expr();
     u8 parse_bin_expr();
@@ -172,6 +186,7 @@ class Parser
     const char *parser_error_advice(PrsErr);
     u8 parse_error_use_global_err();
 
+  public:
     // Parser exports
     std::vector<AstImport> imports;
     std::vector<AstFn> functions;
@@ -179,7 +194,6 @@ class Parser
     std::vector<AstStruct> structs;
     std::vector<AstGlVar> glVars;
 
-  public:
     Parser(file_t *, Lexer *);
     ~Parser();
     u8 parse_lexer();

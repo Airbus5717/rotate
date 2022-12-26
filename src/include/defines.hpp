@@ -109,8 +109,16 @@ const auto rstderr = stderr;
 #define TODO(str)                                                                                  \
     do                                                                                             \
     {                                                                                              \
-        std::fprintf(rstderr, "%sTODO: %s\n@file: %s:%d%s\n", YELLOW, str, __FILE__, __LINE__,     \
-                     RESET);                                                                       \
+        std::fprintf(rstderr, "%sTODO: %s\n@file: %s:%d%s\n", YELLOW, str, __FILE_NAME__,          \
+                     __LINE__, RESET);                                                             \
+        exit(1);                                                                                   \
+    } while (0)
+
+#define UNREACHABLE()                                                                              \
+    do                                                                                             \
+    {                                                                                              \
+        std::fprintf(rstderr, "%sREACHED UNREACHABLE STAT\n@file: %s:%d%s\n", LRED, __FILE_NAME__, \
+                     __LINE__, RESET);                                                             \
         exit(1);                                                                                   \
     } while (0)
 
@@ -147,20 +155,19 @@ const auto rstderr = stderr;
     } while (0)
 
 // terminal colors
-#define GREEN  "\x1b[32m"
-#define YELLOW "\x1b[33m"
-#define BLUE   "\x1b[34m"
-#define PINK   "\x1b[35m"
-#define CYAN   "\x1b[36m"
-//
 #define RESET "\x1b[0m"
-//
-#define BOLD   "\x1b[1m"
-#define FAUINT "\x1b[2m"
-//
-#define BLACK    "\x1b[30m"
-#define WHITE    "\x1b[37m"
-#define DEFAULT  "\x1b[39m"
+#define BOLD  "\x1b[1m"
+#define FAINT "\x1b[2m"
+
+#define GREEN   "\x1b[32m"
+#define YELLOW  "\x1b[33m"
+#define BLUE    "\x1b[34m"
+#define PINK    "\x1b[35m"
+#define CYAN    "\x1b[36m"
+#define BLACK   "\x1b[30m"
+#define WHITE   "\x1b[37m"
+#define DEFAULT "\x1b[39m"
+
 #define LGRAY    "\x1b[90m"
 #define LRED     "\x1b[91m"
 #define LGREEN   "\x1b[92m"

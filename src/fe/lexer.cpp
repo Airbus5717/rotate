@@ -115,6 +115,9 @@ Lexer::lex_identifiers()
     case 2: {
         switch (current())
         {
+        case 'a':
+            if (keyword_match("as", 2)) _type = TknType::As;
+            break;
         case 'f':
             if (keyword_match("fn", 2)) _type = TknType::Function;
             break;
@@ -523,17 +526,20 @@ Lexer::lex_symbols()
         }
         return add_token(TknType::Not);
     }
+    case '#': {
+        // this is for comments
+        while (current() != '\n' && is_not_eof())
+            advance();
+        advance();
+        return EXIT_SUCCESS;
+    }
     default: {
         switch (c)
         {
         case '\0': return EXIT_DONE;
         case '\t': this->error = LexErr::TABS; break;
         case '\r': this->error = LexErr::WINDOWS_CRAP; break;
-        case '#': {
-            while (current() != '\n')
-                advance();
-            break;
-        }
+
         default: this->error = LexErr::LEXER_INVALID_CHAR;
         }
     }

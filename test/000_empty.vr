@@ -1,1 +1,2 @@
-main :: fn() {}
+fn main() {
+}

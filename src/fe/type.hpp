@@ -4,11 +4,16 @@
 
 namespace rotate
 {
+// NOTE(5717): not to be confused with TknIdx
+// Type Index will pointer multiple symbol tables and will differtiate
+// by the type
+typedef UINT TypeIndex;
 
 enum class BaseType : u8
 {
-    TInt = 0,
-    TUINT,
+    TVoid, // NOTE(5717): ONLY ALLOWED FOR FUNCTIONS
+    TInt,
+    TUInt,
     TFloat,
     TChar, // u8
     TBool,
@@ -33,10 +38,30 @@ struct ArrayType
     u8 level;
 };
 
+struct StructType
+{
+    TknIdx id;
+    // TODO
+};
+
+struct EnumType
+{
+    TknIdx id;
+};
+
 struct Type
 {
+    TypeIndex idx;
     BaseType type;
     TypeAttr attr;
+};
+
+struct SymbolTable
+{
+    std::vector<Type> types;
+    std::vector<EnumType> enums_types;
+    std::vector<StructType> structs_types;
+    std::vector<ArrayType> array_types;
 };
 
 const char *get_type_string(Type);

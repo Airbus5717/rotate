@@ -42,30 +42,32 @@ compile(compile_options *options) noexcept
     // parse lexed tokens to Abstract Syntax tree
 
     /*
-    **
-    ** PARSING
-    **
-    */
+     *
+     * PARSING
+     *
+     * */
+    options->st   = Stage::parser;
+    Parser parser = Parser(&file, &lexer);
     if (!options->lex_only)
     {
-        options->st   = Stage::parser;
-        Parser parser = Parser(&file, &lexer);
-        exit          = parser.parse_lexer();
+        exit = parser.parse_lexer();
         ASSERT_RET_FAIL(exit == EXIT_FAILURE, "Parser error");
     }
 
     // log compiliation
     if (options->debug_info)
-    { 
+    {
         // LOGS ONLY DURING SUCCESS OF THE PREVIOUS STAGES
         options->st = Stage::logger;
         if (FILE *output = fopen("output.org", "wb"))
         {
-            log_compilation(output, &file, &lexer);
+            log_compilation(output, &file, &lexer, &parser);
             fclose(output);
         }
         else
+        {
             log_error("Log failed");
+        }
     }
 
     return exit;

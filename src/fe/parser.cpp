@@ -1,5 +1,7 @@
 #include "parser.hpp"
+#include "errmsgs.hpp"
 #include "token.hpp"
+#include "type.hpp"
 
 namespace rotate
 {
@@ -26,38 +28,28 @@ Parser::parse_starter()
 {
     for (;;)
     {
-        u8 exit       = EXIT_SUCCESS;
-        const Token c = current(), p = peek();
-        error = PrsErr::Unknown;
+        u8 exit = EXIT_SUCCESS;
+        Token c = current();
+        error   = PrsErr::Unknown;
         switch (c.type)
         {
-        case TknType::Identifier: {
-            if (p.type == TknType::ColonColon)
-            {
-                advance();
-                advance();
-                switch (current().type)
-                {
-                case TknType::Import: exit = parse_import(); break;
-                case TknType::Function: exit = parse_function(); break;
-                case TknType::Struct: exit = parse_struct(); break;
-                case TknType::Enum: exit = parse_enum(); break;
-                // TODO Global variables
-                default: exit = parse_gl_var();
-                }
-                if (exit == EXIT_FAILURE) return parse_error_use_global_err();
-            }
-            else
-                return parse_error_expect_token(TknType::ColonColon);
-            break;
-        }
+        case TknType::Import: exit = parse_import(); break;
+        case TknType::Function: exit = parse_function(); break;
+
+        // NOTE(5717): Global Variable
+        case TknType::Identifier: exit = parse_gl_var(); break;
+        case TknType::Struct: exit = parse_struct(); break;
+        case TknType::Enum: exit = parse_enum(); break;
+        // NOTE(5717): End of parsing phase
         case TknType::EOT: {
             log_debug("Parser End");
             return EXIT_SUCCESS;
         }
-        default: return parse_error_expect_token(TknType::Identifier);
+        default: return parse_error_use_global_err();
         }
+        if (exit != EXIT_SUCCESS) return parser_error(error);
     }
+    UNREACHABLE();
     return EXIT_FAILURE;
 }
 
@@ -65,16 +57,20 @@ Parser::parse_starter()
 u8
 Parser::parse_import()
 {
+    // import "std/io";
     advance(); // skip 'import'
-    // Skip '('
-    expect(current().type == TknType::OpenParen, advance(), error = PrsErr::OpenParents);
     // Skip the string
     expect(current().type == TknType::String, advance(), error = PrsErr::ImportStringExpect);
-
-    ast.imports.push_back(AstImport(past().index));
-
-    // TODO error Parser error types
-    expect(current().type == TknType::CloseParen, advance(), error = PrsErr::CloseParents);
+    if (current().type == TknType::As)
+    {
+        advance();
+        expect(current().type == TknType::Identifier, advance(), error = PrsErr::ImportId);
+        ast.imports.emplace_back(past().index - 2, past().index);
+    }
+    else
+    {
+        ast.imports.emplace_back(past().index);
+    }
     expect_semicolon(advance(), error = PrsErr::SemicolonExpect);
     return EXIT_SUCCESS;
 }
@@ -82,6 +78,10 @@ Parser::parse_import()
 u8
 Parser::parse_gl_var()
 {
+    // NOTE(5717):
+    // Global Const | Variable
+    // public or not
+    // static or not
     TODO("parse global variables");
 
     return EXIT_FAILURE;
@@ -91,7 +91,29 @@ Parser::parse_gl_var()
 u8
 Parser::parse_function()
 {
+    /* NOTE(5717):
+     fn id() {...}
+     fn id(params...) {...}
+     fn id() type {...}
+     fn id(params...) type {...}
+    */
     TODO("parse functions");
+    advance(); // skip 'fn'
+
+    // TODO:
+    expect(current().type == TknType::Identifier, advance(), error = PrsErr::FnId);
+    expect(current().type == TknType::OpenParen, advance(), error = PrsErr::OpenParents);
+    if (current().type != TknType::CloseParen)
+    {
+        TODO("Parse function parameters");
+    }
+
+    expect(current().type == TknType::CloseParen, advance(), error = PrsErr::CloseParents);
+    if (current().type != TknType::OpenCurly)
+    {
+        TODO("parse function non-void types");
+    }
+    // ast.functions.push_back(AstFn());
     return EXIT_FAILURE;
 }
 
@@ -99,6 +121,7 @@ Parser::parse_function()
 u8
 Parser::parse_enum()
 {
+    TODO("parse enums");
     return EXIT_FAILURE;
 }
 
@@ -106,6 +129,20 @@ u8
 Parser::parse_struct()
 {
     TODO("parse structs");
+    return EXIT_FAILURE;
+}
+
+u8
+Parser::parse_type(Type *type)
+{
+    TODO("parse base");
+    switch (current().type)
+    {
+    case TknType::Ref: {
+    }
+    default: break;
+    }
+    UNREACHABLE();
     return EXIT_FAILURE;
 }
 
