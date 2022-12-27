@@ -1,7 +1,6 @@
 #include "parser.hpp"
 #include "errmsgs.hpp"
 #include "token.hpp"
-#include "type.hpp"
 
 namespace rotate
 {
@@ -42,12 +41,12 @@ Parser::parse_starter()
         case TknType::Enum: exit = parse_enum(); break;
         // NOTE(5717): End of parsing phase
         case TknType::EOT: {
-            log_debug("Parser End");
+            log_debug("End of Parsing");
             return EXIT_SUCCESS;
         }
         default: return parse_error_use_global_err();
         }
-        if (exit != EXIT_SUCCESS) return parser_error(error);
+        if (exit == EXIT_FAILURE) return parser_error(error);
     }
     UNREACHABLE();
     return EXIT_FAILURE;
@@ -63,13 +62,19 @@ Parser::parse_import()
     expect(current().type == TknType::String, advance(), error = PrsErr::ImportStringExpect);
     if (current().type == TknType::As)
     {
+        // import "std/io" as io;
+        // import string as id;
         advance();
         expect(current().type == TknType::Identifier, advance(), error = PrsErr::ImportId);
-        ast.imports.emplace_back(past().index - 2, past().index);
+        ast.imports.push_back(AstImport(past().index - 2, past().index));
+        // ast.imports.emplace_back(past().index - 2, past().index);
+        log_debug("added an aliased import");
     }
     else
     {
-        ast.imports.emplace_back(past().index);
+        ast.imports.push_back(AstImport(past().index));
+        // ast.imports.emplace_back(past().index);
+        log_debug("added an import");
     }
     expect_semicolon(advance(), error = PrsErr::SemicolonExpect);
     return EXIT_SUCCESS;
@@ -83,7 +88,6 @@ Parser::parse_gl_var()
     // public or not
     // static or not
     TODO("parse global variables");
-
     return EXIT_FAILURE;
 }
 
@@ -97,7 +101,6 @@ Parser::parse_function()
      fn id() type {...}
      fn id(params...) type {...}
     */
-    TODO("parse functions");
     advance(); // skip 'fn'
 
     // TODO:
@@ -113,7 +116,13 @@ Parser::parse_function()
     {
         TODO("parse function non-void types");
     }
+    else
+    {
+        TODO("parse function blocks");
+    }
+
     // ast.functions.push_back(AstFn());
+    TODO("Functions");
     return EXIT_FAILURE;
 }
 
@@ -132,18 +141,43 @@ Parser::parse_struct()
     return EXIT_FAILURE;
 }
 
-u8
-Parser::parse_type(Type *type)
+Type
+Parser::parse_type()
 {
-    TODO("parse base");
+    Type ftype{};
+    BaseType btype = BaseType::TInvalid;
+
+    if (current().type == TknType::Ref)
+    {
+
+        ftype.is_pointer = true;
+        advance();
+    }
+
+    if (current().type == TknType::OpenSQRBrackets)
+    {
+        TODO("Parse Array type");
+    }
+
+    // Base
     switch (current().type)
     {
-    case TknType::Ref: {
+    case TknType::UintKeyword: btype = BaseType::TUInt; break;
+    case TknType::IntKeyword: btype = BaseType::TInt; break;
+    case TknType::BoolKeyword: btype = BaseType::TBool; break;
+    case TknType::FloatKeyword: btype = BaseType::TFloat; break;
+    case TknType::CharKeyword: btype = BaseType::TChar; break;
+    case TknType::Identifier: {
+        // aliases, structs, enums
+        TODO("parse identifier types");
+        btype = BaseType::TId_Struct_or_Enum;
+        break;
     }
     default: break;
     }
-    UNREACHABLE();
-    return EXIT_FAILURE;
+    // if (peek().type == TknType::Colon) ftype.is_const = true;
+    ftype.type = btype;
+    return ftype;
 }
 
 Token

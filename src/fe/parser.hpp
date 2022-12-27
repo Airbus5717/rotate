@@ -76,6 +76,12 @@ struct Expr
     BinaryExpr binary;
 };
 
+// NOTE(5717): function params are const
+struct FuncParam
+{
+    TknIdx id;
+    Type type;
+};
 /*
  * Abstract Syntax tree
  */
@@ -86,6 +92,7 @@ struct Ast
     std::vector<AstStruct> structs;
     std::vector<AstEnum> enums;
     std::vector<AstFn> functions;
+    SymbolTable symbol_table;
 };
 
 struct AstImport
@@ -115,16 +122,18 @@ struct AstImport
 struct AstGlVar
 {
     TknIdx id_idx;
-    // Type type;
+    Type type;
 };
 
 struct AstStruct
 {
+    TknIdx id;
     // id, params(),
 };
 
 struct AstEnum
 {
+    TknIdx id;
 };
 
 struct AstBlock
@@ -145,25 +154,39 @@ class Parser
     // not owned (weak ptr)
     file_t *file;
     //
-    Ast ast;
     std::vector<Token> *tokens;
     PrsErr error;
     UINT idx;
 
+    // starting point
     u8 parse_starter();
+
     // global stmts
     u8 parse_import();
     u8 parse_function();
     u8 parse_gl_var();
     u8 parse_struct();
     u8 parse_enum();
-    // non global
+
+    // outline function specific
     u8 parse_block();
+    u8 parse_fn_params();
+    u8 parse_fn_params_types();
+
+    // statements (inner) function specific
+    u8 parse_var_def();
+    u8 parse_var_decl();
+    u8 parse_while_loop();
+    u8 parse_voidfunction_call();
+    u8 parse_for_loop();
+    u8 parse_if_else();
+    u8 parse_mutate_var();
+    u8 parse_defer_stmt();
+    u8 parse_switch_stmt();
+    u8 parse_ignore_vars();
 
     // Types
-    u8 parse_type(Type *);
-    BaseType parse_base_type();
-    TypeAttr parse_type_attr();
+    Type parse_type();
 
     // expressions
     u8 parse_expr();
@@ -178,7 +201,7 @@ class Parser
     Token peek() const;
     void advance();
 
-    //
+    // err msgs
     u8 parse_error_expect_token(TknType);
     PrsErr convert_tkn_type_to_parse_error(TknType);
     u8 parser_error(PrsErr);
@@ -187,13 +210,8 @@ class Parser
     u8 parse_error_use_global_err();
 
   public:
+    Ast ast;
     // Parser exports
-    std::vector<AstImport> imports;
-    std::vector<AstFn> functions;
-    std::vector<AstEnum> enums;
-    std::vector<AstStruct> structs;
-    std::vector<AstGlVar> glVars;
-
     Parser(file_t *, Lexer *);
     ~Parser();
     u8 parse_lexer();

@@ -11,6 +11,7 @@ typedef UINT TypeIndex;
 
 enum class BaseType : u8
 {
+    TInvalid,
     TVoid, // NOTE(5717): ONLY ALLOWED FOR FUNCTIONS
     TInt,
     TUInt,
@@ -19,17 +20,9 @@ enum class BaseType : u8
     TBool,
     TArray, // strings are char arrays
     TStruct,
-    TEnum,
-};
+    TEnum, // a member
 
-enum class TypeAttr : u8
-{
-    // NOTE(5717): mutable
-    mutableVariable = 0,
-    staticMutable   = 1, // NOTE(): unused for now
-    // NOTE(5717): immutable
-    staticConstVar = 2,
-    constVar       = 3,
+    TId_Struct_or_Enum, // must be converted to struct or enum during type prep
 };
 
 struct ArrayType
@@ -51,9 +44,11 @@ struct EnumType
 
 struct Type
 {
+    // TODO: optimize representation
     TypeIndex idx;
     BaseType type;
-    TypeAttr attr;
+    bool is_pointer;
+    bool is_const;
 };
 
 struct SymbolTable
@@ -64,7 +59,7 @@ struct SymbolTable
     std::vector<ArrayType> array_types;
 };
 
-const char *get_type_string(Type);
-const char *get_type_modifier_attr_string(TypeAttr);
+const char *get_base_type_string(Type);
+// const char *get_type_modifier_attr_string(TypeAttr);
 
 }; // namespace rotate

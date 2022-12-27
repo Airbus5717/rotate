@@ -4,6 +4,7 @@
 #include "include/log.hpp"
 
 #include "fe/parser.hpp"
+#include <cstdlib>
 
 namespace rotate
 {
@@ -51,7 +52,7 @@ compile(compile_options *options) noexcept
     if (!options->lex_only)
     {
         exit = parser.parse_lexer();
-        ASSERT_RET_FAIL(exit == EXIT_FAILURE, "Parser error");
+        ASSERT_RET_FAIL(exit != EXIT_FAILURE, "Parser error");
     }
 
     // log compiliation

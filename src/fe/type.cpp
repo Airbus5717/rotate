@@ -4,7 +4,7 @@ namespace rotate
 {
 
 const char *
-get_type_string(Type t)
+get_base_type_string(Type t)
 {
     switch (t.type)
     {
@@ -17,11 +17,13 @@ get_type_string(Type t)
     case BaseType::TArray: return "ARRAY";
     case BaseType::TEnum: return "ENUM";
     case BaseType::TStruct: return "STRUCT";
+    case BaseType::TInvalid: return "INVALID";
+    case BaseType::TId_Struct_or_Enum: return "ID";
     }
     TODO("IMPLEMENT GET TYPE STRING");
     return nullptr;
 }
-
+/*
 const char *
 get_type_modifier_attr_string(TypeAttr a)
 {
@@ -34,6 +36,6 @@ get_type_modifier_attr_string(TypeAttr a)
     }
     TODO("implement get type modifier as string method");
     return "UNKNOWN";
-}
+} */
 
 } // namespace rotate
