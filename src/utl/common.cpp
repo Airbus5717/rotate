@@ -31,7 +31,7 @@ log_warn(const char *str)
     fprintf(rstderr, "[%sWARN%s] : %s\n", LYELLOW, RESET, str);
 }
 
-void
+void // NOTE(5717): basically a print for debug builds
 log_debug(const char *str)
 {
 #if DEBUG
@@ -47,7 +47,7 @@ log_info(const char *str)
     fprintf(rstderr, "[%sINFO%s] : %s\n", LGREEN, RESET, str);
 }
 
-// func definition in ./frontend/include/lexer.hpp
+// NOTE: func definition in ./frontend/include/lexer.hpp
 void
 log_token(FILE *output, const Token tkn, const char *str)
 {
@@ -56,10 +56,32 @@ log_token(FILE *output, const Token tkn, const char *str)
 }
 
 UINT
-get_digits_from_number(UINT num)
+get_digits_from_number(const UINT num)
 {
     // TODO: check
     return (UINT)std::floor(std::log10(num) + 1);
 }
 
+u8
+bit_set(const u8 field, const u8 n)
+{
+    // NOTE(5717): n should be [1:8],
+    // otherwise it is ignored
+    return (field | ((u8)1 << n));
+}
+
+u8
+bit_clear(const u8 field, const u8 n)
+{
+    // NOTE(5717): n should be [1:8]
+    // otherwise it is ignored
+    return (field & (u8)(~((u8)1 << n)));
+}
+
+u8
+bit_is_set(const u8 field, const u8 n)
+{
+    // NOTE(5717): returns non zero for true else 0 for false
+    return ((field >> n) & 1);
+}
 } // namespace rotate

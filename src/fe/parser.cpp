@@ -1,6 +1,7 @@
 #include "parser.hpp"
 #include "errmsgs.hpp"
 #include "token.hpp"
+#include "type.hpp"
 
 namespace rotate
 {
@@ -18,7 +19,7 @@ Parser::parse_lexer()
 {
     // NOTE(5717): error handling in parser
     // The parser will stop at the first error occured
-    if (tokens->size() < 2) return EXIT_FAILURE;
+    if (tokens->size() < 2) return FAILURE;
     return parse_starter();
 }
 
@@ -27,7 +28,7 @@ Parser::parse_starter()
 {
     for (;;)
     {
-        u8 exit = EXIT_SUCCESS;
+        u8 exit = SUCCESS;
         Token c = current();
         error   = PrsErr::Unknown;
         switch (c.type)
@@ -42,14 +43,14 @@ Parser::parse_starter()
         // NOTE(5717): End of parsing phase
         case TknType::EOT: {
             log_debug("End of Parsing");
-            return EXIT_SUCCESS;
+            return SUCCESS;
         }
         default: return parse_error_use_global_err();
         }
-        if (exit == EXIT_FAILURE) return parser_error(error);
+        if (exit == FAILURE) return parser_error(error);
     }
     UNREACHABLE();
-    return EXIT_FAILURE;
+    return FAILURE;
 }
 
 // Import statements
@@ -77,7 +78,7 @@ Parser::parse_import()
         log_debug("added an import");
     }
     expect_semicolon(advance(), error = PrsErr::SemicolonExpect);
-    return EXIT_SUCCESS;
+    return SUCCESS;
 }
 
 u8
@@ -85,10 +86,44 @@ Parser::parse_gl_var()
 {
     // NOTE(5717):
     // Global Const | Variable
-    // public or not
-    // static or not
-    TODO("parse global variables");
-    return EXIT_FAILURE;
+    TknIdx id = current().index;
+    UNUSED(id);
+    advance();
+    if (current().type == TknType::ColonColon)
+    {
+        // NOTE(5717): a const variable branch
+        // NOTE(5717): requires type to be inferred
+        auto value = parse_expr(TknType::SemiColon);
+        UNUSED(value);
+        TODO("parse expression gl vr");
+    }
+    expect(current().type == TknType::Colon, advance(), error = PrsErr::GlobalVarColon);
+    switch (current().type)
+    {
+    case TknType::Colon: {
+        TODO("Parse inferred const");
+        break;
+    }
+    case TknType::Equal: {
+        TODO("Parse inferred mutable");
+        break;
+    }
+    default: break;
+    }
+    Type t = parse_type();
+    expect(t.type != BaseType::TInvalid, advance(), error = PrsErr::ParseType);
+    if (current().type == TknType::Colon)
+    {
+        t.is_const = true;
+    }
+    else
+    {
+        expect(current().type == TknType::Equal, advance(), error = PrsErr::GlobalVarEql);
+        t.is_const = false;
+    }
+    TODO("parse expr");
+    expect_semicolon(advance(), error = PrsErr::GlobalVarSemiColon);
+    return SUCCESS;
 }
 
 // Functions
@@ -103,27 +138,31 @@ Parser::parse_function()
     */
     advance(); // skip 'fn'
 
-    // TODO:
+    // Id
     expect(current().type == TknType::Identifier, advance(), error = PrsErr::FnId);
+    // (
     expect(current().type == TknType::OpenParen, advance(), error = PrsErr::OpenParents);
+    // parse function parameters
     if (current().type != TknType::CloseParen)
     {
         TODO("Parse function parameters");
     }
-
+    // close function params with close parent ')'
     expect(current().type == TknType::CloseParen, advance(), error = PrsErr::CloseParents);
+    // if not void function parse type
     if (current().type != TknType::OpenCurly)
     {
         TODO("parse function non-void types");
     }
-    else
+    else // parse function block
     {
+        expect(current().type == TknType::OpenCurly, advance(), error = PrsErr::OpenCurly);
         TODO("parse function blocks");
     }
 
     // ast.functions.push_back(AstFn());
     TODO("Functions");
-    return EXIT_FAILURE;
+    return FAILURE;
 }
 
 // Enums
@@ -131,32 +170,33 @@ u8
 Parser::parse_enum()
 {
     TODO("parse enums");
-    return EXIT_FAILURE;
+    return FAILURE;
 }
 
 u8
 Parser::parse_struct()
 {
     TODO("parse structs");
-    return EXIT_FAILURE;
+    return FAILURE;
 }
 
 Type
 Parser::parse_type()
 {
+    // TODO: optimize types using bitfields
     Type ftype{};
     BaseType btype = BaseType::TInvalid;
 
-    if (current().type == TknType::Ref)
-    {
-
-        ftype.is_pointer = true;
-        advance();
-    }
-
+    // Parse Arrays
     if (current().type == TknType::OpenSQRBrackets)
     {
         TODO("Parse Array type");
+    }
+
+    if (current().type == TknType::Ref)
+    {
+        ftype.is_pointer = true;
+        advance();
     }
 
     // Base
@@ -178,6 +218,38 @@ Parser::parse_type()
     // if (peek().type == TknType::Colon) ftype.is_const = true;
     ftype.type = btype;
     return ftype;
+}
+
+u8
+Parser::parse_expr(TknType delimiter)
+{
+    /*
+     * NOTE(5717): An Expression definition will be either
+     *
+     * - Parse expr Primary
+     *   Primary_literal (usually a single token)
+     *   i.e. numbers, chars etc.
+     *
+     * - Parse Array literal
+     *   [ Expr... ] // seperated with commas [0, inf(hardcode a max number)]
+     *
+     * - Parse expr Binary
+     *   Expr Binary_operator Expr
+     *   i.e. `1 + 1`
+     *
+     * - Parse expr Unary (Prefix)
+     *   Unary_operator Expr
+     *   i.e. `-1`
+     *
+     * - Parse expr Grouping (no special representation(will reorder child of trees))
+     *  ( Expr )
+     *  i.e. (1 + 1)
+     *
+     * - Function Call (Non void type)
+     *  NOTE(5717): Void function calls are statements
+     *  */
+    TODO("Implement parsing expressions");
+    return FAILURE;
 }
 
 Token
@@ -268,7 +340,7 @@ Parser::parser_error(PrsErr err)
     }
     // error lexer_err_advice
     fprintf(rstderr, "> Advice: %s%s\n", RESET, parser_error_advice(err));
-    return EXIT_FAILURE;
+    return FAILURE;
 }
 
 const char *
@@ -292,4 +364,5 @@ Parser::parse_error_use_global_err()
 {
     return parser_error(error);
 }
+
 } // namespace rotate

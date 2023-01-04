@@ -189,7 +189,7 @@ class Parser
     Type parse_type();
 
     // expressions
-    u8 parse_expr();
+    u8 parse_expr(TknType);
     u8 parse_bin_expr();
     u8 parse_unary_expr();
     u8 parse_grouping_expr();

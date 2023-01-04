@@ -39,7 +39,7 @@ compile(compile_options *options) noexcept
     Lexer lexer = Lexer(&file);
     exit        = lexer.lex();
     if (lexer.getTokens()->size() < 2) log_error("file is empty");
-    if (exit == EXIT_FAILURE) return EXIT_FAILURE;
+    if (exit == FAILURE) return FAILURE;
     // parse lexed tokens to Abstract Syntax tree
 
     /*
@@ -52,7 +52,7 @@ compile(compile_options *options) noexcept
     if (!options->lex_only)
     {
         exit = parser.parse_lexer();
-        ASSERT_RET_FAIL(exit != EXIT_FAILURE, "Parser error");
+        ASSERT_RET_FAIL(exit != FAILURE, "Parser error");
     }
 
     // log compiliation

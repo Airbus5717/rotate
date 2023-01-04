@@ -17,9 +17,9 @@ main(const int argc, char **const argv)
 
         // compile
         u8 _exit = compile(&comp_opt);
-        if (_exit == EXIT_FAILURE)
+        if (_exit == FAILURE)
             log_stage(main_err(comp_opt.st));
-        else if (_exit == EXIT_SUCCESS)
+        else if (_exit == SUCCESS)
             log_info("SUCCESS");
 
         end_t   = clock();
@@ -30,7 +30,7 @@ main(const int argc, char **const argv)
     {
         print_version_and_exit();
     }
-    return EXIT_SUCCESS;
+    return SUCCESS;
 }
 
 const char *

@@ -27,8 +27,12 @@ enum class PrsErr : u16
     GlobalVarType,
     GlobalLongVarExpr,
     GlobalVarSemiColon,
+    GlobalVarColon,
+    GlobalVarEql,
     // global structs
     // global enums
+    // types
+    ParseType,
 };
 
 struct ParserErr
@@ -57,6 +61,8 @@ const static ParserErr parser_errors[] = {
               "Add an open curly brackets '}'"),
     ParserErr(PrsErr::ImportId, "Import aliased string requires an Id as alias",
               "Add an identifier after 'as' keyword"),
+    ParserErr(PrsErr::GlobalVarColon, "Expected a colon after Global Variable identifier",
+              "Add a colon ':' for the global variable Identifier"),
 };
 
 } // namespace rotate

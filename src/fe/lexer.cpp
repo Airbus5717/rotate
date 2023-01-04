@@ -36,19 +36,19 @@ Lexer::lex()
     {
         switch (lex_director())
         {
-        case EXIT_SUCCESS: break;
-        case EXIT_DONE: {
+        case SUCCESS: break;
+        case DONE: {
             len = 0;
             add_token(TknType::EOT);
             add_token(TknType::EOT);
             add_token(TknType::EOT);
             tokens->shrink_to_fit();
-            return EXIT_SUCCESS;
+            return SUCCESS;
         }
-        case EXIT_FAILURE: return report_error();
+        case FAILURE: return report_error();
         }
     }
-    return EXIT_FAILURE;
+    return FAILURE;
 }
 
 inline void
@@ -233,7 +233,7 @@ Lexer::lex_identifiers()
         // log_error("identifier length is more than 128 chars");
         error = LexErr::TOO_LONG_IDENTIFIER;
         restore_state_for_err();
-        return EXIT_FAILURE;
+        return FAILURE;
     }
 
     return add_token(_type);
@@ -272,7 +272,7 @@ Lexer::lex_numbers()
     {
         log_error("number digits length is above 100");
         restore_state_for_err();
-        return EXIT_FAILURE;
+        return FAILURE;
     }
     index -= len;
     return add_token(reached_dot ? TknType::Integer : TknType::Float);
@@ -293,7 +293,7 @@ Lexer::lex_hex_numbers()
     {
         log_error("hex number digits length is above 32");
         restore_state_for_err();
-        return EXIT_FAILURE;
+        return FAILURE;
     }
     index -= len;
     return add_token(TknType::Integer);
@@ -314,7 +314,7 @@ Lexer::lex_binary_numbers()
     {
         log_error("binary number digits length is above 128");
         restore_state_for_err();
-        return EXIT_FAILURE;
+        return FAILURE;
     }
     index -= len;
     return add_token(TknType::Integer);
@@ -330,7 +330,7 @@ Lexer::lex_strings()
         {
             restore_state_for_err();
             error = LexErr::NOT_CLOSED_STRING;
-            return EXIT_FAILURE;
+            return FAILURE;
         }
 
         if (current() == '"')
@@ -352,7 +352,7 @@ Lexer::lex_strings()
         restore_state_for_err();
         log_error("A string is not allowed to be longer than (UUINT_MAX / 2)");
         error = LexErr::TOO_LONG_STRING;
-        return EXIT_FAILURE;
+        return FAILURE;
     }
     index -= len;
     return add_token(TknType::String);
@@ -384,7 +384,7 @@ Lexer::lex_chars()
         default:
             error = LexErr::NOT_VALID_ESCAPE_CHAR;
             restore_state_for_err();
-            return EXIT_FAILURE;
+            return FAILURE;
         }
         if (current() == '\'')
         {
@@ -396,11 +396,11 @@ Lexer::lex_chars()
         {
             error = LexErr::LEXER_INVALID_CHAR;
             restore_state_for_err();
-            return EXIT_FAILURE;
+            return FAILURE;
         }
     }
 
-    return EXIT_FAILURE;
+    return FAILURE;
 }
 
 u8
@@ -497,7 +497,7 @@ Lexer::lex_symbols()
             //
             while (is_not_eof() && current() != '\n')
                 advance();
-            return EXIT_SUCCESS;
+            return SUCCESS;
         }
         else if (p == '*')
         {
@@ -514,7 +514,7 @@ Lexer::lex_symbols()
                 }
                 advance();
             }
-            return EXIT_SUCCESS;
+            return SUCCESS;
         }
         return add_token(TknType::DIV);
     }
@@ -531,12 +531,12 @@ Lexer::lex_symbols()
         while (current() != '\n' && is_not_eof())
             advance();
         advance();
-        return EXIT_SUCCESS;
+        return SUCCESS;
     }
     default: {
         switch (c)
         {
-        case '\0': return EXIT_DONE;
+        case '\0': return DONE;
         case '\t': this->error = LexErr::TABS; break;
         case '\r': this->error = LexErr::WINDOWS_CRAP; break;
 
@@ -544,7 +544,7 @@ Lexer::lex_symbols()
         }
     }
     }
-    return EXIT_FAILURE;
+    return FAILURE;
 }
 
 u8
@@ -674,7 +674,7 @@ Lexer::report_error()
     }
     // error lexer_err_advice
     fprintf(rstderr, "> Advice: %s%s\n", RESET, lexer_err_advice(error));
-    return EXIT_FAILURE;
+    return FAILURE;
 }
 
 u8
@@ -687,7 +687,7 @@ Lexer::add_token(const TknType type)
     for (UINT i = 0; i < len; i++)
         advance();
 
-    return EXIT_SUCCESS;
+    return SUCCESS;
 }
 
 } // namespace rotate

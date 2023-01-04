@@ -123,7 +123,12 @@ const auto rstderr = stderr;
     } while (0)
 
 #define UNUSED(x) (void)(x)
-#define EXIT_DONE 3
+constexpr auto SUCCESS = 0; // EXIT_SUCCESS
+constexpr auto FAILURE = 1; // EXIT_FAILURE
+constexpr auto DONE    = 2; // EXIT_DONE
+static_assert(SUCCESS == 0, "Exit Success code is wrong");
+static_assert(FAILURE == 1, "Exit Failure code is wrong");
+static_assert(DONE == 2, "Exit Done code is wrong");
 
 #define expect(expr, doWhenExpected, doElse)                                                       \
     do                                                                                             \
