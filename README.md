@@ -3,10 +3,10 @@
 > **Warning** Work is still in progress do not use for any serious project 
 - inspired by C, odin, Jai and zig
 ```odin
-io :: import("std/io");
+import "std/io" as io;
 
-main :: fn() {
-	io.print("Hello, World\n");
+fn main() {
+	io.println("Hello, World");
 }
 ```
 
