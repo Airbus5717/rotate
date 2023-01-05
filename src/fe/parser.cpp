@@ -301,11 +301,11 @@ Parser::parse_literal_expr(TknType delimiter, bool *is_valid)
         case TknType::Identifier:
         case TknType::Nil:
         case TknType::Integer: {
-            return LitExpr{.val_idx = c.index};
+            return LitExpr(c.index);
         }
         default: break; *is_valid = false;
     }
-    return LitExpr{};
+    return LitExpr(0);
 }
 
 ArrayExpr
@@ -314,7 +314,7 @@ Parser::parse_array_literal_expr(TknType delimiter, bool *is_valid)
     TODO("Parse array literals");
     ArrayExpr a;
     UNUSED(delimiter), UNUSED(is_valid);
-    return ArrayExpr{};
+    return ArrayExpr();
 }
 
 Token
@@ -345,8 +345,7 @@ ExprIdx
 Parser::add_literal_expr(LitExpr lit)
 {
     ast->literals.push_back(lit);
-    ast->expressions.push_back(Expr{.idx = LitIdx++, .type = ExprType::Literal});
-    // TODO: proper error handling
+    ast->expressions.push_back(Expr(LitIdx++, ExprType::Literal));
     return ExprIndex++;
 }
 
@@ -354,7 +353,7 @@ ExprIdx
 Parser::add_array_literal_expr(ArrayExpr a)
 {
     ast->arr_exprs.push_back(a);
-    ast->expressions.push_back(Expr{.idx = ArrayExprIdx++, .type = ExprType::ArrayLiteral});
+    ast->expressions.push_back(Expr(ArrayExprIdx++, ExprType::ArrayLiteral));
     return ExprIndex++;
 }
 

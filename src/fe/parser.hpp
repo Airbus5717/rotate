@@ -52,18 +52,36 @@ struct LitExpr
 {
     // LiteralExprType type;
     TknIdx val_idx;
+
+    LitExpr(TknIdx i) : val_idx(i)
+    {
+    }
+
+    ~LitExpr() = default;
 };
 
 struct UnaryExpr
 {
     UnaryOpType op;
     Expr *expr;
+
+    UnaryExpr(UnaryOpType o, Expr *expr) : op(o), expr(expr)
+    {
+    }
+
+    ~UnaryExpr() = default;
 };
 
 struct BinaryExpr
 {
     BinaryOpType op;
     Expr *left, *right;
+
+    BinaryExpr(BinaryOpType o, Expr *l, Expr *r) : op(o), left(l), right(r)
+    {
+    }
+
+    ~BinaryExpr() = default;
 };
 
 struct ArrayExpr
@@ -95,6 +113,12 @@ struct Expr
 {
     ExprIdx idx;
     ExprType type;
+
+    Expr(ExprIdx i, ExprType t) : idx(i), type(t)
+    {
+    }
+
+    ~Expr() = default;
 };
 
 // NOTE: array[i]
@@ -102,6 +126,12 @@ struct ArraySubExpr
 {
     TknIdx id; // array id
     Expr i;
+
+    ArraySubExpr(TknIdx id, Expr e) : id(id), i(e)
+    {
+    }
+
+    ~ArraySubExpr() = default;
 };
 
 // NOTE(5717): used as func params, struct params or variables
@@ -109,6 +139,12 @@ struct VarDef
 {
     TknIdx id;
     Type type;
+
+    VarDef(TknIdx id, Type t) : id(id), type(t)
+    {
+    }
+
+    ~VarDef() = default;
 };
 /*
  * Abstract Syntax tree
