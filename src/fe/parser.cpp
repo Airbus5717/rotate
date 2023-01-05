@@ -7,7 +7,8 @@ namespace rotate
 {
 
 Parser::Parser(file_t *file, Lexer *lexer)
-    : file(file), tokens(lexer->getTokens()), idx(0), ast(new Ast())
+    : file(file), tokens(lexer->getTokens()), idx(0), ExprIndex(0), LitIdx(0), BinIdx(0),
+      UnaryIdx(0), ArrayExprIdx(0), ArraySubIdx(0), FnCallIdx(0), ast(new Ast())
 {
     ASSERT_NULL(lexer, "Passed lexer to parser was null");
     ASSERT_NULL(file, "Passed file to parser was null");
@@ -91,13 +92,15 @@ Parser::parse_gl_var()
     // NOTE(5717):
     // Global Const | Variable
     TknIdx id = current().index;
+    UNUSED(id);
     advance();
     if (current().type == TknType::ColonColon)
     {
         // NOTE(5717): a const variable branch
         // NOTE(5717): requires type to be inferred
         bool is_valid;
-        Expr value = parse_expr(TknType::SemiColon, &is_valid);
+        ExprIdx value = parse_expr(TknType::SemiColon, &is_valid);
+        UNUSED(value);
         if (!is_valid)
         {
             error = PrsErr::GlobalLongVarExpr;
@@ -106,6 +109,7 @@ Parser::parse_gl_var()
         TODO("parse expression gl vr");
     }
     expect(current().type == TknType::Colon, advance(), error = PrsErr::GlobalVarColon);
+
     switch (current().type)
     {
     case TknType::Colon: {
@@ -118,6 +122,7 @@ Parser::parse_gl_var()
     }
     default: break;
     }
+
     Type t = parse_type();
     expect(t.type != BaseType::TInvalid, advance(), error = PrsErr::ParseType);
     if (current().type == TknType::Colon)
@@ -258,15 +263,42 @@ Parser::parse_expr(TknType delimiter, bool *is_valid)
      *  */
     ExprIdx i;
     auto c = current(), p = peek();
+    switch (c.type)
+    {
+
+    case TknType::CloseCurly:
+    case TknType::CloseParen:
+    case TknType::CloseSQRBrackets:
+    case TknType::SemiColon: {
+        *is_valid = false;
+        return 0;
+    }
+    default: break;
+    }
     // single token expression
     if (p.type == delimiter)
     {
         LitExpr l = parse_literal_expr(delimiter, is_valid);
         ASSERT(*is_valid, "Invalid literal expression");
         i = add_literal_expr(l);
+        advance(); // NOTE: advance once becuz of 'single' token
+        return i;
+    }
+
+    // multi token
+    switch (c.type)
+    {
+    // NOTE: Array Literal
+    case TknType::OpenSQRBrackets: {
+        ArrayExpr a = parse_array_literal_expr(delimiter, is_valid);
+        TODO("check if nothing is after the array");
+        return add_array_literal_expr(a);
+    }
+    default: break;
     }
     // TODO: multi token expression
     TODO("Implement multi token expression");
+    return i;
 }
 
 LitExpr
@@ -283,12 +315,22 @@ Parser::parse_literal_expr(TknType delimiter, bool *is_valid)
     case TknType::True:
     case TknType::False:
     case TknType::Identifier:
+    case TknType::Nil:
     case TknType::Integer: {
         return LitExpr{.val_idx = c.index};
     }
     default: break; *is_valid = false;
     }
     return LitExpr{};
+}
+
+ArrayExpr
+Parser::parse_array_literal_expr(TknType delimiter, bool *is_valid)
+{
+    TODO("Parse array literals");
+    ArrayExpr a;
+    UNUSED(delimiter), UNUSED(is_valid);
+    return ArrayExpr{};
 }
 
 Token
@@ -315,13 +357,21 @@ Parser::advance()
     idx++;
 }
 
-u8
+ExprIdx
 Parser::add_literal_expr(LitExpr lit)
 {
     ast->literals.push_back(lit);
     ast->expressions.push_back(Expr{.idx = LitIdx++, .type = ExprType::Literal});
     // TODO: proper error handling
-    return SUCCESS;
+    return ExprIndex++;
+}
+
+ExprIdx
+Parser::add_array_literal_expr(ArrayExpr a)
+{
+    ast->arr_exprs.push_back(a);
+    ast->expressions.push_back(Expr{.idx = ArrayExprIdx++, .type = ExprType::ArrayLiteral});
+    return ExprIndex++;
 }
 
 u8
