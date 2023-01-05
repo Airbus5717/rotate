@@ -141,15 +141,16 @@ struct AstImport
     // index is the index of string token
     // It requires a single string Token for path
     // the path must be known at compile time
-    TknIdx id_idx;
-    TknIdx val_idx;
+    TknIdx alias_id;
+    TknIdx import_str;
     bool aliased;
 
-    AstImport(UINT val_idx) : val_idx(val_idx), aliased(false)
+    AstImport(UINT import_str) : import_str(import_str), aliased(false)
     {
     }
 
-    AstImport(TknIdx id_idx, TknIdx val_idx) : id_idx(id_idx), val_idx(val_idx), aliased(true)
+    AstImport(TknIdx alias_id, TknIdx import_str)
+        : alias_id(alias_id), import_str(import_str), aliased(true)
     {
     }
 
@@ -161,6 +162,12 @@ struct AstGlVar
     TknIdx id_idx;
     Type type;
     ExprIdx value;
+
+    AstGlVar(TknIdx i, Type t, ExprIdx e) : id_idx(i), type(t), value(e)
+    {
+    }
+
+    ~AstGlVar() = default;
 };
 
 struct AstStruct

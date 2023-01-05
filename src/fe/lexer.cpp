@@ -36,16 +36,16 @@ Lexer::lex()
     {
         switch (lex_director())
         {
-        case SUCCESS: break;
-        case DONE: {
-            len = 0;
-            add_token(TknType::EOT);
-            add_token(TknType::EOT);
-            add_token(TknType::EOT);
-            tokens->shrink_to_fit();
-            return SUCCESS;
-        }
-        case FAILURE: return report_error();
+            case SUCCESS: break;
+            case DONE: {
+                len = 0;
+                add_token(TknType::EOT);
+                add_token(TknType::EOT);
+                add_token(TknType::EOT);
+                tokens->shrink_to_fit();
+                return SUCCESS;
+            }
+            case FAILURE: return report_error();
         }
     }
     return FAILURE;
@@ -115,120 +115,120 @@ Lexer::lex_identifiers()
     // TODO: optimize searching for matching keywords
     switch (len)
     {
-    case 2: {
-        switch (current())
-        {
-        case 'a':
-            if (keyword_match("as", 2)) _type = TknType::As;
-            break;
-        case 'f':
-            if (keyword_match("fn", 2)) _type = TknType::Function;
-            break;
-        case 'i':
-            if (keyword_match("if", 2))
-                _type = TknType::If;
-            else if (keyword_match("in", 2))
-                _type = TknType::In;
-            break;
-        case 'o':
-            if (keyword_match("or", 2)) _type = TknType::Or;
-            break;
-        default: break;
-        }
+        case 2: {
+            switch (current())
+            {
+                case 'a':
+                    if (keyword_match("as", 2)) _type = TknType::As;
+                    break;
+                case 'f':
+                    if (keyword_match("fn", 2)) _type = TknType::Function;
+                    break;
+                case 'i':
+                    if (keyword_match("if", 2))
+                        _type = TknType::If;
+                    else if (keyword_match("in", 2))
+                        _type = TknType::In;
+                    break;
+                case 'o':
+                    if (keyword_match("or", 2)) _type = TknType::Or;
+                    break;
+                default: break;
+            }
 
-        break;
-    }
-    case 3: {
-        switch (current())
-        {
-        case 'f':
-            if (keyword_match("for", 3)) _type = TknType::For;
-            break;
-        case 'p':
-            if (keyword_match("pub", 3)) _type = TknType::Public;
-            break;
-        case 'i':
-            if (keyword_match("int", 3)) _type = TknType::IntKeyword;
-            break;
-        case 'r':
-            if (keyword_match("ref", 3)) _type = TknType::Ref;
-            break;
-        case 'a':
-            if (keyword_match("and", 3)) _type = TknType::And;
-            break;
-        case 'n':
-            if (keyword_match("nil", 3)) _type = TknType::Nil;
             break;
         }
-        break;
-    }
-    case 4: {
-        switch (current())
-        {
-        case 'e': {
-            if (keyword_match("else", 4))
-                _type = TknType::Else;
-            else if (keyword_match("enum", 4))
-                _type = TknType::Enum;
+        case 3: {
+            switch (current())
+            {
+                case 'f':
+                    if (keyword_match("for", 3)) _type = TknType::For;
+                    break;
+                case 'p':
+                    if (keyword_match("pub", 3)) _type = TknType::Public;
+                    break;
+                case 'i':
+                    if (keyword_match("int", 3)) _type = TknType::IntKeyword;
+                    break;
+                case 'r':
+                    if (keyword_match("ref", 3)) _type = TknType::Ref;
+                    break;
+                case 'a':
+                    if (keyword_match("and", 3)) _type = TknType::And;
+                    break;
+                case 'n':
+                    if (keyword_match("nil", 3)) _type = TknType::Nil;
+                    break;
+            }
             break;
         }
-        case 't':
-            if (keyword_match("true", 4)) _type = TknType::True;
-            break;
-        case 'c':
-            if (keyword_match("char", 4)) _type = TknType::CharKeyword;
-            break;
-        case 'b':
-            if (keyword_match("bool", 4)) _type = TknType::BoolKeyword;
-            break;
-        case 'u':
-            if (keyword_match("uint", 4)) _type = TknType::UintKeyword;
-            break;
-        }
-        break;
-    }
-    case 5: {
-        switch (current())
-        {
-        case 'w':
-            if (keyword_match("while", 5)) _type = TknType::While;
-            break;
-        case 'f': {
-            if (keyword_match("false", 5))
-                _type = TknType::False;
-            else if (keyword_match("float", 5))
-                _type = TknType::FloatKeyword;
+        case 4: {
+            switch (current())
+            {
+                case 'e': {
+                    if (keyword_match("else", 4))
+                        _type = TknType::Else;
+                    else if (keyword_match("enum", 4))
+                        _type = TknType::Enum;
+                    break;
+                }
+                case 't':
+                    if (keyword_match("true", 4)) _type = TknType::True;
+                    break;
+                case 'c':
+                    if (keyword_match("char", 4)) _type = TknType::CharKeyword;
+                    break;
+                case 'b':
+                    if (keyword_match("bool", 4)) _type = TknType::BoolKeyword;
+                    break;
+                case 'u':
+                    if (keyword_match("uint", 4)) _type = TknType::UintKeyword;
+                    break;
+            }
             break;
         }
-        case 'b':
-            if (keyword_match("break", 5)) _type = TknType::Break;
+        case 5: {
+            switch (current())
+            {
+                case 'w':
+                    if (keyword_match("while", 5)) _type = TknType::While;
+                    break;
+                case 'f': {
+                    if (keyword_match("false", 5))
+                        _type = TknType::False;
+                    else if (keyword_match("float", 5))
+                        _type = TknType::FloatKeyword;
+                    break;
+                }
+                case 'b':
+                    if (keyword_match("break", 5)) _type = TknType::Break;
+                    break;
+            }
             break;
         }
-        break;
-    }
-    case 6: {
-        switch (current())
-        {
-        case 'r':
-            if (keyword_match("return", 6)) _type = TknType::Return;
-            break;
-        case 'i':
-            if (keyword_match("import", 6)) _type = TknType::Import;
-            break;
-        case 'd':
-            if (keyword_match("delete", 6)) _type = TknType::Delete;
-            break;
-        case 's': {
-            if (keyword_match("struct", 6))
-                _type = TknType::Struct;
-            else if (keyword_match("switch", 6))
-                _type = TknType::Switch;
+        case 6: {
+            switch (current())
+            {
+                case 'r':
+                    if (keyword_match("return", 6)) _type = TknType::Return;
+                    break;
+                case 'i':
+                    if (keyword_match("import", 6)) _type = TknType::Import;
+                    break;
+                case 'd':
+                    if (keyword_match("delete", 6)) _type = TknType::Delete;
+                    break;
+                case 's': {
+                    if (keyword_match("struct", 6))
+                        _type = TknType::Struct;
+                    else if (keyword_match("switch", 6))
+                        _type = TknType::Switch;
+                    break;
+                }
+            }
             break;
         }
-        }
-        break;
-    }
-    default: break;
+        default: break;
     }
 
     if (len > 100)
@@ -254,9 +254,9 @@ Lexer::lex_numbers()
     {
         switch (p)
         {
-        case 'x': return lex_hex_numbers();
-        case 'b': return lex_binary_numbers();
-        default: break;
+            case 'x': return lex_hex_numbers();
+            case 'b': return lex_binary_numbers();
+            default: break;
         }
     }
 
@@ -377,17 +377,17 @@ Lexer::lex_chars()
         advance_len_inc();
         switch (current())
         {
-        case 'n':
-        case 't':
-        case 'r':
-        case 'b':
-        case 'f':
-        case '\\':
-        case '\'': advance_len_inc(); break;
-        default:
-            error = LexErr::NOT_VALID_ESCAPE_CHAR;
-            restore_state_for_err();
-            return FAILURE;
+            case 'n':
+            case 't':
+            case 'r':
+            case 'b':
+            case 'f':
+            case '\\':
+            case '\'': advance_len_inc(); break;
+            default:
+                error = LexErr::NOT_VALID_ESCAPE_CHAR;
+                restore_state_for_err();
+                return FAILURE;
         }
         if (current() == '\'')
         {
@@ -414,138 +414,133 @@ Lexer::lex_symbols()
     len          = 1;
     switch (c)
     {
-    case '{': return add_token(TknType::OpenCurly);
-    case '}': return add_token(TknType::CloseCurly);
-    case '(': return add_token(TknType::OpenParen);
-    case ')': return add_token(TknType::CloseParen);
-    case '[': return add_token(TknType::OpenSQRBrackets);
-    case ']': return add_token(TknType::CloseSQRBrackets);
-    case ';': return add_token(TknType::SemiColon);
-    case ',': return add_token(TknType::Comma);
-    // TODO(5717) bug below needs to check an eql during peeking
+        case '{': return add_token(TknType::OpenCurly);
+        case '}': return add_token(TknType::CloseCurly);
+        case '(': return add_token(TknType::OpenParen);
+        case ')': return add_token(TknType::CloseParen);
+        case '[': return add_token(TknType::OpenSQRBrackets);
+        case ']': return add_token(TknType::CloseSQRBrackets);
+        case ';': return add_token(TknType::SemiColon);
+        case ',': return add_token(TknType::Comma);
+        // TODO(5717) bug below needs to check an eql during peeking
 
-    // more than one length char
-    case '.': {
-        if (p == '.')
-        {
-            len++;
-            return add_token(TknType::To);
-        }
-        return add_token(TknType::Dot);
-    }
-    case ':': {
-        if (p == ':')
-        {
-            len++;
-            return add_token(TknType::ColonColon);
-        }
-        return add_token(TknType::Colon);
-    }
-    case '>': {
-        if (p == '=')
-        {
-            len++;
-            return add_token(TknType::GreaterEql);
-        }
-        return add_token(TknType::Greater);
-    }
-    case '<': {
-        if (p == '=')
-        {
-            len++;
-            return add_token(TknType::LessEql);
-        }
-        return add_token(TknType::Less);
-    }
-    case '=': {
-        if (p == '=')
-        {
-            len++;
-            return add_token(TknType::EqualEqual);
-        }
-        return add_token(TknType::Equal);
-    }
-    case '+': {
-        if (p == '=')
-        {
-            len++;
-            return add_token(TknType::AddEqual);
-        }
-        return add_token(TknType::PLUS);
-    }
-    case '-': {
-        if (p == '=')
-        {
-            len++;
-            return add_token(TknType::SubEqual);
-        }
-        return add_token(TknType::MINUS);
-    }
-    case '*': {
-        if (p == '=')
-        {
-            len++;
-            return add_token(TknType::MultEqual);
-        }
-        return add_token(TknType::Star);
-    }
-    case '/': {
-        if (p == '=')
-        {
-            len++;
-            return add_token(TknType::DivEqual);
-        }
-        else if (p == '/')
-        {
-            //
-            while (is_not_eof() && current() != '\n')
-                advance();
-            return SUCCESS;
-        }
-        else if (p == '*')
-        {
-            advance();
-            advance();
-            // TODO: Allow nested comments
-            bool end_comment = false;
-            while (is_not_eof() && !end_comment)
+        // more than one length char
+        case '.': {
+            if (p == '.')
             {
-                if (current() == '*' && peek() == '/')
-                {
-                    advance();
-                    end_comment = true;
-                }
-                advance();
+                len++;
+                return add_token(TknType::To);
             }
+            return add_token(TknType::Dot);
+        }
+        case ':': {
+            return add_token(TknType::Colon);
+        }
+        case '>': {
+            if (p == '=')
+            {
+                len++;
+                return add_token(TknType::GreaterEql);
+            }
+            return add_token(TknType::Greater);
+        }
+        case '<': {
+            if (p == '=')
+            {
+                len++;
+                return add_token(TknType::LessEql);
+            }
+            return add_token(TknType::Less);
+        }
+        case '=': {
+            if (p == '=')
+            {
+                len++;
+                return add_token(TknType::EqualEqual);
+            }
+            return add_token(TknType::Equal);
+        }
+        case '+': {
+            if (p == '=')
+            {
+                len++;
+                return add_token(TknType::AddEqual);
+            }
+            return add_token(TknType::PLUS);
+        }
+        case '-': {
+            if (p == '=')
+            {
+                len++;
+                return add_token(TknType::SubEqual);
+            }
+            return add_token(TknType::MINUS);
+        }
+        case '*': {
+            if (p == '=')
+            {
+                len++;
+                return add_token(TknType::MultEqual);
+            }
+            return add_token(TknType::Star);
+        }
+        case '/': {
+            if (p == '=')
+            {
+                len++;
+                return add_token(TknType::DivEqual);
+            }
+            else if (p == '/')
+            {
+                //
+                while (is_not_eof() && current() != '\n')
+                    advance();
+                return SUCCESS;
+            }
+            else if (p == '*')
+            {
+                advance();
+                advance();
+                // TODO: Allow nested comments
+                bool end_comment = false;
+                while (is_not_eof() && !end_comment)
+                {
+                    if (current() == '*' && peek() == '/')
+                    {
+                        advance();
+                        end_comment = true;
+                    }
+                    advance();
+                }
+                return SUCCESS;
+            }
+            return add_token(TknType::DIV);
+        }
+        case '!': {
+            if (p == '=')
+            {
+                len++;
+                return add_token(TknType::NotEqual);
+            }
+            return add_token(TknType::Not);
+        }
+        case '#': {
+            // this is for comments
+            while (current() != '\n' && is_not_eof())
+                advance();
+            advance();
             return SUCCESS;
         }
-        return add_token(TknType::DIV);
-    }
-    case '!': {
-        if (p == '=')
-        {
-            len++;
-            return add_token(TknType::NotEqual);
-        }
-        return add_token(TknType::Not);
-    }
-    case '#': {
-        // this is for comments
-        while (current() != '\n' && is_not_eof())
-            advance();
-        advance();
-        return SUCCESS;
-    }
-    default: {
-        switch (c)
-        {
-        case '\0': return DONE;
-        case '\t': this->error = LexErr::TABS; break;
-        case '\r': this->error = LexErr::WINDOWS_CRAP; break;
+        default: {
+            switch (c)
+            {
+                case '\0': return DONE;
+                case '\t': this->error = LexErr::TABS; break;
+                case '\r': this->error = LexErr::WINDOWS_CRAP; break;
 
-        default: this->error = LexErr::LEXER_INVALID_CHAR;
+                default: this->error = LexErr::LEXER_INVALID_CHAR;
+            }
         }
-    }
     }
     return FAILURE;
 }

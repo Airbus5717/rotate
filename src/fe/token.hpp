@@ -32,7 +32,6 @@ enum class TknType : u8
     BoolKeyword,      // 'bool'
     SemiColon,        // ;
     Colon,            // :
-    ColonColon,       // constant (::)
     Function,         // 'fn'
     PLUS,             // +
     MINUS,            // -

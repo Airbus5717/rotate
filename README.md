@@ -2,7 +2,7 @@
 ## Rotate (C++)
 > **Warning** Work is still in progress do not use for any serious project 
 - inspired by C, odin, Jai and zig
-```odin
+```go
 import "std/io" as io;
 
 fn main() {

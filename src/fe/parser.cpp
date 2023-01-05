@@ -38,19 +38,19 @@ Parser::parse_starter()
         error   = PrsErr::Unknown;
         switch (c.type)
         {
-        case TknType::Import: exit = parse_import(); break;
-        case TknType::Function: exit = parse_function(); break;
+            case TknType::Import: exit = parse_import(); break;
+            case TknType::Function: exit = parse_function(); break;
 
-        // NOTE(5717): Global Variable
-        case TknType::Identifier: exit = parse_gl_var(); break;
-        case TknType::Struct: exit = parse_struct(); break;
-        case TknType::Enum: exit = parse_enum(); break;
-        // NOTE(5717): End of parsing phase
-        case TknType::EOT: {
-            log_debug("End of Parsing");
-            return SUCCESS;
-        }
-        default: return parse_error_use_global_err();
+            // NOTE(5717): Global Variable
+            case TknType::Identifier: exit = parse_gl_var(); break;
+            case TknType::Struct: exit = parse_struct(); break;
+            case TknType::Enum: exit = parse_enum(); break;
+            // NOTE(5717): End of parsing phase
+            case TknType::EOT: {
+                log_debug("End of Parsing");
+                return exit;
+            }
+            default: return parse_error_use_global_err();
         }
         if (exit == FAILURE) return parser_error(error);
     }
@@ -65,21 +65,21 @@ Parser::parse_import()
     // import "std/io";
     advance(); // skip 'import'
     // Skip the string
+    TknIdx str = current().index;
     expect(current().type == TknType::String, advance(), error = PrsErr::ImportStringExpect);
     if (current().type == TknType::As)
     {
         // import "std/io" as io;
         // import string as id;
         advance();
+        TknIdx alias = current().index;
         expect(current().type == TknType::Identifier, advance(), error = PrsErr::ImportId);
-        ast->imports.push_back(AstImport(past().index - 2, past().index));
-        // ast.imports.emplace_back(past().index - 2, past().index);
+        ast->imports.push_back(AstImport(alias, str));
         log_debug("added an aliased import");
     }
     else
     {
-        ast->imports.push_back(AstImport(past().index));
-        // ast.imports.emplace_back(past().index);
+        ast->imports.push_back(AstImport(str));
         log_debug("added an import");
     }
     expect_semicolon(advance(), error = PrsErr::SemicolonExpect);
@@ -92,51 +92,35 @@ Parser::parse_gl_var()
     // NOTE(5717):
     // Global Const | Variable
     TknIdx id = current().index;
-    UNUSED(id);
     advance();
-    if (current().type == TknType::ColonColon)
-    {
-        // NOTE(5717): a const variable branch
-        // NOTE(5717): requires type to be inferred
-        bool is_valid;
-        ExprIdx value = parse_expr(TknType::SemiColon, &is_valid);
-        UNUSED(value);
-        if (!is_valid)
-        {
-            error = PrsErr::GlobalLongVarExpr;
-            return FAILURE;
-        }
-        TODO("parse expression gl vr");
-    }
+    bool is_valid;
     expect(current().type == TknType::Colon, advance(), error = PrsErr::GlobalVarColon);
 
     switch (current().type)
     {
-    case TknType::Colon: {
-        TODO("Parse inferred const");
-        break;
-    }
-    case TknType::Equal: {
-        TODO("Parse inferred mutable");
-        break;
-    }
-    default: break;
+        case TknType::Colon: {
+            TODO("Parse inferred const");
+            break;
+        }
+        case TknType::Equal: {
+            TODO("Parse inferred mutable");
+            break;
+        }
+        default: break;
     }
 
-    Type t = parse_type();
+    Type t     = parse_type();
+    t.is_const = false;
     expect(t.type != BaseType::TInvalid, advance(), error = PrsErr::ParseType);
     if (current().type == TknType::Colon)
-    {
         t.is_const = true;
-    }
     else
-    {
         expect(current().type == TknType::Equal, advance(), error = PrsErr::GlobalVarEql);
-        t.is_const = false;
-    }
-    TODO("parse expr");
+
+    auto val = parse_expr(TknType::SemiColon, &is_valid);
     expect_semicolon(advance(), error = PrsErr::GlobalVarSemiColon);
-    return SUCCESS;
+    ast->gl_variables.push_back(AstGlVar(id, t, val));
+    return !(SUCCESS && is_valid); // complement to get the zero value
 }
 
 // Functions
@@ -215,18 +199,18 @@ Parser::parse_type()
     // Base
     switch (current().type)
     {
-    case TknType::UintKeyword: btype = BaseType::TUInt; break;
-    case TknType::IntKeyword: btype = BaseType::TInt; break;
-    case TknType::BoolKeyword: btype = BaseType::TBool; break;
-    case TknType::FloatKeyword: btype = BaseType::TFloat; break;
-    case TknType::CharKeyword: btype = BaseType::TChar; break;
-    case TknType::Identifier: {
-        // aliases, structs, enums
-        TODO("parse identifier types");
-        btype = BaseType::TId;
-        break;
-    }
-    default: break;
+        case TknType::UintKeyword: btype = BaseType::TUInt; break;
+        case TknType::IntKeyword: btype = BaseType::TInt; break;
+        case TknType::BoolKeyword: btype = BaseType::TBool; break;
+        case TknType::FloatKeyword: btype = BaseType::TFloat; break;
+        case TknType::CharKeyword: btype = BaseType::TChar; break;
+        case TknType::Identifier: {
+            // aliases, structs, enums
+            TODO("parse identifier types");
+            btype = BaseType::TId;
+            break;
+        }
+        default: break;
     }
     // if (peek().type == TknType::Colon) ftype.is_const = true;
     ftype.type = btype;
@@ -266,14 +250,14 @@ Parser::parse_expr(TknType delimiter, bool *is_valid)
     switch (c.type)
     {
 
-    case TknType::CloseCurly:
-    case TknType::CloseParen:
-    case TknType::CloseSQRBrackets:
-    case TknType::SemiColon: {
-        *is_valid = false;
-        return 0;
-    }
-    default: break;
+        case TknType::CloseCurly:
+        case TknType::CloseParen:
+        case TknType::CloseSQRBrackets:
+        case TknType::SemiColon: {
+            *is_valid = false;
+            return 0;
+        }
+        default: break;
     }
     // single token expression
     if (p.type == delimiter)
@@ -288,13 +272,13 @@ Parser::parse_expr(TknType delimiter, bool *is_valid)
     // multi token
     switch (c.type)
     {
-    // NOTE: Array Literal
-    case TknType::OpenSQRBrackets: {
-        ArrayExpr a = parse_array_literal_expr(delimiter, is_valid);
-        TODO("check if nothing is after the array");
-        return add_array_literal_expr(a);
-    }
-    default: break;
+        // NOTE: Array Literal
+        case TknType::OpenSQRBrackets: {
+            ArrayExpr a = parse_array_literal_expr(delimiter, is_valid);
+            TODO("check if nothing is after the array");
+            return add_array_literal_expr(a);
+        }
+        default: break;
     }
     // TODO: multi token expression
     TODO("Implement multi token expression");
@@ -309,17 +293,17 @@ Parser::parse_literal_expr(TknType delimiter, bool *is_valid)
     *is_valid = true;
     switch (c.type)
     {
-    case TknType::String:
-    case TknType::Float:
-    case TknType::Char:
-    case TknType::True:
-    case TknType::False:
-    case TknType::Identifier:
-    case TknType::Nil:
-    case TknType::Integer: {
-        return LitExpr{.val_idx = c.index};
-    }
-    default: break; *is_valid = false;
+        case TknType::String:
+        case TknType::Float:
+        case TknType::Char:
+        case TknType::True:
+        case TknType::False:
+        case TknType::Identifier:
+        case TknType::Nil:
+        case TknType::Integer: {
+            return LitExpr{.val_idx = c.index};
+        }
+        default: break; *is_valid = false;
     }
     return LitExpr{};
 }
@@ -385,7 +369,7 @@ Parser::convert_tkn_type_to_parse_error(TknType tkn)
 {
     switch (tkn)
     {
-    default: TODO("Parser handle tkn Type conversion");
+        default: TODO("Parser handle tkn Type conversion");
     }
     return PrsErr::Unknown;
 }

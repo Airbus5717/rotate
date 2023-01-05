@@ -8,17 +8,17 @@ get_base_type_string(Type t)
 {
     switch (t.type)
     {
-    case BaseType::TVoid: return "VOID";
-    case BaseType::TInt: return "INT";
-    case BaseType::TBool: return "BOOL";
-    case BaseType::TChar: return "CHAR";
-    case BaseType::TUInt: return "UINT";
-    case BaseType::TFloat: return "FLOAT";
-    case BaseType::TArray: return "ARRAY";
-    case BaseType::TEnum: return "ENUM";
-    case BaseType::TStruct: return "STRUCT";
-    case BaseType::TInvalid: return "INVALID";
-    case BaseType::TId: return "ID";
+        case BaseType::TVoid: return "VOID";
+        case BaseType::TInt: return "INT";
+        case BaseType::TBool: return "BOOL";
+        case BaseType::TChar: return "CHAR";
+        case BaseType::TUInt: return "UINT";
+        case BaseType::TFloat: return "FLOAT";
+        case BaseType::TArray: return "ARRAY";
+        case BaseType::TEnum: return "ENUM";
+        case BaseType::TStruct: return "STRUCT";
+        case BaseType::TInvalid: return "INVALID";
+        case BaseType::TId: return "ID";
     }
     TODO("IMPLEMENT GET TYPE STRING");
     return nullptr;
