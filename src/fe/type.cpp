@@ -18,7 +18,7 @@ get_base_type_string(Type t)
     case BaseType::TEnum: return "ENUM";
     case BaseType::TStruct: return "STRUCT";
     case BaseType::TInvalid: return "INVALID";
-    case BaseType::TId_Struct_or_Enum: return "ID";
+    case BaseType::TId: return "ID";
     }
     TODO("IMPLEMENT GET TYPE STRING");
     return nullptr;

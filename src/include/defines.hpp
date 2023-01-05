@@ -122,7 +122,8 @@ const auto rstderr = stderr;
         exit(1);                                                                                   \
     } while (0)
 
-#define UNUSED(x) (void)(x)
+#define UNUSED(x) ((void)sizeof(x))
+
 constexpr auto SUCCESS = 0; // EXIT_SUCCESS
 constexpr auto FAILURE = 1; // EXIT_FAILURE
 constexpr auto DONE    = 2; // EXIT_DONE
@@ -160,19 +161,17 @@ static_assert(DONE == 2, "Exit Done code is wrong");
     } while (0)
 
 // terminal colors
-#define RESET "\x1b[0m"
-#define BOLD  "\x1b[1m"
-#define FAINT "\x1b[2m"
-
-#define GREEN   "\x1b[32m"
-#define YELLOW  "\x1b[33m"
-#define BLUE    "\x1b[34m"
-#define PINK    "\x1b[35m"
-#define CYAN    "\x1b[36m"
-#define BLACK   "\x1b[30m"
-#define WHITE   "\x1b[37m"
-#define DEFAULT "\x1b[39m"
-
+#define RESET    "\x1b[0m"
+#define BOLD     "\x1b[1m"
+#define FAINT    "\x1b[2m"
+#define GREEN    "\x1b[32m"
+#define YELLOW   "\x1b[33m"
+#define BLUE     "\x1b[34m"
+#define PINK     "\x1b[35m"
+#define CYAN     "\x1b[36m"
+#define BLACK    "\x1b[30m"
+#define WHITE    "\x1b[37m"
+#define DEFAULT  "\x1b[39m"
 #define LGRAY    "\x1b[90m"
 #define LRED     "\x1b[91m"
 #define LGREEN   "\x1b[92m"

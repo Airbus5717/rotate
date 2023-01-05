@@ -12,7 +12,7 @@ Lexer::Lexer(file_t *file)
     ASSERT_NULL(file, "Lexer File passed is a null pointer");
     ASSERT_NULL(tokens, "Lexer vec of tokens passed is a null pointer");
 
-    tokens->reserve(file->length / 2);
+    tokens->reserve(file->length / 4);
 }
 
 Lexer::~Lexer() noexcept
@@ -57,17 +57,19 @@ Lexer::skip_whitespace() noexcept
     for (;;)
     {
         const char c = current();
-        if (c == '\n')
+        if (c == ' ')
+        {
+            index++;
+        }
+        else if (c == '\n')
         {
             index++;
             line++;
         }
-        else if (c == ' ')
-        {
-            index++;
-        }
         else
+        {
             break;
+        }
     }
 }
 
@@ -78,17 +80,18 @@ Lexer::lex_director()
     len = 0, begin_tok_line = line;
     save_state();
     const char c = current();
-
+    // ints and floats
     if (isdigit(c)) return lex_numbers();
 
-    //
+    // chars, and strings
+    // TODO: Multiline string
     if (c == '\'') return lex_chars();
     if (c == '"') return lex_strings();
 
-    //
+    // NOTE: Idenitifiers, keywords and builtin functions
     if (c == '_' || isalpha(c)) return lex_identifiers();
     if (c == '@') return lex_builtin_funcs();
-
+    // Symbols
     return lex_symbols();
 }
 

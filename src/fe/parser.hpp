@@ -2,13 +2,10 @@
 
 #include "errmsgs.hpp"
 #include "lexer.hpp"
-#include "token.hpp"
 #include "type.hpp"
 
 namespace rotate
 {
-//! Keep code as simple as possible
-//! for scope level bases
 
 // Expressions
 struct Expr;
@@ -28,7 +25,7 @@ struct AstFn;
  * Expressions
  */
 
-enum class BinaryOpType
+enum class BinaryOpType : u8
 {
     // TODO: add all
     add,     // +
@@ -40,9 +37,10 @@ enum class BinaryOpType
     greql,   // >=
     less,    // <
     leseql,  // <=
+             // TODO: more operators
 };
 
-enum class UnaryOpType
+enum class UnaryOpType : u8
 {
     logical_negate,   // '!'
     numerical_negate, // -
@@ -51,7 +49,7 @@ enum class UnaryOpType
 };
 
 struct LitExpr
-{ //
+{
     // LiteralExprType type;
     TknIdx val_idx;
 };
@@ -68,16 +66,46 @@ struct BinaryExpr
     Expr *left, *right;
 };
 
-struct Expr
+struct ArrayExpr
 {
-    // TODO: Make a union
-    LitExpr literal;
-    UnaryExpr unary;
-    BinaryExpr binary;
+    Type type;
+    usize size;
+    std::vector<Expr> expressions;
 };
 
-// NOTE(5717): function params are const
-struct FuncParam
+struct FnCallExpr
+{
+    TknIdx id;
+    Type return_type;
+    std::vector<Expr> input_params;
+    // NOTE(5717): must be non-void return type
+};
+
+enum class ExprType : u8
+{
+    Literal,
+    ArraySub,
+    UnaryExpr,
+    ArrayLiteral,
+    BinaryExpr,
+    FuncCallNonVoid,
+};
+
+struct Expr
+{
+    ExprIdx idx;
+    ExprType type;
+};
+
+// NOTE: array[i]
+struct ArraySubExpr
+{
+    TknIdx id; // array id
+    Expr i;
+};
+
+// NOTE(5717): used as func params, struct params or variables
+struct VarDef
 {
     TknIdx id;
     Type type;
@@ -87,12 +115,21 @@ struct FuncParam
  */
 struct Ast
 {
+    // Globals
     std::vector<AstImport> imports;
     std::vector<AstGlVar> gl_variables;
     std::vector<AstStruct> structs;
     std::vector<AstEnum> enums;
     std::vector<AstFn> functions;
-    SymbolTable symbol_table;
+    // Expressions
+    std::vector<Expr> expressions;
+    std::vector<LitExpr> literals;
+    std::vector<BinaryExpr> bin_exprs;
+    std::vector<UnaryExpr> unary_exprs;
+    std::vector<ArrayExpr> arr_exprs;
+    std::vector<FnCallExpr> fn_exprs;
+    // types
+    SymbolTable stable;
 };
 
 struct AstImport
@@ -123,22 +160,24 @@ struct AstGlVar
 {
     TknIdx id_idx;
     Type type;
+    ExprIdx value;
 };
 
 struct AstStruct
 {
     TknIdx id;
-    // id, params(),
+    std::vector<VarDef> members;
 };
 
 struct AstEnum
 {
     TknIdx id;
+    std::vector<TknIdx> members;
 };
 
 struct AstBlock
 {
-    // TODO
+    // TODO: vector of statements
 };
 
 struct AstFn
@@ -146,18 +185,11 @@ struct AstFn
     TknIdx id;
     Type return_type;
     AstBlock block;
-    // TODO: parameters
+    std::vector<VarDef> params;
 };
 
 class Parser
 {
-    // not owned (weak ptr)
-    file_t *file;
-    //
-    std::vector<Token> *tokens;
-    PrsErr error;
-    UINT idx;
-
     // starting point
     u8 parse_starter();
 
@@ -189,11 +221,13 @@ class Parser
     Type parse_type();
 
     // expressions
-    u8 parse_expr(TknType);
-    u8 parse_bin_expr();
-    u8 parse_unary_expr();
-    u8 parse_grouping_expr();
-    u8 parse_literal();
+    ExprIdx parse_expr(TknType, bool *);
+    BinaryExpr parse_bin_expr(TknType, bool *);
+    UnaryExpr parse_unary_expr(TknType, bool *);
+    Expr parse_grouping_expr(TknType, bool *);
+    ArrayExpr parse_array_literal_expr(TknType, bool *);
+    LitExpr parse_literal_expr(TknType, bool *);
+    FnCallExpr parse_void_fn_call_expr(TknType, bool *);
 
     // utils
     Token current() const;
@@ -209,8 +243,27 @@ class Parser
     const char *parser_error_advice(PrsErr);
     u8 parse_error_use_global_err();
 
+    // add expressions
+    ExprIdx add_literal_expr(LitExpr);
+    ExprIdx add_binary_expr(BinaryExpr);
+    ExprIdx add_unary_expr(UnaryExpr);
+    ExprIdx add_array_literal_expr(ArrayExpr);
+    ExprIdx add_array_sub_literal_expr(ArraySubExpr);
+    ExprIdx add_nonvoid_fn_call_expr(FnCallExpr);
+    // add globals
+    // NOTE: not needed for now
+
+    // PRIVATE members
+    // not owned (weak ptr)
+    file_t *file;
+    std::vector<Token> *tokens;
+    //
+    PrsErr error;
+    UINT idx; // of tokens
+    UINT ExprIndex, LitIdx, BinIdx, UnaryIdx, ArrayExprIdx, ArraySubIdx, FnCallIdx;
+
   public:
-    Ast ast;
+    Ast *ast;
     // Parser exports
     Parser(file_t *, Lexer *);
     ~Parser();

@@ -7,7 +7,9 @@ namespace rotate
 // NOTE(5717): not to be confused with TknIdx
 // Type Index will pointer multiple symbol tables and will differtiate
 // by the type
-typedef UINT TypeIndex;
+typedef UINT TypeIndex;  // Type index
+typedef UINT ExprIdx;    // Expression index
+typedef UINT ExprLocIdx; // Expression location index
 
 enum class BaseType : u8
 {
@@ -21,8 +23,7 @@ enum class BaseType : u8
     TArray, // strings are char arrays
     TStruct,
     TEnum, // a member
-
-    TId_Struct_or_Enum, // must be converted to struct or enum during type prep
+    TId,   // TO BE VALIDATED
 };
 
 struct ArrayType

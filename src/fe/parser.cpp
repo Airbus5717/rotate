@@ -6,13 +6,17 @@
 namespace rotate
 {
 
-Parser::Parser(file_t *file, Lexer *lexer) : file(file), tokens(lexer->getTokens()), idx(0)
+Parser::Parser(file_t *file, Lexer *lexer)
+    : file(file), tokens(lexer->getTokens()), idx(0), ast(new Ast())
 {
     ASSERT_NULL(lexer, "Passed lexer to parser was null");
     ASSERT_NULL(file, "Passed file to parser was null");
 }
 
-Parser::~Parser() = default;
+Parser::~Parser()
+{
+    delete ast;
+}
 
 u8
 Parser::parse_lexer()
@@ -67,13 +71,13 @@ Parser::parse_import()
         // import string as id;
         advance();
         expect(current().type == TknType::Identifier, advance(), error = PrsErr::ImportId);
-        ast.imports.push_back(AstImport(past().index - 2, past().index));
+        ast->imports.push_back(AstImport(past().index - 2, past().index));
         // ast.imports.emplace_back(past().index - 2, past().index);
         log_debug("added an aliased import");
     }
     else
     {
-        ast.imports.push_back(AstImport(past().index));
+        ast->imports.push_back(AstImport(past().index));
         // ast.imports.emplace_back(past().index);
         log_debug("added an import");
     }
@@ -87,14 +91,18 @@ Parser::parse_gl_var()
     // NOTE(5717):
     // Global Const | Variable
     TknIdx id = current().index;
-    UNUSED(id);
     advance();
     if (current().type == TknType::ColonColon)
     {
         // NOTE(5717): a const variable branch
         // NOTE(5717): requires type to be inferred
-        auto value = parse_expr(TknType::SemiColon);
-        UNUSED(value);
+        bool is_valid;
+        Expr value = parse_expr(TknType::SemiColon, &is_valid);
+        if (!is_valid)
+        {
+            error = PrsErr::GlobalLongVarExpr;
+            return FAILURE;
+        }
         TODO("parse expression gl vr");
     }
     expect(current().type == TknType::Colon, advance(), error = PrsErr::GlobalVarColon);
@@ -210,7 +218,7 @@ Parser::parse_type()
     case TknType::Identifier: {
         // aliases, structs, enums
         TODO("parse identifier types");
-        btype = BaseType::TId_Struct_or_Enum;
+        btype = BaseType::TId;
         break;
     }
     default: break;
@@ -220,8 +228,8 @@ Parser::parse_type()
     return ftype;
 }
 
-u8
-Parser::parse_expr(TknType delimiter)
+ExprIdx
+Parser::parse_expr(TknType delimiter, bool *is_valid)
 {
     /*
      * NOTE(5717): An Expression definition will be either
@@ -248,8 +256,39 @@ Parser::parse_expr(TknType delimiter)
      * - Function Call (Non void type)
      *  NOTE(5717): Void function calls are statements
      *  */
-    TODO("Implement parsing expressions");
-    return FAILURE;
+    ExprIdx i;
+    auto c = current(), p = peek();
+    // single token expression
+    if (p.type == delimiter)
+    {
+        LitExpr l = parse_literal_expr(delimiter, is_valid);
+        ASSERT(*is_valid, "Invalid literal expression");
+        i = add_literal_expr(l);
+    }
+    // TODO: multi token expression
+    TODO("Implement multi token expression");
+}
+
+LitExpr
+Parser::parse_literal_expr(TknType delimiter, bool *is_valid)
+{
+    auto c = current(), p = peek();
+    if (p.type != delimiter) TODO("non single literal");
+    *is_valid = true;
+    switch (c.type)
+    {
+    case TknType::String:
+    case TknType::Float:
+    case TknType::Char:
+    case TknType::True:
+    case TknType::False:
+    case TknType::Identifier:
+    case TknType::Integer: {
+        return LitExpr{.val_idx = c.index};
+    }
+    default: break; *is_valid = false;
+    }
+    return LitExpr{};
 }
 
 Token
@@ -274,6 +313,15 @@ void
 Parser::advance()
 {
     idx++;
+}
+
+u8
+Parser::add_literal_expr(LitExpr lit)
+{
+    ast->literals.push_back(lit);
+    ast->expressions.push_back(Expr{.idx = LitIdx++, .type = ExprType::Literal});
+    // TODO: proper error handling
+    return SUCCESS;
 }
 
 u8
