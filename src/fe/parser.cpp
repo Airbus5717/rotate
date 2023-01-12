@@ -65,14 +65,14 @@ Parser::parse_import()
     // import "std/io";
     advance(); // skip 'import'
     // Skip the string
-    TknIdx str = current().index;
+    TknIdx str = idx;
     expect(current().type == TknType::String, advance(), error = PrsErr::ImportStringExpect);
     if (current().type == TknType::As)
     {
         // import "std/io" as io;
         // import string as id;
         advance();
-        TknIdx alias = current().index;
+        TknIdx alias = idx;
         expect(current().type == TknType::Identifier, advance(), error = PrsErr::ImportId);
         ast->imports.push_back(AstImport(alias, str));
         log_debug("added an aliased import");
@@ -91,34 +91,27 @@ Parser::parse_gl_var()
 {
     // NOTE(5717):
     // Global Const | Variable
-    TknIdx id = current().index;
+    TknIdx id = idx;
     advance();
     bool is_valid;
     expect(current().type == TknType::Colon, advance(), error = PrsErr::GlobalVarColon);
-
-    switch (current().type)
+    Type t;
+    if (current().type == TknType::Colon || current().type == TknType::Equal)
     {
-        case TknType::Colon: {
-            TODO("Parse inferred const");
-            break;
-        }
-        case TknType::Equal: {
-            TODO("Parse inferred mutable");
-            break;
-        }
-        default: break;
+        // NOTE: type to be inferred in the typechecker
+        advance();
+        t.is_const = past().type == TknType::Colon;
+        t.type     = BaseType::TInvalid;
     }
-
-    Type t     = parse_type();
-    t.is_const = false;
-    expect(t.type != BaseType::TInvalid, advance(), error = PrsErr::ParseType);
-    if (current().type == TknType::Colon)
-        t.is_const = true;
     else
-        expect(current().type == TknType::Equal, advance(), error = PrsErr::GlobalVarEql);
-
+    {
+        t          = parse_type();
+        t.is_const = peek().type == TknType::Colon;
+        advance();
+        expect(current().type == TknType::Colon || current().type == TknType::Equal, advance(),
+               error = PrsErr::GlobalVarColon);
+    }
     auto val = parse_expr(TknType::SemiColon, &is_valid);
-    expect_semicolon(advance(), error = PrsErr::GlobalVarSemiColon);
     ast->gl_variables.push_back(AstGlVar(id, t, val));
     return !(SUCCESS && is_valid); // complement to get the zero value
 }
@@ -187,6 +180,7 @@ Parser::parse_type()
     // Parse Arrays
     if (current().type == TknType::OpenSQRBrackets)
     {
+        advance();
         TODO("Parse Array type");
     }
 
@@ -210,7 +204,9 @@ Parser::parse_type()
             btype = BaseType::TId;
             break;
         }
-        default: break;
+        default: {
+            TODO("Parse specific type");
+        }
     }
     // if (peek().type == TknType::Colon) ftype.is_const = true;
     ftype.type = btype;
@@ -313,7 +309,7 @@ Parser::parse_array_literal_expr(TknType delimiter, bool *is_valid)
 {
     TODO("Parse array literals");
     ArrayExpr a;
-    UNUSED(delimiter), UNUSED(is_valid);
+    UNUSED(delimiter), UNUSED(is_valid), UNUSED(a);
     return ArrayExpr();
 }
 

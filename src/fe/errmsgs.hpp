@@ -33,6 +33,8 @@ enum class PrsErr : u16
     // global enums
     // types
     ParseType,
+    NUM_OF_PARSER_ERRORS, // NOTE: do not use it for parsing errors
+                          // this is only to get the count of the enum
 };
 
 struct ParserErr
@@ -45,7 +47,7 @@ struct ParserErr
     }
 };
 
-const static ParserErr parser_errors[] = {
+static const ParserErr parser_errors[] = {
     ParserErr(PrsErr::Unknown, "Unknown Error Message", "Unknown Error Advice"),
     ParserErr(PrsErr::SemicolonExpect, "Statement requires a SemiColon';'",
               "Add a Semicolon at the end of the statement"),

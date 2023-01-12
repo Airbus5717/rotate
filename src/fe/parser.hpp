@@ -2,6 +2,7 @@
 
 #include "errmsgs.hpp"
 #include "lexer.hpp"
+#include "token.hpp"
 #include "type.hpp"
 
 namespace rotate
@@ -229,6 +230,13 @@ struct AstFn
     Type return_type;
     AstBlock block;
     std::vector<VarDef> params;
+
+    AstFn(TknIdx i, Type r, AstBlock b, std::vector<VarDef> p)
+        : id(i), return_type(r), block(b), params(p)
+    {
+    }
+
+    ~AstFn() = default;
 };
 
 class Parser

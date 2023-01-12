@@ -4,7 +4,6 @@
 #include "include/log.hpp"
 
 #include "fe/parser.hpp"
-#include <cstdlib>
 
 namespace rotate
 {
