@@ -29,5 +29,9 @@ void log_warn(const char *);
 
 //
 UINT get_digits_from_number(UINT);
+// bitwise operations
+u8 bit_set(const u8 field, const u8 n);
+u8 bit_clear(const u8 field, const u8 n);
+u8 bit_is_set(const u8 field, const u8 n);
 
 } // namespace rotate

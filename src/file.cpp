@@ -3,6 +3,11 @@
 namespace rotate
 {
 
+/// NOTE:
+/// the whole file will be read at once
+/// to avoid potential problems with the
+/// filesystem during reading as developers
+/// may modify the files during reading
 file_t
 file_read(const char *name) noexcept
 {
@@ -34,8 +39,11 @@ file_read(const char *name) noexcept
         fclose(file);
         return file_t(nullptr, nullptr, 0, valid::failure);
     }
+
+    // NOTE: use max unsigned int possible to avoid overflow
     const usize length = (usize)ftell(file);
 
+    // NOTE: hardcoded 3 null-terminators
     if (length > (UINT_MAX - 3))
     {
         log_error("File is too large");
@@ -73,6 +81,8 @@ file_read(const char *name) noexcept
 
     // Close the file
     fclose(file);
+
+    // NOTE:
     return file_t(name, buffer, (UINT)length, valid::success);
 }
 

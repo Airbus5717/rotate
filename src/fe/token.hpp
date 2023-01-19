@@ -71,6 +71,7 @@ enum class TknType : u8
     Struct,           // 'struct'
     Ref,              // 'ref' // TODO later
     Nil,              // `nil` basically null
+    Void,             // `void`
     EOT,              // EOT - END OF TOKENS
 };
 
@@ -78,8 +79,8 @@ const char *tkn_type_describe(const TknType type) noexcept;
 
 struct Token
 {
-    TknType type;
-    UINT index, length, line;
+    const TknType type;
+    const UINT index, length, line;
 
     Token(TknType type, UINT index, UINT length, UINT line)
         : type(type), index(index), length(length), line(line)

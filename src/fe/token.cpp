@@ -69,6 +69,7 @@ tkn_type_describe(const TknType type) noexcept
         case TknType::UintKeyword: return "uint";
         case TknType::GreaterEql: return ">=";
         case TknType::LessEql: return "<=";
+        case TknType::Void: return "void";
         case TknType::EOT: return "End OF Tokens";
 
         default: return "UNKNOWN";
@@ -138,6 +139,7 @@ get_keyword_or_type(const char *string, const Token &tkn)
         case TknType::NotEqual: return "!=";
         case TknType::Not: return "!";
         case TknType::Comma: return ",";
+        case TknType::Void: return "void";
         case TknType::EOT: return "end_of_tokens";
         case TknType::Integer:
         case TknType::Float:

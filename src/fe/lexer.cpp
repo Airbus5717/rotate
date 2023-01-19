@@ -184,6 +184,9 @@ Lexer::lex_identifiers()
                 case 'u':
                     if (keyword_match("uint", 4)) _type = TknType::UintKeyword;
                     break;
+                case 'v':
+                    if (keyword_match("void", 4)) _type = TknType::Void;
+                    break;
             }
             break;
         }

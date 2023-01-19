@@ -65,6 +65,10 @@ static const ParserErr parser_errors[] = {
               "Add an identifier after 'as' keyword"),
     ParserErr(PrsErr::GlobalVarColon, "Expected a colon after Global Variable identifier",
               "Add a colon ':' for the global variable Identifier"),
+    ParserErr(PrsErr::GlobalVarSemiColon, "Expected a semicolon",
+              "Add a Semicolon ';' after the global variable statement"),
+    ParserErr(PrsErr::GlobalVarEql, "Expected an Equal",
+              "Add an Equal sign '=' for assigning to the global variable"),
 };
 
 } // namespace rotate

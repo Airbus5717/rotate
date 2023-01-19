@@ -270,6 +270,7 @@ class Parser
 
     // Types
     Type parse_type();
+    Type parse_fn_type();
 
     // expressions
     ExprIdx parse_expr(TknType, bool *);

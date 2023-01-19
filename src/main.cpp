@@ -8,9 +8,10 @@ main(const int argc, char **const argv)
 
     if (argc > 1)
     {
-
+		// parse program arguments
         auto comp_opt = compile_options(argc, argv);
-        // timer stuff
+
+        // setup timer stuff
         clock_t start_t, end_t;
         f128 total_t;
         start_t = clock();
@@ -22,6 +23,7 @@ main(const int argc, char **const argv)
         else if (_exit == SUCCESS)
             log_info("SUCCESS");
 
+        // print comptime 
         end_t   = clock();
         total_t = (double)(end_t - start_t) / CLOCKS_PER_SEC;
         printf("[%sTIME%s] : %.5Lf sec\n", LMAGENTA, RESET, total_t);

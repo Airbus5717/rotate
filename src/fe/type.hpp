@@ -48,8 +48,21 @@ struct Type
     // TODO: optimize representation
     TypeIndex idx;
     BaseType type;
-    bool is_pointer;
-    bool is_const;
+    u8 attributes;
+    u8 array_level; // must be > 0
+    // NOTE:
+    // do not use 0 and 8
+    // 1 => ptr
+    // 2 => const
+    void set_pointer(bool is_ptr)
+    {
+        bit_set(attributes, is_ptr);
+    }
+
+    void set_const(bool is_c)
+    {
+        bit_set(attributes, is_c);
+    }
 };
 
 struct SymbolTable
@@ -57,7 +70,7 @@ struct SymbolTable
     std::vector<Type> types;
     std::vector<EnumType> enums_types;
     std::vector<StructType> structs_types;
-    std::vector<ArrayType> array_types;
+    // std::vector<ArrayType> array_types;
 };
 
 const char *get_base_type_string(Type);

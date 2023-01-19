@@ -1,6 +1,5 @@
 #include "parser.hpp"
 #include "errmsgs.hpp"
-#include "token.hpp"
 #include "type.hpp"
 
 namespace rotate
@@ -50,7 +49,10 @@ Parser::parse_starter()
                 log_debug("End of Parsing");
                 return exit;
             }
-            default: return parse_error_use_global_err();
+            default: {
+                error = PrsErr::GlobalScopeNotAllowed;
+                parser_error(error);
+            }
         }
         if (exit == FAILURE) return parser_error(error);
     }
@@ -100,20 +102,21 @@ Parser::parse_gl_var()
     {
         // NOTE: type to be inferred in the typechecker
         advance();
-        t.is_const = past().type == TknType::Colon;
-        t.type     = BaseType::TInvalid;
+        t.set_const(past().type == TknType::Colon);
+        t.type = BaseType::TInvalid;
     }
     else
     {
-        t          = parse_type();
-        t.is_const = peek().type == TknType::Colon;
+        t = parse_type();
+        t.set_const(peek().type == TknType::Colon);
         advance();
         expect(current().type == TknType::Colon || current().type == TknType::Equal, advance(),
                error = PrsErr::GlobalVarColon);
     }
     auto val = parse_expr(TknType::SemiColon, &is_valid);
     ast->gl_variables.push_back(AstGlVar(id, t, val));
-    return !(SUCCESS && is_valid); // complement to get the zero value
+    expect_semicolon(advance(), error = PrsErr::GlobalVarSemiColon);
+    return !is_valid; // complement to get the integer truth
 }
 
 // Functions
@@ -142,9 +145,11 @@ Parser::parse_function()
     // if not void function parse type
     if (current().type != TknType::OpenCurly)
     {
-        TODO("parse function non-void types");
+        auto type = parse_fn_type();
+        expect(type.type != BaseType::TInvalid, advance(), );
     }
-    else // parse function block
+
+    // parse function block
     {
         expect(current().type == TknType::OpenCurly, advance(), error = PrsErr::OpenCurly);
         TODO("parse function blocks");
@@ -171,23 +176,47 @@ Parser::parse_struct()
 }
 
 Type
+Parser::parse_fn_type()
+{
+    // NOTE: allow only functions to optain void type
+    Type type{};
+    type.type = BaseType::TInvalid;
+    switch (current().type)
+    {
+        case TknType::Void: {
+            type.type = BaseType::TVoid;
+            break;
+        }
+        default: return parse_type();
+    }
+    return type;
+}
+
+Type
 Parser::parse_type()
 {
     // TODO: optimize types using bitfields
     Type ftype{};
-    BaseType btype = BaseType::TInvalid;
-
+    BaseType btype    = BaseType::TInvalid;
+    ftype.array_level = 0;
     // Parse Arrays
     if (current().type == TknType::OpenSQRBrackets)
     {
-        advance();
-        TODO("Parse Array type");
+        advance(); // skip [
+        if (current().type != TknType::CloseSQRBrackets)
+        {
+            ftype.type = BaseType::TInvalid;
+            return ftype;
+        }
+        advance();             // skip ]
+                               //
+        ftype.array_level = 1; // single dimention array
     }
 
     if (current().type == TknType::Ref)
     {
-        ftype.is_pointer = true;
-        advance();
+        ftype.set_pointer(true);
+        advance(); // skip 'ref'
     }
 
     // Base
@@ -200,14 +229,17 @@ Parser::parse_type()
         case TknType::CharKeyword: btype = BaseType::TChar; break;
         case TknType::Identifier: {
             // aliases, structs, enums
-            TODO("parse identifier types");
             btype = BaseType::TId;
+            TODO("add the id to symbol table");
+            log_debug("add id to symbol table");
             break;
         }
         default: {
+            log_error(tkn_type_describe(current().type));
             TODO("Parse specific type");
         }
     }
+
     // if (peek().type == TknType::Colon) ftype.is_const = true;
     ftype.type = btype;
     return ftype;
@@ -240,6 +272,7 @@ Parser::parse_expr(TknType delimiter, bool *is_valid)
      *
      * - Function Call (Non void type)
      *  NOTE(5717): Void function calls are statements
+     *  NOT Expressions
      *  */
     ExprIdx i;
     auto c = current(), p = peek();

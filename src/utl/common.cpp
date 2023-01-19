@@ -35,7 +35,7 @@ void // NOTE(5717): basically a print for debug builds
 log_debug(const char *str)
 {
 #if DEBUG
-    fprintf(stderr, "[%sDEBUG%s]: %s\n", LYELLOW, RESET, str);
+    fprintf(rstderr, "[%sDEBUG%s]: %s\n", LYELLOW, RESET, str);
 #else
     UNUSED(str);
 #endif
@@ -58,7 +58,7 @@ log_token(FILE *output, const Token tkn, const char *str)
 UINT
 get_digits_from_number(const UINT num)
 {
-    // TODO: check
+    // TODO: Test this algorithm
     return (UINT)std::floor(std::log10(num) + 1);
 }
 
