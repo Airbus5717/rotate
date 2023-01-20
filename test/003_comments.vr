@@ -1,11 +1,10 @@
-io :: import("std/io");
 
 // SINGLE LINE COMMENTS
 /* 
  multi line comments
 */
 
-main :: fn() {}
+fn main() {}
 
 /* multi line comments do not need to have an
  ending delimiter because EOF is enough for 

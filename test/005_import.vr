@@ -1,0 +1,7 @@
+import "std/io"; // non aliased
+import "std/os" as os; // aliased
+
+fn main() {
+    println("non aliased import function");
+    os.exit(0); 
+}

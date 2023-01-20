@@ -45,8 +45,13 @@ typedef signed long long int isize;
 
 // use this for the project
 typedef u32 UINT;
-const auto RUINT_MAX = UINT32_MAX;
-const auto RUINT_MIN = 0;
+constexpr auto RUINT_MAX              = UINT32_MAX;
+constexpr auto RUINT_MIN              = 0;
+constexpr auto EXTRA_NULL_TERMINATORS = 3;
+
+static_assert(EXTRA_NULL_TERMINATORS > 2, "keep the number above 2");
+static_assert(RUINT_MIN == 0, "Min number should unsigned 0");
+static_assert(RUINT_MAX == UINT32_MAX, "Max number");
 
 const auto rstdin  = stdin;
 const auto rstdout = stdout;

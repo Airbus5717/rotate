@@ -1,38 +1,12 @@
 @import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@700&display=swap");
 
 html {
-  margin: 40px auto;
-  max-width: 60rem;
-  line-height: 1.6;
   font-size: 1.2rem;
-  background-color: #0f141b;
-  padding: 0 10rem;
+  border: none;
   /* font-family: "Inter", sans-serif; */
 }
+body { border: none; }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-li,
-p,
-a {
-  color: #c5c5c5;
-  line-height: 1.2;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-li,
-a {
-  font-family: "Open Sans", sans-serif;
-}
 
 img {
   width: 750px;
@@ -41,15 +15,14 @@ img {
 
 pre {
   background-color: #181f27;
-  margin: 1rem;
-  padding: 1rem;
   border-radius: 1rem;
   counter-reset: line;
+  border: none;
   color: #ededed;
+  line-height: 1.6;
   font-family: "Inconsolata", monospace;
 }
 
 ::selection {
-  color: #212b36;
-  background: #e79e67;
+  background: rgb(240, 170, 123);
 }

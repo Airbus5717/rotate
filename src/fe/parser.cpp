@@ -456,6 +456,7 @@ Parser::parser_error(PrsErr err)
 const char *
 Parser::parser_error_msg(PrsErr err)
 {
+    // TODO: Convert O(n) to O(1)
     for (auto const &p : parser_errors)
         if (p.err == err) return p.msg;
     return "TODO: Parser error msg";
@@ -464,6 +465,7 @@ Parser::parser_error_msg(PrsErr err)
 const char *
 Parser::parser_error_advice(PrsErr err)
 {
+    // TODO: Convert O(n) to O(1)
     for (auto const &p : parser_errors)
         if (p.err == err) return p.advice;
     return "TODO: Parser error msg";

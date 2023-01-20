@@ -1,87 +1,49 @@
 #+TITLE: Rotate Programming Language
 #+OPTIONS: num:nil html-style:nil timestamp:nil date:nil author:nil
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="solarized-min.css"/>
 #+HTML_HEAD: <link rel="stylesheet" type="text/css" href="style.css"/>
 
+#+begin_center
+The Syntax is subject to change at any time
+#+end_center
 
 * Project Link
-[[https://github.com/Airbus5717/rotate.git][Github]]
+[[https://github.com/Airbus5717/rotate.git][Github repo]]
 
 
 * Basics
 ** Hello World
-#+begin_src cpp
-io :: import("std/io");
-
-main :: fn() {
-    io.println("Hello, World");
-}
-
-#+end_src
+#+include: "../test/001_hello.vr" src cpp
 
 ** Comments
-#+begin_src cpp
-// for single line comments
-
-/*
-  multi-line comments
-*/
-#+end_src
+#+include: "../test/003_comments.vr" src cpp
 
 * Syntax Overview
 ** Basic variables
-#+begin_src odin
-io :: import("std/io");
-
-// semicolons are optional
-x: int = 1;
-y := 2; // inferred
-z :: 3; // z is const 3
-d := ref x; // type is int*
-d = nil; // now NULL
-
-arr : []int = [1, 2, 3]; // inferred type ([3]int)
-io.println(arr.len); // arr.len == 3
-#+end_src
+#+include: "../test/002_var.vr" src cpp
 
 ** If Else
-#+begin_src odin
-x := true;
-y := !x;
-if x {
- // do stuff
-} else if !y {
-    // do stuff
-} else {
-    // do stuff
-}
-#+end_src
+#+include: "../test/006_if.vr" src cpp
 
 ** Loop
-#+begin_src odin
-for i in 0..2 {
-        // do something
-}
-x := true;
-while x {
-	break;
-}
-#+end_src
+#+include: "../test/007_loops.vr" src cpp
 
 ** Switch
-#+begin_src odin
-x := 1
+#+begin_src cpp
+x :: 1;
+    // every case break is the default
 switch x {
-	1: {}
-	2: {}
-	else:{}
+    1: {}
+    2: {}
+    else:{}
 }
 #+end_src
 ** Struct
-#+begin_src odin
+#+begin_src cpp
 
 Token :: struct {
-	x: int,
-	y: [3]int,
+    x: int,
+    y: [3]int,
 }
 
 
@@ -91,30 +53,25 @@ d.y[1] = 1;
 #+end_src
 
 ** Function
-#+begin_src cpp
-//! no generics for now
-add :: fn(x: int, y: int) int {
-    return x + y;
-}
-#+end_src
+#+include: "../test/004_func.vr" src cpp
 
 ** Enums
-#+begin_src odin
+#+begin_src cpp
 // no size specification
 
 TknType :: enum {
-	Id,
-	Number,
-	Float,
-	String,
-	Char,
-	Invalid,
+    Id,
+    Number,
+    Float,
+    String,
+    Char,
+    Invalid,
 }
 #+end_src
 
 ** Memory managment
 similar to C, with some modern features (new/delete and defer)
-#+begin_src odin
+#+begin_src cpp
 io :: import("std/io");
 os :: import("std/os");
 
@@ -128,16 +85,16 @@ defer delete x;
 
 // how to check for failed allocation
 if x == nil {
-	io.println("Fail alloc");
-	os.exit(1);
+    io.println("Fail alloc");
+    os.exit(1);
 }
 #+end_src
 
 
 * TODO
 ** Compiler
-- Parser
-- TypeChecker
+- Parser 30% done
+- TypeChecker 10% done
 - Analysis
 - Optimization
 - CodeGen

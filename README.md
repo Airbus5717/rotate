@@ -1,12 +1,13 @@
 
 ## Rotate (C++)
 > **Warning** Work is still in progress do not use for any serious project 
-- inspired by C, odin, Jai and zig
-```go
-import "std/io" as io;
+- inspired by C, Odin, Jai, Go and Zig programming languages
+
+```cpp
+import "std/io";
 
 fn main() {
-	io.println("Hello, World");
+    println("Hello, World"); 
 }
 ```
 

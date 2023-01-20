@@ -7,6 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Rotate Programming Language</title>
 <meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="solarized-min.css"/>
 <link rel="stylesheet" type="text/css" href="style.css"/>
 </head>
 <body>
@@ -16,226 +17,245 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org336e1df">Project Link</a></li>
-<li><a href="#orge3fe266">Basics</a>
+<li><a href="#org55fd396">Project Link</a></li>
+<li><a href="#orgafe6a06">Basics</a>
 <ul>
-<li><a href="#org2009a00">Hello World</a></li>
-<li><a href="#org3a9a600">Comments</a></li>
+<li><a href="#org2d7d13f">Hello World</a></li>
+<li><a href="#orgc3063e1">Comments</a></li>
 </ul>
 </li>
-<li><a href="#org47019ad">Syntax Overview</a>
+<li><a href="#org63c0831">Syntax Overview</a>
 <ul>
-<li><a href="#orga686462">Basic variables</a></li>
-<li><a href="#org3b618b0">If Else</a></li>
-<li><a href="#org394064d">Loop</a></li>
-<li><a href="#orgba7de6b">Switch</a></li>
-<li><a href="#org663c970">Struct</a></li>
-<li><a href="#orge4c75e7">Function</a></li>
-<li><a href="#orgab930e2">Enums</a></li>
-<li><a href="#orge930fb4">Memory managment</a></li>
+<li><a href="#org17e734f">Basic variables</a></li>
+<li><a href="#org1a5be9d">If Else</a></li>
+<li><a href="#org7b4dfef">Loop</a></li>
+<li><a href="#org7312d17">Switch</a></li>
+<li><a href="#orga9bf7fa">Struct</a></li>
+<li><a href="#org126958f">Function</a></li>
+<li><a href="#org2435416">Enums</a></li>
+<li><a href="#org116ff02">Memory managment</a></li>
 </ul>
 </li>
-<li><a href="#orgc0a3b5b">TODO</a>
+<li><a href="#org01e8130">TODO</a>
 <ul>
-<li><a href="#org38f0c4d">Compiler</a></li>
-<li><a href="#org4453ee6">DOCS</a></li>
+<li><a href="#org7899845">Compiler</a></li>
+<li><a href="#org2a8283f">DOCS</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
-
-
-<div id="outline-container-org336e1df" class="outline-2">
-<h2 id="org336e1df">Project Link</h2>
-<div class="outline-text-2" id="text-org336e1df">
+<div class="org-center">
 <p>
-<a href="https://github.com/Airbus5717/rotate.git">Github</a>
+The Syntax is subject to change at any time
+</p>
+</div>
+
+<div id="outline-container-org55fd396" class="outline-2">
+<h2 id="org55fd396">Project Link</h2>
+<div class="outline-text-2" id="text-org55fd396">
+<p>
+<a href="https://github.com/Airbus5717/rotate.git">Github repo</a>
 </p>
 </div>
 </div>
 
 
-<div id="outline-container-orge3fe266" class="outline-2">
-<h2 id="orge3fe266">Basics</h2>
-<div class="outline-text-2" id="text-orge3fe266">
+<div id="outline-container-orgafe6a06" class="outline-2">
+<h2 id="orgafe6a06">Basics</h2>
+<div class="outline-text-2" id="text-orgafe6a06">
 </div>
-<div id="outline-container-org2009a00" class="outline-3">
-<h3 id="org2009a00">Hello World</h3>
-<div class="outline-text-3" id="text-org2009a00">
+<div id="outline-container-org2d7d13f" class="outline-3">
+<h3 id="org2d7d13f">Hello World</h3>
+<div class="outline-text-3" id="text-org2d7d13f">
 <div class="org-src-container">
-<pre class="src src-cpp"><span style="color: #a9a1e1;">io</span> :: <span style="color: #51afef;">import</span><span style="color: #51afef;">(</span><span style="color: #98be65;">"std/io"</span><span style="color: #51afef;">)</span>;
-
-<span style="color: #a9a1e1;">main</span> :: <span style="color: #c678dd;">fn</span><span style="color: #51afef;">()</span> <span style="color: #51afef;">{</span>
-    io.println<span style="color: #c678dd;">(</span><span style="color: #98be65;">"Hello, World"</span><span style="color: #c678dd;">)</span>;
-<span style="color: #51afef;">}</span>
-
+<pre class="src src-cpp"><span style="color: #fb4934;">import</span> <span style="color: #b8bb26;">"std/io"</span>;
+<span style="color: #928374;">// </span><span style="color: #928374;">comment</span>
+<span style="color: #fabd2f;">fn</span> <span style="color: #b8bb26;">main</span><span style="color: #fe8019;">()</span> <span style="color: #fe8019;">{</span>
+    println<span style="color: #cc241d;">(</span><span style="color: #b8bb26;">"Hello, World"</span><span style="color: #cc241d;">)</span>;
+<span style="color: #fe8019;">}</span>
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org3a9a600" class="outline-3">
-<h3 id="org3a9a600">Comments</h3>
-<div class="outline-text-3" id="text-org3a9a600">
+<div id="outline-container-orgc3063e1" class="outline-3">
+<h3 id="orgc3063e1">Comments</h3>
+<div class="outline-text-3" id="text-orgc3063e1">
 <div class="org-src-container">
-<pre class="src src-cpp"><span style="color: #5B6268;">// </span><span style="color: #5B6268;">for single line comments</span>
+<pre class="src src-cpp"><span style="color: #928374;">// </span><span style="color: #928374;">SINGLE LINE COMMENTS</span>
+<span style="color: #928374;">/* </span>
+<span style="color: #928374;"> multi line comments</span>
+<span style="color: #928374;">*/</span>
 
-<span style="color: #5B6268;">/*</span>
-<span style="color: #5B6268;">  multi-line comments</span>
-<span style="color: #5B6268;">*/</span>
+<span style="color: #fabd2f;">fn</span> <span style="color: #b8bb26;">main</span><span style="color: #fe8019;">()</span> <span style="color: #fe8019;">{}</span>
+
+<span style="color: #928374;">/* </span><span style="color: #928374;">multi line comments do not need to have an</span>
+<span style="color: #928374;"> ending delimiter because EOF is enough for </span>
+<span style="color: #928374;"> as a comment delimiter</span>
 </pre>
 </div>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org47019ad" class="outline-2">
-<h2 id="org47019ad">Syntax Overview</h2>
-<div class="outline-text-2" id="text-org47019ad">
+<div id="outline-container-org63c0831" class="outline-2">
+<h2 id="org63c0831">Syntax Overview</h2>
+<div class="outline-text-2" id="text-org63c0831">
 </div>
-<div id="outline-container-orga686462" class="outline-3">
-<h3 id="orga686462">Basic variables</h3>
-<div class="outline-text-3" id="text-orga686462">
+<div id="outline-container-org17e734f" class="outline-3">
+<h3 id="org17e734f">Basic variables</h3>
+<div class="outline-text-3" id="text-org17e734f">
 <div class="org-src-container">
-<pre class="src src-odin">io :: <span style="color: #51afef;">import</span>(<span style="color: #98be65;">"std/io"</span>);
+<pre class="src src-cpp"><span style="color: #fb4934;">import</span> <span style="color: #b8bb26;">"std/io"</span>;
 
-<span style="color: #5B6268;">// </span><span style="color: #5B6268;">semicolons are optional</span>
-x: <span style="color: #ECBE7B;">int</span> = <span style="color: #da8548; font-weight: bold;">1</span>;
-y := <span style="color: #da8548; font-weight: bold;">2</span>; <span style="color: #5B6268;">// </span><span style="color: #5B6268;">inferred</span>
-z :: <span style="color: #da8548; font-weight: bold;">3</span>; <span style="color: #5B6268;">// </span><span style="color: #5B6268;">z is const 3</span>
-d := ref x; <span style="color: #5B6268;">// </span><span style="color: #5B6268;">type is int*</span>
-d = <span style="color: #a9a1e1;">nil</span>; <span style="color: #5B6268;">// </span><span style="color: #5B6268;">now NULL</span>
-
-arr : []<span style="color: #ECBE7B;">int</span> = [<span style="color: #da8548; font-weight: bold;">1</span>, <span style="color: #da8548; font-weight: bold;">2</span>, <span style="color: #da8548; font-weight: bold;">3</span>]; <span style="color: #5B6268;">// </span><span style="color: #5B6268;">inferred type ([3]int)</span>
-io.println(arr.len); <span style="color: #5B6268;">// </span><span style="color: #5B6268;">arr.len == 3</span>
+<span style="color: #fabd2f;">fn</span> <span style="color: #b8bb26;">main</span><span style="color: #fe8019;">()</span> <span style="color: #fe8019;">{</span>
+    <span style="color: #d3869b;">x</span> := <span style="color: #d3869b; font-weight: bold;">1</span>; <span style="color: #928374;">// </span><span style="color: #928374;">inferred variable</span>
+    y :: <span style="color: #d3869b; font-weight: bold;">2</span>; <span style="color: #928374;">// </span><span style="color: #928374;">inferred constant</span>
+    <span style="color: #d3869b;">z</span> :<span style="color: #fabd2f;">int</span> = <span style="color: #d3869b; font-weight: bold;">1</span>; <span style="color: #928374;">// </span><span style="color: #928374;">int variable</span>
+    print_int<span style="color: #cc241d;">(</span>x<span style="color: #cc241d;">)</span>;
+    print_int<span style="color: #cc241d;">(</span>y<span style="color: #cc241d;">)</span>;
+    print_int<span style="color: #cc241d;">(</span>z<span style="color: #cc241d;">)</span>;
+    println<span style="color: #cc241d;">(</span><span style="color: #b8bb26;">""</span><span style="color: #cc241d;">)</span>;
+<span style="color: #fe8019;">}</span>
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org3b618b0" class="outline-3">
-<h3 id="org3b618b0">If Else</h3>
-<div class="outline-text-3" id="text-org3b618b0">
+<div id="outline-container-org1a5be9d" class="outline-3">
+<h3 id="org1a5be9d">If Else</h3>
+<div class="outline-text-3" id="text-org1a5be9d">
 <div class="org-src-container">
-<pre class="src src-odin">x := <span style="color: #a9a1e1;">true</span>;
-y := !x;
-<span style="color: #51afef;">if</span> x {
- <span style="color: #5B6268;">// </span><span style="color: #5B6268;">do stuff</span>
-} <span style="color: #51afef;">else</span> <span style="color: #51afef;">if</span> !y {
-    <span style="color: #5B6268;">// </span><span style="color: #5B6268;">do stuff</span>
-} <span style="color: #51afef;">else</span> {
-    <span style="color: #5B6268;">// </span><span style="color: #5B6268;">do stuff</span>
-}
+<pre class="src src-cpp"><span style="color: #fb4934;">import</span> <span style="color: #b8bb26;">"std/io"</span>;
+
+<span style="color: #fabd2f;">fn</span> <span style="color: #b8bb26;">main</span><span style="color: #fe8019;">()</span> <span style="color: #fe8019;">{</span>
+    <span style="color: #d3869b;">x</span> := <span style="color: #d3869b; font-weight: bold;">1</span>;
+    <span style="color: #fb4934;">if</span> x == <span style="color: #d3869b; font-weight: bold;">1</span> <span style="color: #cc241d;">{</span>
+      println<span style="color: #b8bb26;">(</span><span style="color: #b8bb26;">"x is 1"</span><span style="color: #b8bb26;">)</span>;
+    <span style="color: #cc241d;">}</span> <span style="color: #fb4934;">else</span> <span style="color: #cc241d;">{</span>
+      println<span style="color: #b8bb26;">(</span><span style="color: #b8bb26;">"x is not 1"</span><span style="color: #b8bb26;">)</span>;
+    <span style="color: #cc241d;">}</span>
+<span style="color: #fe8019;">}</span>
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org394064d" class="outline-3">
-<h3 id="org394064d">Loop</h3>
-<div class="outline-text-3" id="text-org394064d">
+<div id="outline-container-org7b4dfef" class="outline-3">
+<h3 id="org7b4dfef">Loop</h3>
+<div class="outline-text-3" id="text-org7b4dfef">
 <div class="org-src-container">
-<pre class="src src-odin"><span style="color: #51afef;">for</span> i <span style="color: #51afef;">in</span> <span style="color: #da8548; font-weight: bold;">0</span><span style="color: #a9a1e1;">..</span><span style="color: #da8548; font-weight: bold;">2</span> {
-        <span style="color: #5B6268;">// </span><span style="color: #5B6268;">do something</span>
-}
-x := <span style="color: #a9a1e1;">true</span>;
-while x {
-    <span style="color: #51afef;">break</span>;
-}
+<pre class="src src-cpp"><span style="color: #fabd2f;">fn</span> <span style="color: #b8bb26;">main</span><span style="color: #fe8019;">()</span> <span style="color: #fe8019;">{</span>
+    <span style="color: #fb4934;">for</span> i in <span style="color: #d3869b; font-weight: bold;">0</span>..<span style="color: #d3869b; font-weight: bold;">2</span> <span style="color: #cc241d;">{</span>
+        <span style="color: #928374;">// </span><span style="color: #928374;">do something</span>
+    <span style="color: #cc241d;">}</span>
+
+    <span style="color: #d3869b;">x</span> := <span style="color: #d3869b;">true</span>;
+    <span style="color: #fb4934;">while</span> x <span style="color: #cc241d;">{</span>
+        <span style="color: #fb4934;">break</span>;
+    <span style="color: #cc241d;">}</span>
+<span style="color: #fe8019;">}</span>
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgba7de6b" class="outline-3">
-<h3 id="orgba7de6b">Switch</h3>
-<div class="outline-text-3" id="text-orgba7de6b">
+<div id="outline-container-org7312d17" class="outline-3">
+<h3 id="org7312d17">Switch</h3>
+<div class="outline-text-3" id="text-org7312d17">
 <div class="org-src-container">
-<pre class="src src-odin">x := <span style="color: #da8548; font-weight: bold;">1</span>
-<span style="color: #51afef;">switch</span> x {
-    <span style="color: #da8548; font-weight: bold;">1</span>: {}
-    <span style="color: #da8548; font-weight: bold;">2</span>: {}
-    <span style="color: #51afef;">else</span>:{}
-}
+<pre class="src src-cpp">x :: <span style="color: #d3869b; font-weight: bold;">1</span>;
+    <span style="color: #928374;">// </span><span style="color: #928374;">every case break is the default</span>
+<span style="color: #fb4934;">switch</span> x <span style="color: #fe8019;">{</span>
+    <span style="color: #d3869b; font-weight: bold;">1</span>: <span style="color: #cc241d;">{}</span>
+    <span style="color: #d3869b; font-weight: bold;">2</span>: <span style="color: #cc241d;">{}</span>
+    <span style="color: #fb4934;">else</span>:<span style="color: #cc241d;">{}</span>
+<span style="color: #fe8019;">}</span>
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org663c970" class="outline-3">
-<h3 id="org663c970">Struct</h3>
-<div class="outline-text-3" id="text-org663c970">
+<div id="outline-container-orga9bf7fa" class="outline-3">
+<h3 id="orga9bf7fa">Struct</h3>
+<div class="outline-text-3" id="text-orga9bf7fa">
 <div class="org-src-container">
-<pre class="src src-odin">
-<span style="color: #ECBE7B;">Token</span> :: <span style="color: #51afef;">struct</span> {
-    x: <span style="color: #ECBE7B;">int</span>,
-    y: [<span style="color: #da8548; font-weight: bold;">3</span>]<span style="color: #ECBE7B;">int</span>,
-}
+<pre class="src src-cpp">
+<span style="color: #d3869b;">Token</span> :: <span style="color: #fb4934;">struct</span> <span style="color: #fe8019;">{</span>
+    <span style="color: #d3869b;">x</span>: <span style="color: #fabd2f;">int</span>,
+    y: <span style="color: #cc241d;">[</span><span style="color: #d3869b; font-weight: bold;">3</span><span style="color: #cc241d;">]</span><span style="color: #fabd2f;">int</span>,
+<span style="color: #fe8019;">}</span>
 
 
-d := Token{<span style="color: #da8548; font-weight: bold;">1</span>, [<span style="color: #da8548; font-weight: bold;">1</span>, <span style="color: #da8548; font-weight: bold;">2</span>, <span style="color: #da8548; font-weight: bold;">3</span>]};
-d.x = <span style="color: #da8548; font-weight: bold;">2</span>;
-d.y[<span style="color: #da8548; font-weight: bold;">1</span>] = <span style="color: #da8548; font-weight: bold;">1</span>;
-</pre>
-</div>
-</div>
-</div>
-
-<div id="outline-container-orge4c75e7" class="outline-3">
-<h3 id="orge4c75e7">Function</h3>
-<div class="outline-text-3" id="text-orge4c75e7">
-<div class="org-src-container">
-<pre class="src src-cpp"><span style="color: #5B6268;">//</span><span style="color: #5B6268;">! no generics for now</span>
-<span style="color: #a9a1e1;">add</span> :: fn<span style="color: #51afef;">(</span>x: <span style="color: #ECBE7B;">int</span>, y: <span style="color: #ECBE7B;">int</span><span style="color: #51afef;">)</span> <span style="color: #ECBE7B;">int</span> <span style="color: #51afef;">{</span>
-    <span style="color: #51afef;">return</span> x + y;
-<span style="color: #51afef;">}</span>
+<span style="color: #d3869b;">d</span> := Token<span style="color: #fe8019;">{</span><span style="color: #d3869b; font-weight: bold;">1</span>, <span style="color: #cc241d;">[</span><span style="color: #d3869b; font-weight: bold;">1</span>, <span style="color: #d3869b; font-weight: bold;">2</span>, <span style="color: #d3869b; font-weight: bold;">3</span><span style="color: #cc241d;">]</span><span style="color: #fe8019;">}</span>;
+d.x = <span style="color: #d3869b; font-weight: bold;">2</span>;
+d.y<span style="color: #fe8019;">[</span><span style="color: #d3869b; font-weight: bold;">1</span><span style="color: #fe8019;">]</span> = <span style="color: #d3869b; font-weight: bold;">1</span>;
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgab930e2" class="outline-3">
-<h3 id="orgab930e2">Enums</h3>
-<div class="outline-text-3" id="text-orgab930e2">
+<div id="outline-container-org126958f" class="outline-3">
+<h3 id="org126958f">Function</h3>
+<div class="outline-text-3" id="text-org126958f">
 <div class="org-src-container">
-<pre class="src src-odin"><span style="color: #5B6268;">// </span><span style="color: #5B6268;">no size specification</span>
+<pre class="src src-cpp"><span style="color: #fb4934;">import</span> <span style="color: #b8bb26;">"std/io"</span>;
 
-<span style="color: #ECBE7B;">TknType</span> :: <span style="color: #51afef;">enum</span> {
-    Id,
-    Number,
-    Float,
-    String,
-    Char,
-    Invalid,
-}
+<span style="color: #fabd2f;">fn</span> <span style="color: #b8bb26;">add</span><span style="color: #fe8019;">(</span>x: <span style="color: #fabd2f;">int</span>, y: <span style="color: #fabd2f;">int</span><span style="color: #fe8019;">)</span> <span style="color: #fabd2f;">int</span> <span style="color: #fe8019;">{</span>
+    <span style="color: #fb4934;">return</span> x + y;
+<span style="color: #fe8019;">}</span>
+
+<span style="color: #fabd2f;">fn</span> <span style="color: #b8bb26;">main</span><span style="color: #fe8019;">()</span> <span style="color: #fe8019;">{</span>
+    print_int<span style="color: #cc241d;">(</span>add<span style="color: #b8bb26;">(</span><span style="color: #d3869b; font-weight: bold;">1</span>, <span style="color: #d3869b; font-weight: bold;">2</span><span style="color: #b8bb26;">)</span><span style="color: #cc241d;">)</span>;
+    println<span style="color: #cc241d;">(</span><span style="color: #b8bb26;">""</span><span style="color: #cc241d;">)</span>;
+<span style="color: #fe8019;">}</span>
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orge930fb4" class="outline-3">
-<h3 id="orge930fb4">Memory managment</h3>
-<div class="outline-text-3" id="text-orge930fb4">
+<div id="outline-container-org2435416" class="outline-3">
+<h3 id="org2435416">Enums</h3>
+<div class="outline-text-3" id="text-org2435416">
+<div class="org-src-container">
+<pre class="src src-cpp"><span style="color: #928374;">// </span><span style="color: #928374;">no size specification</span>
+
+<span style="color: #d3869b;">TknType</span> :: <span style="color: #fb4934;">enum</span> <span style="color: #fe8019;">{</span>
+    <span style="color: #83a598;">Id</span>,
+    <span style="color: #83a598;">Number</span>,
+    <span style="color: #83a598;">Float</span>,
+    <span style="color: #83a598;">String</span>,
+    <span style="color: #83a598;">Char</span>,
+    <span style="color: #83a598;">Invalid</span>,
+<span style="color: #fe8019;">}</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org116ff02" class="outline-3">
+<h3 id="org116ff02">Memory managment</h3>
+<div class="outline-text-3" id="text-org116ff02">
 <p>
 similar to C, with some modern features (new/delete and defer)
 </p>
 <div class="org-src-container">
-<pre class="src src-odin">io :: <span style="color: #51afef;">import</span>(<span style="color: #98be65;">"std/io"</span>);
-os :: <span style="color: #51afef;">import</span>(<span style="color: #98be65;">"std/os"</span>);
+<pre class="src src-cpp"><span style="color: #d3869b;">io</span> :: <span style="color: #fb4934;">import</span><span style="color: #fe8019;">(</span><span style="color: #b8bb26;">"std/io"</span><span style="color: #fe8019;">)</span>;
+<span style="color: #d3869b;">os</span> :: <span style="color: #fb4934;">import</span><span style="color: #fe8019;">(</span><span style="color: #b8bb26;">"std/os"</span><span style="color: #fe8019;">)</span>;
 
-str := <span style="color: #c678dd;">new</span> [<span style="color: #da8548; font-weight: bold;">3</span>]char;
-<span style="color: #51afef;">defer</span> <span style="color: #c678dd;">delete</span> str;
+<span style="color: #d3869b;">str</span> := <span style="color: #fb4934;">new</span> <span style="color: #fe8019;">[</span><span style="color: #d3869b; font-weight: bold;">3</span><span style="color: #fe8019;">]</span><span style="color: #fabd2f;">char</span>;
+defer <span style="color: #fb4934;">delete</span> str;
 
-x := <span style="color: #c678dd;">new</span> [<span style="color: #da8548; font-weight: bold;">100</span>]<span style="color: #ECBE7B;">int</span>;
-tkn := <span style="color: #c678dd;">new</span> Token; <span style="color: #5B6268;">// </span><span style="color: #5B6268;">assuming Token is a struct</span>
-<span style="color: #51afef;">defer</span> <span style="color: #c678dd;">delete</span> tkn;
-<span style="color: #51afef;">defer</span> <span style="color: #c678dd;">delete</span> x;
+<span style="color: #d3869b;">x</span> := <span style="color: #fb4934;">new</span> <span style="color: #fe8019;">[</span><span style="color: #d3869b; font-weight: bold;">100</span><span style="color: #fe8019;">]</span><span style="color: #fabd2f;">int</span>;
+<span style="color: #d3869b;">tkn</span> := <span style="color: #fb4934;">new</span> <span style="color: #fabd2f;">Token</span>; <span style="color: #928374;">// </span><span style="color: #928374;">assuming Token is a struct</span>
+defer <span style="color: #fb4934;">delete</span> tkn;
+defer <span style="color: #fb4934;">delete</span> x;
 
-<span style="color: #5B6268;">// </span><span style="color: #5B6268;">how to check for failed allocation</span>
-<span style="color: #51afef;">if</span> x == <span style="color: #a9a1e1;">nil</span> {
-    io.println(<span style="color: #98be65;">"Fail alloc"</span>);
-    os.exit(<span style="color: #da8548; font-weight: bold;">1</span>);
-}
+<span style="color: #928374;">// </span><span style="color: #928374;">how to check for failed allocation</span>
+<span style="color: #fb4934;">if</span> x == nil <span style="color: #fe8019;">{</span>
+    io.println<span style="color: #cc241d;">(</span><span style="color: #b8bb26;">"Fail alloc"</span><span style="color: #cc241d;">)</span>;
+    os.exit<span style="color: #cc241d;">(</span><span style="color: #d3869b; font-weight: bold;">1</span><span style="color: #cc241d;">)</span>;
+<span style="color: #fe8019;">}</span>
 </pre>
 </div>
 </div>
@@ -243,16 +263,16 @@ tkn := <span style="color: #c678dd;">new</span> Token; <span style="color: #5B62
 </div>
 
 
-<div id="outline-container-orgc0a3b5b" class="outline-2">
-<h2 id="orgc0a3b5b">TODO</h2>
-<div class="outline-text-2" id="text-orgc0a3b5b">
+<div id="outline-container-org01e8130" class="outline-2">
+<h2 id="org01e8130">TODO</h2>
+<div class="outline-text-2" id="text-org01e8130">
 </div>
-<div id="outline-container-org38f0c4d" class="outline-3">
-<h3 id="org38f0c4d">Compiler</h3>
-<div class="outline-text-3" id="text-org38f0c4d">
+<div id="outline-container-org7899845" class="outline-3">
+<h3 id="org7899845">Compiler</h3>
+<div class="outline-text-3" id="text-org7899845">
 <ul class="org-ul">
-<li>Parser</li>
-<li>TypeChecker</li>
+<li>Parser 30% done</li>
+<li>TypeChecker 10% done</li>
 <li>Analysis</li>
 <li>Optimization</li>
 <li>CodeGen</li>
@@ -260,9 +280,9 @@ tkn := <span style="color: #c678dd;">new</span> Token; <span style="color: #5B62
 </div>
 </div>
 
-<div id="outline-container-org4453ee6" class="outline-3">
-<h3 id="org4453ee6">DOCS</h3>
-<div class="outline-text-3" id="text-org4453ee6">
+<div id="outline-container-org2a8283f" class="outline-3">
+<h3 id="org2a8283f">DOCS</h3>
+<div class="outline-text-3" id="text-org2a8283f">
 <ul class="org-ul">
 <li>Add a copy button in HTML docs export</li>
 <li>Add automation to docs generation</li>

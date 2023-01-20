@@ -1,5 +1,5 @@
-io :: import("std/io");
+import "std/io";
 // comment
-main :: fn() {
-    io.println("Hello, World");
+fn main() {
+    println("Hello, World");
 }
