@@ -1,0 +1,10 @@
+import "std/io";
+
+fn main() {
+    x := 1;
+    if x == 1 {
+      println("x is 1");
+    } else {
+      println("x is not 1");
+    }
+}

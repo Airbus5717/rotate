@@ -1,0 +1,11 @@
+
+fn main() {
+    for i in 0..2 {
+        // do something
+    }
+
+    x := true;
+    while x {
+        break;
+    }
+}

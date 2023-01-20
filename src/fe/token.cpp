@@ -202,7 +202,7 @@ lexer_err_advice(const LexErr error) noexcept
         case LexErr::UNSUPPORTED: break;
         case LexErr::UNKNOWN: break;
     }
-    return (YELLOW "TODO: error msg implementation." RESET);
+    return "TODO: error msg implementation.";
 }
 
 } // namespace rotate

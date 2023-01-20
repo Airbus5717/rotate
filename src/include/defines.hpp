@@ -21,10 +21,7 @@
 namespace rotate
 {
 
-#ifndef RTVERSION
-#define RTVERSION "0.0.1"
-const auto _VERSION = RTVERSION;
-#endif
+constexpr auto RTVERSION = "0.0.1";
 
 typedef float f32;
 typedef double f64;
@@ -166,24 +163,24 @@ static_assert(DONE == 2, "Exit Done code is wrong");
     } while (0)
 
 // terminal colors
-#define RESET    "\x1b[0m"
-#define BOLD     "\x1b[1m"
-#define FAINT    "\x1b[2m"
-#define GREEN    "\x1b[32m"
-#define YELLOW   "\x1b[33m"
-#define BLUE     "\x1b[34m"
-#define PINK     "\x1b[35m"
-#define CYAN     "\x1b[36m"
-#define BLACK    "\x1b[30m"
-#define WHITE    "\x1b[37m"
-#define DEFAULT  "\x1b[39m"
-#define LGRAY    "\x1b[90m"
-#define LRED     "\x1b[91m"
-#define LGREEN   "\x1b[92m"
-#define LYELLOW  "\x1b[93m"
-#define LBLUE    "\x1b[94m"
-#define LMAGENTA "\x1b[95m"
-#define LCYAN    "\x1b[96m"
-#define LWHITE   "\x1b[97m"
+constexpr auto RESET    = "\x1b[0m";
+constexpr auto BOLD     = "\x1b[1m";
+constexpr auto FAINT    = "\x1b[2m";
+constexpr auto GREEN    = "\x1b[32m";
+constexpr auto YELLOW   = "\x1b[33m";
+constexpr auto BLUE     = "\x1b[34m";
+constexpr auto PINK     = "\x1b[35m";
+constexpr auto CYAN     = "\x1b[36m";
+constexpr auto BLACK    = "\x1b[30m";
+constexpr auto WHITE    = "\x1b[37m";
+constexpr auto DEFAULT  = "\x1b[39m";
+constexpr auto LGRAY    = "\x1b[90m";
+constexpr auto LRED     = "\x1b[91m";
+constexpr auto LGREEN   = "\x1b[92m";
+constexpr auto LYELLOW  = "\x1b[93m";
+constexpr auto LBLUE    = "\x1b[94m";
+constexpr auto LMAGENTA = "\x1b[95m";
+constexpr auto LCYAN    = "\x1b[96m";
+constexpr auto LWHITE   = "\x1b[97m";
 
 } // namespace rotate
