@@ -54,14 +54,14 @@ struct Type
     // do not use 0 and 8
     // 1 => ptr
     // 2 => const
-    void set_pointer(bool is_ptr)
+    void set_pointer()
     {
-        bit_set(attributes, is_ptr);
+        attributes = bit_set(attributes, 1);
     }
 
-    void set_const(bool is_c)
+    void set_const()
     {
-        bit_set(attributes, is_c);
+        attributes = bit_set(attributes, 2);
     }
 };
 

@@ -45,13 +45,10 @@ scan:
 	@scan-view ./output/*
 
 fast:
-	$(CXX) $(SRC) -o $(BIN) $(CFLAGS) $(ANALYZE) $(CSTD) $(LIB) -Ofast
-
-afl:
-	afl-$(CXX) $(SRC) -o $(BIN) $(CFLAGS) $(DEBUG) $(CSTD) $(LIB)
+	$(CXX) $(SRC) -o $(BIN) $(CFLAGS) $(ANALYZE) $(CSTD) $(LIB) -Ofast $(FLAG)
 
 debug:
-	$(CXX) $(SRC) -o $(BIN) $(CFLAGS) $(ANALYZE) $(DEBUG) $(CSTD) $(LIB)
+	$(CXX) $(SRC) -o $(BIN) $(CFLAGS) $(ANALYZE) $(DEBUG) $(CSTD) $(LIB) $(FLAG)
 
 debug_gdb: debug
 	gdb --tui $(BIN)
@@ -75,4 +72,4 @@ format:
 	@clang-format -i src/**/*.cpp src/**/*.hpp 
 
 release:
-	$(CXX) $(SRC) -O2 -Ofast -o $(BIN) $(CFLAGS) $(CSTD) $(LIB) $(ANALYZE) -Werror $(STRICT)
+	$(CXX) $(SRC) -O4 -Ofast -o $(BIN) $(CFLAGS) $(CSTD) $(LIB) $(ANALYZE) -Werror $(STRICT) $(FLAG) -s -fvpt -ftree-loop-optimize

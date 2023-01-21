@@ -102,13 +102,13 @@ Parser::parse_gl_var()
     {
         // NOTE: type to be inferred in the typechecker
         advance();
-        t.set_const(past().type == TknType::Colon);
+        if (past().type == TknType::Colon) t.set_const();
         t.type = BaseType::TInvalid;
     }
     else
     {
         t = parse_type();
-        t.set_const(peek().type == TknType::Colon);
+        if (peek().type == TknType::Colon) t.set_const();
         advance();
         expect(current().type == TknType::Colon || current().type == TknType::Equal, advance(),
                error = PrsErr::GlobalVarColon);
@@ -215,7 +215,7 @@ Parser::parse_type()
 
     if (current().type == TknType::Ref)
     {
-        ftype.set_pointer(true);
+        ftype.set_pointer();
         advance(); // skip 'ref'
     }
 
