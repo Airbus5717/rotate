@@ -1,5 +1,6 @@
 #include "lexer.hpp"
 #include "token.hpp"
+#include <cstddef>
 
 namespace rotate
 {
@@ -39,9 +40,8 @@ Lexer::lex()
             case SUCCESS: break;
             case DONE: {
                 len = 0;
-                add_token(TknType::EOT);
-                add_token(TknType::EOT);
-                add_token(TknType::EOT);
+                for (u8 i = 0; i < EXTRA_NULL_TERMINATORS; ++i)
+                    add_token(TknType::EOT);
                 tokens->shrink_to_fit();
                 return SUCCESS;
             }

@@ -1,4 +1,5 @@
 #include "include/file.hpp"
+#include "include/defines.hpp"
 
 namespace rotate
 {
@@ -66,8 +67,8 @@ file_read(const char *name) noexcept
         return file_t(nullptr, nullptr, 0, valid::failure);
     }
 
-    // add NULL charactor (3 for extra safety)
-    for (u8 i = 0; i < 3; i++)
+    // add NULL charactor (EXTRA_NULL_TERMINATORS for extra safety)
+    for (u8 i = 0; i < EXTRA_NULL_TERMINATORS; i++)
         buffer[length + i] = '\0';
 
     // simple validator (check first char if it is a visible ascii or is_space(without tabs))

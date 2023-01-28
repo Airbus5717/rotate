@@ -72,4 +72,8 @@ format:
 	@clang-format -i src/**/*.cpp src/**/*.hpp 
 
 release:
-	$(CXX) $(SRC) -O4 -Ofast -o $(BIN) $(CFLAGS) $(CSTD) $(LIB) $(ANALYZE) -Werror $(STRICT) $(FLAG) -s -fvpt -ftree-loop-optimize
+	$(CXX) $(SRC) -O2 -Ofast -o $(BIN) $(CFLAGS) $(CSTD) $(LIB) $(ANALYZE) -Werror $(STRICT) $(FLAG) -s -fvpt -ftree-loop-optimize
+
+release_min_size:
+	$(CXX) $(SRC) -O2 -Oz -o $(BIN) $(CFLAGS) $(CSTD) $(LIB) $(ANALYZE) -Werror $(STRICT) $(FLAG) -s -fvpt -ftree-loop-optimize
+

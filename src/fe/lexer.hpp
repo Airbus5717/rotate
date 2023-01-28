@@ -53,7 +53,7 @@ class Lexer
     UINT get_num_of_lines();
     u8 lex();
     void save_log(FILE *);
-};
+}; // class Lexer
 
 void log_token(FILE *, const Token, const char *);
 

@@ -197,7 +197,7 @@ struct AstImport
 struct AstGlVar
 {
     TknIdx id_idx;
-    Type type;
+    Type type{};
     ExprIdx value;
 
     AstGlVar(TknIdx i, Type t, ExprIdx e) : id_idx(i), type(t), value(e)

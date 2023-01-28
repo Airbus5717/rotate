@@ -97,7 +97,7 @@ Parser::parse_gl_var()
     advance();
     bool is_valid;
     expect(current().type == TknType::Colon, advance(), error = PrsErr::GlobalVarColon);
-    Type t;
+    Type t{};
     if (current().type == TknType::Colon || current().type == TknType::Equal)
     {
         // NOTE: type to be inferred in the typechecker

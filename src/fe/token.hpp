@@ -73,7 +73,7 @@ enum class TknType : u8
     Nil,              // `nil` basically null
     Void,             // `void`
     EOT,              // EOT - END OF TOKENS
-};
+};                    // enum TknType
 
 const char *tkn_type_describe(const TknType type) noexcept;
 
@@ -115,7 +115,7 @@ enum class LexErr : u8
     BAD_TOKEN_AT_GLOBAL,
     NOT_CLOSED_COMMENT,
     UNSUPPORTED,
-};
+}; // enum LexErr
 
 const char *get_keyword_or_type(const char *, const Token &);
 const char *lexer_err_advice(const LexErr) noexcept;
