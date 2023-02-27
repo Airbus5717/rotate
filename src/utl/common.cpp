@@ -67,7 +67,7 @@ bit_set(const u8 field, const u8 n)
 {
     // NOTE(5717): n should be [1:8],
     // otherwise it is ignored
-    return (field | ((u8)1 << n));
+    return (field | (u8)((u8)1 << n));
 }
 
 u8

@@ -5,7 +5,7 @@
 namespace rotate
 {
 
-Parser::Parser(file_t *file, Lexer *lexer)
+Parser::Parser(const file_t *file, const Lexer *lexer)
     : file(file), tokens(lexer->getTokens()), idx(0), ExprIndex(0), LitIdx(0), BinIdx(0),
       UnaryIdx(0), ArrayExprIdx(0), ArraySubIdx(0), FnCallIdx(0), ast(new Ast())
 {
@@ -246,7 +246,7 @@ Parser::parse_type()
 }
 
 ExprIdx
-Parser::parse_expr(TknType delimiter, bool *is_valid)
+Parser::parse_expr(const TknType delimiter, bool *is_valid)
 {
     /*
      * NOTE(5717): An Expression definition will be either
@@ -315,7 +315,7 @@ Parser::parse_expr(TknType delimiter, bool *is_valid)
 }
 
 LitExpr
-Parser::parse_literal_expr(TknType delimiter, bool *is_valid)
+Parser::parse_literal_expr(const TknType delimiter, bool *is_valid)
 {
     auto c = current(), p = peek();
     if (p.type != delimiter) TODO("non single literal");
@@ -338,10 +338,10 @@ Parser::parse_literal_expr(TknType delimiter, bool *is_valid)
 }
 
 ArrayExpr
-Parser::parse_array_literal_expr(TknType delimiter, bool *is_valid)
+Parser::parse_array_literal_expr(const TknType delimiter, bool *is_valid)
 {
     TODO("Parse array literals");
-    ArrayExpr a;
+    ArrayExpr a{};
     UNUSED(delimiter), UNUSED(is_valid), UNUSED(a);
     return ArrayExpr();
 }
@@ -367,11 +367,11 @@ Parser::peek() const
 void
 Parser::advance()
 {
-    idx++;
+    ++idx;
 }
 
 ExprIdx
-Parser::add_literal_expr(LitExpr lit)
+Parser::add_literal_expr(const LitExpr lit)
 {
     ast->literals.push_back(lit);
     ast->expressions.push_back(Expr(LitIdx++, ExprType::Literal));
@@ -379,7 +379,7 @@ Parser::add_literal_expr(LitExpr lit)
 }
 
 ExprIdx
-Parser::add_array_literal_expr(ArrayExpr a)
+Parser::add_array_literal_expr(const ArrayExpr a)
 {
     ast->arr_exprs.push_back(a);
     ast->expressions.push_back(Expr(ArrayExprIdx++, ExprType::ArrayLiteral));
@@ -466,6 +466,7 @@ const char *
 Parser::parser_error_advice(PrsErr err)
 {
     // TODO: Convert O(n) to O(1)
+    // not important to refactor to O(1) right now
     for (auto const &p : parser_errors)
         if (p.err == err) return p.advice;
     return "TODO: Parser error msg";

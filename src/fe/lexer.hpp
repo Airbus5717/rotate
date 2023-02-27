@@ -9,7 +9,7 @@ class Lexer
 {
     // lexer state variables
     UINT index, len, line, begin_tok_line, file_length;
-    file_t *file; // not owned by the lexer
+    const file_t *file; // not owned by the lexer
     LexErr error    = LexErr::UNKNOWN;
     UINT save_index = 0, save_line = 0;
     std::vector<Token> *tokens;
@@ -47,9 +47,9 @@ class Lexer
 
   public:
     //
-    Lexer(file_t *);
+    Lexer(const file_t *);
     ~Lexer() noexcept;
-    std::vector<Token> *getTokens();
+    std::vector<Token> *getTokens() const;
     UINT get_num_of_lines();
     u8 lex();
     void save_log(FILE *);

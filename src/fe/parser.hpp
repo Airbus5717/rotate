@@ -273,13 +273,13 @@ class Parser
     Type parse_fn_type();
 
     // expressions
-    ExprIdx parse_expr(TknType, bool *);
-    BinaryExpr parse_bin_expr(TknType, bool *);
-    UnaryExpr parse_unary_expr(TknType, bool *);
-    Expr parse_grouping_expr(TknType, bool *);
-    ArrayExpr parse_array_literal_expr(TknType, bool *);
-    LitExpr parse_literal_expr(TknType, bool *);
-    FnCallExpr parse_void_fn_call_expr(TknType, bool *);
+    ExprIdx parse_expr(const TknType, bool *);
+    BinaryExpr parse_bin_expr(const TknType, bool *);
+    UnaryExpr parse_unary_expr(const TknType, bool *);
+    Expr parse_grouping_expr(const TknType, bool *);
+    ArrayExpr parse_array_literal_expr(const TknType, bool *);
+    LitExpr parse_literal_expr(const TknType, bool *);
+    FnCallExpr parse_void_fn_call_expr(const TknType, bool *);
 
     // utils
     Token current() const;
@@ -288,27 +288,27 @@ class Parser
     void advance();
 
     // err msgs
-    u8 parse_error_expect_token(TknType);
-    PrsErr convert_tkn_type_to_parse_error(TknType);
-    u8 parser_error(PrsErr);
-    const char *parser_error_msg(PrsErr);
-    const char *parser_error_advice(PrsErr);
+    u8 parse_error_expect_token(const TknType);
+    PrsErr convert_tkn_type_to_parse_error(const TknType);
+    u8 parser_error(const PrsErr);
+    const char *parser_error_msg(const PrsErr);
+    const char *parser_error_advice(const PrsErr);
     u8 parse_error_use_global_err();
 
     // add expressions
-    ExprIdx add_literal_expr(LitExpr);
-    ExprIdx add_binary_expr(BinaryExpr);
-    ExprIdx add_unary_expr(UnaryExpr);
-    ExprIdx add_array_literal_expr(ArrayExpr);
-    ExprIdx add_array_sub_literal_expr(ArraySubExpr);
-    ExprIdx add_nonvoid_fn_call_expr(FnCallExpr);
+    ExprIdx add_literal_expr(const LitExpr);
+    ExprIdx add_binary_expr(const BinaryExpr);
+    ExprIdx add_unary_expr(const UnaryExpr);
+    ExprIdx add_array_literal_expr(const ArrayExpr);
+    ExprIdx add_array_sub_literal_expr(const ArraySubExpr);
+    ExprIdx add_nonvoid_fn_call_expr(const FnCallExpr);
     // add globals
     // NOTE: not needed for now
 
     // PRIVATE members
     // not owned (weak ptr)
-    file_t *file;
-    std::vector<Token> *tokens;
+    const file_t *file;
+    const std::vector<Token> *tokens;
     //
     PrsErr error;
     UINT idx; // of tokens
@@ -317,7 +317,7 @@ class Parser
   public:
     Ast *ast;
     // Parser exports
-    Parser(file_t *, Lexer *);
+    Parser(const file_t *, const Lexer *);
     ~Parser();
     u8 parse_lexer();
 }; // Parser
