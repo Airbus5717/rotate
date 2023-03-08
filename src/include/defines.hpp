@@ -15,8 +15,6 @@
 #include <cstring>
 #include <ctime>
 
-// header for stack allocation
-#include <alloca.h>
 
 namespace rotate
 {

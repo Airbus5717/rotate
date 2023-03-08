@@ -79,11 +79,11 @@ const char *tkn_type_describe(const TknType type) noexcept;
 
 struct Token
 {
-    const TknType type;
     const UINT index, length, line;
+    const TknType type;
 
-    Token(TknType type, UINT index, UINT length, UINT line)
-        : type(type), index(index), length(length), line(line)
+    Token(UINT index, UINT length, UINT line, TknType type)
+        : index(index), length(length), line(line), type(type)
     {
     }
 };

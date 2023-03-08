@@ -658,9 +658,12 @@ Lexer::report_error()
 
     // arrows pointing to error location
     UINT spaces = index - low + 1;
+
+    const UINT MAX_ARROW_LEN = 101;
     if (len < 101)
     {
-        char *arrows = (char *)alloca(len + 1);
+        char arrows[MAX_ARROW_LEN];
+        memset(arrows, 0, MAX_ARROW_LEN);
         memset(arrows, '^', len);
         arrows[len] = '\0';
 
