@@ -6,6 +6,18 @@
 namespace rotate
 {
 
+char *
+strndup(const char *src, const usize length)
+{
+    char *res = new char[length];
+    ASSERT_NULL(res, "failed mem allocation");
+    for (usize i = 0; i < length; ++i)
+    {
+        res[i] = src[i];
+    }
+    return res;
+}
+
 void
 log_stage(const char *str)
 {

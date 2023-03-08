@@ -536,10 +536,17 @@ Lexer::lex_symbols()
             switch (c)
             {
                 case '\0': return DONE;
-                case '\t': this->error = LexErr::TABS; break;
-                case '\r': this->error = LexErr::WINDOWS_CRAP; break;
-
-                default: this->error = LexErr::LEXER_INVALID_CHAR;
+                case '\t': {
+                    this->error = LexErr::TABS;
+                    break;
+                }
+                case '\r': {
+                    advance();
+                    return SUCCESS;
+                }
+                default: {
+                    this->error = LexErr::LEXER_INVALID_CHAR;
+                }
             }
         }
     }
@@ -685,11 +692,8 @@ Lexer::add_token(const TknType type)
 {
     // index at the end of the token
     // NOTE(Airbus5717): emplace_back constructs the token in the vector
-    tokens->emplace_back(type, index, len, begin_tok_line);
-
-    for (UINT i = 0; i < len; i++)
-        advance();
-
+    tokens->emplace_back(index, len, begin_tok_line, type);
+    advance_len_times(); // TODO: Test optimization
     return SUCCESS;
 }
 

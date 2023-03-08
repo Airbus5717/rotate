@@ -27,6 +27,7 @@ void log_debug(const char *);
 void log_info(const char *);
 void log_warn(const char *);
 
+char *strndup(const char *, const usize);
 //
 UINT get_digits_from_number(UINT);
 // bitwise operations

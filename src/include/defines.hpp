@@ -15,7 +15,6 @@
 #include <cstring>
 #include <ctime>
 
-
 namespace rotate
 {
 
@@ -109,15 +108,15 @@ const auto rstderr = stderr;
 #define TODO(str)                                                                                  \
     do                                                                                             \
     {                                                                                              \
-        std::fprintf(rstderr, "%sTODO: %s\n@file: %s:%d%s\n", YELLOW, str, __FILE_NAME__,          \
-                     __LINE__, RESET);                                                             \
+        std::fprintf(rstderr, "%sTODO: %s\n@file: %s:%d%s\n", YELLOW, str, __FILE__, __LINE__,     \
+                     RESET);                                                                       \
         exit(1);                                                                                   \
     } while (0)
 
 #define UNREACHABLE()                                                                              \
     do                                                                                             \
     {                                                                                              \
-        std::fprintf(rstderr, "%sREACHED UNREACHABLE STAT\n@file: %s:%d%s\n", LRED, __FILE_NAME__, \
+        std::fprintf(rstderr, "%sREACHED UNREACHABLE STAT\n@file: %s:%d%s\n", LRED, __FILE__,      \
                      __LINE__, RESET);                                                             \
         exit(1);                                                                                   \
     } while (0)
@@ -130,6 +129,12 @@ constexpr auto DONE    = 2; // EXIT_DONE
 static_assert(SUCCESS == 0, "Exit Success code is wrong");
 static_assert(FAILURE == 1, "Exit Failure code is wrong");
 static_assert(DONE == 2, "Exit Done code is wrong");
+
+#ifdef _WIN32
+#define NEWLINE "\n\r"
+#else
+#define NEWLINE "\n"
+#endif
 
 #define expect(expr, doWhenExpected, doElse)                                                       \
     do                                                                                             \

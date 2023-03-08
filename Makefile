@@ -34,16 +34,16 @@ all: format
 	@cmake --build build
 
 
-redo: clean gen build all
+redo: gen build all
 	@echo done
 
 gen:
 	@cmake -S . -B build -G Ninja
 
 scan:
-	@rm -rf output
+	@rm -r output
 	@scan-build -o ./output $(CXX) $(SRC) -o $(BIN) $(CFLAGS) $(DEBUG) $(CSTD) $(LIB)
-	@scan-view ./output/*
+	@scan-view ./output/
 
 fast:
 	$(CXX) $(SRC) -o $(BIN) $(CFLAGS) $(ANALYZE) $(CSTD) $(LIB) -Ofast $(FLAG)
@@ -59,8 +59,8 @@ debug_gdb: debug
 
 
 clean:
-	@rm -rf output*
-	@rm -rf build/
+	@rm -r output
+	@rm -r build
 
 
 memcheck: debug
