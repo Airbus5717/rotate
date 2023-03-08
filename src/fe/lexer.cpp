@@ -94,7 +94,7 @@ Lexer::lex_director()
 }
 
 std::vector<Token> *
-Lexer::getTokens() const
+Lexer::get_tokens() const
 {
     return tokens;
 }

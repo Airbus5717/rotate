@@ -15,7 +15,7 @@ file_read(const char *name) noexcept
     usize len = strlen(name);
 
     const char *file_ext = &(name)[len - 3];
-    if (strcasecmp(file_ext, ".vr") != 0)
+    if (strcmp(file_ext, ".vr") !=0)
     {
         fprintf(stderr, "%s%serror:%s file name: `%s` must end with `.vr`%s\n", BOLD, LRED, WHITE,
                 name, RESET);

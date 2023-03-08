@@ -49,7 +49,7 @@ class Lexer
     //
     Lexer(const file_t *);
     ~Lexer() noexcept;
-    std::vector<Token> *getTokens() const;
+    std::vector<Token> *get_tokens() const;
     UINT get_num_of_lines();
     u8 lex();
     void save_log(FILE *);
