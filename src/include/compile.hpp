@@ -13,7 +13,7 @@ print_version_and_exit()
                       " --log   for dumping compilation info as orgmode format in output.org\n"
                       " https://github.com/Airbus5717/rotate.git"
                       "\n";
-    fprintf(rstdout, out, RTVERSION);
+    fprintf(stdout, out, RTVERSION);
     exit(0);
 }
 
@@ -62,7 +62,7 @@ struct compile_options
 
     void log_error_unknown_flag(const char *str)
     {
-        fprintf(rstderr, "[%sWARN%s] : Ignored flag: `%s`\n", LYELLOW, RESET, str);
+        fprintf(stderr, "[%sWARN%s] : Ignored flag: `%s`\n", LYELLOW, RESET, str);
     }
 };
 

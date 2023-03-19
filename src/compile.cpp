@@ -37,7 +37,7 @@ compile(compile_options *options) noexcept
     options->st = Stage::lexer;
     Lexer lexer = Lexer(&file);
     exit        = lexer.lex();
-    if (lexer.getTokens()->size() < 2) log_error("file is empty");
+    if (lexer.get_tokens()->size() < 2) log_error("file is empty");
     if (exit == FAILURE) return FAILURE;
     // parse lexed tokens to Abstract Syntax tree
 

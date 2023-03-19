@@ -21,13 +21,13 @@ strndup(const char *src, const usize length)
 void
 log_stage(const char *str)
 {
-    fprintf(rstderr, "[%sSTAGE%s]: %s\n", LRED, RESET, str);
+    fprintf(stderr, "[%sSTAGE%s]: %s\n", LRED, RESET, str);
 }
 
 void
 log_error(const char *str)
 {
-    fprintf(rstderr, "[%sERROR%s]: %s\n", LRED, RESET, str);
+    fprintf(stderr, "[%sERROR%s]: %s\n", LRED, RESET, str);
 }
 
 void
@@ -40,14 +40,14 @@ exit_error(const char *str)
 void
 log_warn(const char *str)
 {
-    fprintf(rstderr, "[%sWARN%s] : %s\n", LYELLOW, RESET, str);
+    fprintf(stderr, "[%sWARN%s] : %s\n", LYELLOW, RESET, str);
 }
 
 void // NOTE(5717): basically a print for debug builds
 log_debug(const char *str)
 {
 #if DEBUG
-    fprintf(rstderr, "[%sDEBUG%s]: %s\n", LYELLOW, RESET, str);
+    fprintf(stderr, "[%sDEBUG%s]: %s\n", LYELLOW, RESET, str);
 #else
     UNUSED(str);
 #endif
@@ -56,7 +56,7 @@ log_debug(const char *str)
 void
 log_info(const char *str)
 {
-    fprintf(rstderr, "[%sINFO%s] : %s\n", LGREEN, RESET, str);
+    fprintf(stderr, "[%sINFO%s] : %s\n", LGREEN, RESET, str);
 }
 
 // NOTE: func definition in ./frontend/include/lexer.hpp

@@ -6,7 +6,7 @@ namespace rotate
 {
 
 Parser::Parser(const file_t *file, const Lexer *lexer)
-    : file(file), tokens(lexer->getTokens()), idx(0), ExprIndex(0), LitIdx(0), BinIdx(0),
+    : file(file), tokens(lexer->get_tokens()), idx(0), ExprIndex(0), LitIdx(0), BinIdx(0),
       UnaryIdx(0), ArrayExprIdx(0), ArraySubIdx(0), FnCallIdx(0), ast(new Ast())
 {
     ASSERT_NULL(lexer, "Passed lexer to parser was null");
@@ -425,11 +425,11 @@ Parser::parser_error(PrsErr err)
     _length -= low;
 
     // error msg
-    fprintf(rstderr, "> %s%s%s:%u:%u: %serror: %s%s%s\n", BOLD, WHITE, file->name, line, col, LRED,
+    fprintf(stderr, "> %s%s%s:%u:%u: %serror: %s%s%s\n", BOLD, WHITE, file->name, line, col, LRED,
             LBLUE, parser_error_msg(err), RESET);
 
     // line from source code
-    fprintf(rstderr, " %s%u%s | %.*s\n", LYELLOW, line, RESET, _length, (file->contents + low));
+    fprintf(stderr, " %s%u%s | %.*s\n", LYELLOW, line, RESET, _length, (file->contents + low));
 
     UINT num_line_digits = get_digits_from_number(line);
 
@@ -441,15 +441,14 @@ Parser::parser_error(PrsErr err)
         memset(arrows, '^', len);
         arrows[len] = '\0';
 
-        fprintf(rstderr, " %*c |%*c%s%s%s\n", num_line_digits, ' ', spaces, ' ', LRED, BOLD,
-                arrows);
+        fprintf(stderr, " %*c |%*c%s%s%s\n", num_line_digits, ' ', spaces, ' ', LRED, BOLD, arrows);
     }
     else
     {
-        fprintf(rstderr, " %*c |%*c%s%s^^^---...\n", num_line_digits, ' ', spaces, ' ', LRED, BOLD);
+        fprintf(stderr, " %*c |%*c%s%s^^^---...\n", num_line_digits, ' ', spaces, ' ', LRED, BOLD);
     }
     // error lexer_err_advice
-    fprintf(rstderr, "> Advice: %s%s\n", RESET, parser_error_advice(err));
+    fprintf(stderr, "> Advice: %s%s\n", RESET, parser_error_advice(err));
     return FAILURE;
 }
 

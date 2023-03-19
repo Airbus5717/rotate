@@ -8,7 +8,7 @@ main(const int argc, char **const argv)
 
     if (argc > 1)
     {
-	// parse program arguments
+		// parse program arguments
         auto comp_opt = compile_options(argc, argv);
 
         // setup timer stuff

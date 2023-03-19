@@ -15,7 +15,7 @@ log_compilation(FILE *output, file_t *code_file, Lexer *lexer, Parser *parser)
     time(&rawtime);
     assert(code_file && lexer);
 
-    const auto *tokens = lexer->getTokens();
+    const auto *tokens = lexer->get_tokens();
     if (tokens->size() > 0x10000000)
     {
         log_warn("Too large file to show log");

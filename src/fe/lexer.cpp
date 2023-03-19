@@ -655,11 +655,11 @@ Lexer::report_error()
     _length -= low;
 
     // error msg
-    fprintf(rstderr, " > %s%s%s:%u:%u: %serror: %s%s%s\n", BOLD, WHITE, file->name, line, col, LRED,
+    fprintf(stderr, " > %s%s%s:%u:%u: %serror: %s%s%s\n", BOLD, WHITE, file->name, line, col, LRED,
             LBLUE, lexer_err_msg(error), RESET);
 
     // line from source code
-    fprintf(rstderr, "  %s%u%s | %.*s\n", LYELLOW, line, RESET, _length, (file->contents + low));
+    fprintf(stderr, "  %s%u%s | %.*s\n", LYELLOW, line, RESET, _length, (file->contents + low));
 
     UINT num_line_digits = get_digits_from_number(line);
 
@@ -674,16 +674,15 @@ Lexer::report_error()
         memset(arrows, '^', len);
         arrows[len] = '\0';
 
-        fprintf(rstderr, "  %*c |%*c%s%s%s\n", num_line_digits, ' ', spaces, ' ', LRED, BOLD,
+        fprintf(stderr, "  %*c |%*c%s%s%s\n", num_line_digits, ' ', spaces, ' ', LRED, BOLD,
                 arrows);
     }
     else
     {
-        fprintf(rstderr, "  %*c |%*c%s%s^^^---...\n", num_line_digits, ' ', spaces, ' ', LRED,
-                BOLD);
+        fprintf(stderr, "  %*c |%*c%s%s^^^---...\n", num_line_digits, ' ', spaces, ' ', LRED, BOLD);
     }
     // error lexer_err_advice
-    fprintf(rstderr, " > Advice: %s%s\n", RESET, lexer_err_advice(error));
+    fprintf(stderr, " > Advice: %s%s\n", RESET, lexer_err_advice(error));
     return FAILURE;
 }
 

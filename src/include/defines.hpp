@@ -47,16 +47,12 @@ static_assert(EXTRA_NULL_TERMINATORS > 2, "keep the number above 2");
 static_assert(RUINT_MIN == 0, "Min number should unsigned 0");
 static_assert(RUINT_MAX == UINT32_MAX, "Max number");
 
-const auto rstdin  = stdin;
-const auto rstdout = stdout;
-const auto rstderr = stderr;
-
 #define ASSERT(expr, msg)                                                                          \
     do                                                                                             \
     {                                                                                              \
         if (!(expr))                                                                               \
         {                                                                                          \
-            std::fprintf(rstderr, "%sAssert failure: %s\n@file: %s:%d%s\n", LRED, msg, __FILE__,   \
+            std::fprintf(stderr, "%sAssert failure: %s\n@file: %s:%d%s\n", LRED, msg, __FILE__,    \
                          __LINE__, RESET);                                                         \
             exit(1);                                                                               \
         }                                                                                          \
@@ -67,7 +63,7 @@ const auto rstderr = stderr;
     {                                                                                              \
         if ((expr1) != (expr2))                                                                    \
         {                                                                                          \
-            std::fprintf(rstderr, "%sAssert failure: %s\n@file: %s:%d%s\n", LRED, msg, __FILE__,   \
+            std::fprintf(stderr, "%sAssert failure: %s\n@file: %s:%d%s\n", LRED, msg, __FILE__,    \
                          __LINE__, RESET);                                                         \
             exit(1);                                                                               \
         }                                                                                          \
@@ -78,7 +74,7 @@ const auto rstderr = stderr;
     {                                                                                              \
         if ((expr) == NULL)                                                                        \
         {                                                                                          \
-            std::fprintf(rstderr, "%sAssert failure: %s\n@file: %s:%d%s\n", LRED, msg, __FILE__,   \
+            std::fprintf(stderr, "%sAssert failure: %s\n@file: %s:%d%s\n", LRED, msg, __FILE__,    \
                          __LINE__, RESET);                                                         \
             exit(1);                                                                               \
         }                                                                                          \
@@ -89,7 +85,7 @@ const auto rstderr = stderr;
     {                                                                                              \
         if (strcmp(string1, string2) != 0)                                                         \
         {                                                                                          \
-            fprintf(rstderr, "%sAssert failure: %s\n@file: %s:%d%s\n", LRED, msg, __FILE__,        \
+            fprintf(stderr, "%sAssert failure: %s\n@file: %s:%d%s\n", LRED, msg, __FILE__,         \
                     __LINE__, RESET);                                                              \
             exit(1);                                                                               \
         }                                                                                          \
@@ -108,7 +104,7 @@ const auto rstderr = stderr;
 #define TODO(str)                                                                                  \
     do                                                                                             \
     {                                                                                              \
-        std::fprintf(rstderr, "%sTODO: %s\n@file: %s:%d%s\n", YELLOW, str, __FILE__, __LINE__,     \
+        std::fprintf(stderr, "%sTODO: %s\n@file: %s:%d%s\n", YELLOW, str, __FILE__, __LINE__,      \
                      RESET);                                                                       \
         exit(1);                                                                                   \
     } while (0)
@@ -116,7 +112,7 @@ const auto rstderr = stderr;
 #define UNREACHABLE()                                                                              \
     do                                                                                             \
     {                                                                                              \
-        std::fprintf(rstderr, "%sREACHED UNREACHABLE STAT\n@file: %s:%d%s\n", LRED, __FILE__,      \
+        std::fprintf(stderr, "%sREACHED UNREACHABLE STAT\n@file: %s:%d%s\n", LRED, __FILE__,       \
                      __LINE__, RESET);                                                             \
         exit(1);                                                                                   \
     } while (0)
