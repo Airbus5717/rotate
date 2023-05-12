@@ -75,26 +75,21 @@ enum class TknType : u8
     EOT,              // EOT - END OF TOKENS
 };                    // enum TknType
 
-const char *tkn_type_describe(const TknType type) noexcept;
+cstr tkn_type_describe(const TknType type) noexcept;
 
 struct Token
 {
     uint index, length, line;
     TknType type;
 
-    Token()
-    {
-    }
+    Token() {}
 
     Token(uint index, uint length, uint line, TknType type)
         : index(index), length(length), line(line), type(type)
     {
     }
 
-    Token &operator=(const Token &)
-    {
-        return *this;
-    }
+    Token &operator=(const Token &) { return *this; }
 };
 
 enum class LexErr : u8
@@ -126,9 +121,9 @@ enum class LexErr : u8
     UNSUPPORTED,
 }; // enum LexErr
 
-const char *get_keyword_or_type(const char *, const Token &);
-const char *lexer_err_advice(const LexErr) noexcept;
-const char *lexer_err_msg(const LexErr) noexcept;
+cstr get_keyword_or_type(cstr, const Token &);
+cstr lexer_err_advice(const LexErr) noexcept;
+cstr lexer_err_msg(const LexErr) noexcept;
 bool is_token_type_length_variable(TknType);
 bool is_token_a_number(TknType);
 

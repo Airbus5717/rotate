@@ -7,6 +7,7 @@
 
 namespace rotate
 {
+
 void
 log_compilation(FILE *output, file_t *code_file, Lexer *lexer)
 {

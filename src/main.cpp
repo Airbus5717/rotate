@@ -1,5 +1,22 @@
 #include "include/common.hpp"
 #include "include/compile.hpp"
+#include "include/defines.hpp"
+
+rotate::cstr
+main_err(rotate::Stage s)
+{
+    using namespace rotate;
+    switch (s)
+    {
+        case Stage::file: return "FILE READ";
+        case Stage::lexer: return "LEXER";
+        case Stage::parser: return "PARSER";
+        case Stage::tchecker: return "TYPE CHECKER";
+        case Stage::logger: return "LOGGER";
+        default: return "UNKNOWN";
+    }
+    return "UNKNOWN";
+}
 
 int
 main(const int argc, char **const argv)
@@ -8,7 +25,7 @@ main(const int argc, char **const argv)
 
     if (argc > 1)
     {
-		// parse program arguments
+        // parse program arguments
         auto comp_opt = compile_options(argc, argv);
 
         // setup timer stuff
@@ -23,30 +40,11 @@ main(const int argc, char **const argv)
         else if (_exit == SUCCESS)
             log_info("SUCCESS");
 
-        // print comptime 
+        // print comptime
         end_t   = clock();
         total_t = (double)(end_t - start_t) / CLOCKS_PER_SEC;
         printf("[%sTIME%s] : %.5Lf sec\n", LMAGENTA, RESET, total_t);
     }
-    else
-    {
-        print_version_and_exit();
-    }
+    else { print_version_and_exit(); }
     return SUCCESS;
-}
-
-const char *
-rotate::main_err(rotate::Stage s)
-{
-    using namespace rotate;
-    switch (s)
-    {
-        case Stage::file: return "FILE READ";
-        case Stage::lexer: return "LEXER";
-        case Stage::parser: return "PARSER";
-        case Stage::tchecker: return "TYPE CHECKER";
-        case Stage::logger: return "LOGGER";
-        default: return "UNKNOWN";
-    }
-    return "UNKNOWN";
 }

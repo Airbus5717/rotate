@@ -139,10 +139,7 @@ static_assert(DONE == 2, "Exit Done code is wrong");
             doElse;                                                                                \
             return EXIT_FAILURE;                                                                   \
         }                                                                                          \
-        else                                                                                       \
-        {                                                                                          \
-            doWhenExpected;                                                                        \
-        }                                                                                          \
+        else { doWhenExpected; }                                                                   \
     } while (0)
 
 #define expect_semicolon(doWhenExpected, doElse)                                                   \
@@ -154,10 +151,7 @@ static_assert(DONE == 2, "Exit Done code is wrong");
             idx--;                                                                                 \
             return EXIT_FAILURE;                                                                   \
         }                                                                                          \
-        else                                                                                       \
-        {                                                                                          \
-            doWhenExpected;                                                                        \
-        }                                                                                          \
+        else { doWhenExpected; }                                                                   \
     } while (0)
 
 // terminal colors

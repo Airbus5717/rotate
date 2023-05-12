@@ -3,17 +3,13 @@
 #include "include/file.hpp"
 #include "include/log.hpp"
 
-
 namespace rotate
 {
 
 u8
-handle_err(u8 exit, const char *err_string)
+handle_err(u8 exit, cstr err_string)
 {
-    if (exit == 1)
-    {
-        log_error(err_string);
-    }
+    if (1 == exit) { log_error(err_string); }
     return exit;
 }
 
@@ -57,10 +53,7 @@ compile(compile_options *options) noexcept
             log_compilation(output, &file, &lexer);
             fclose(output);
         }
-        else
-        {
-            log_error("Log failed");
-        }
+        else { log_error("Log failed"); }
     }
 
     return exit;

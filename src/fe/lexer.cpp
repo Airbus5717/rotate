@@ -54,19 +54,13 @@ Lexer::skip_whitespace() noexcept
     for (;;)
     {
         const char c = current();
-        if (c == ' ')
-        {
-            index++;
-        }
+        if (c == ' ') { index++; }
         else if (c == '\n')
         {
             index++;
             line++;
         }
-        else
-        {
-            break;
-        }
+        else { break; }
     }
 }
 

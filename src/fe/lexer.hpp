@@ -43,9 +43,9 @@ class Lexer
     char current() const;
     bool is_not_eof() const;
     void skip_whitespace() noexcept;
-    bool keyword_match(const char *, uint);
+    bool keyword_match(cstr, uint);
 
-  public:
+    public:
     //
     Lexer(const file_t *);
     ~Lexer() noexcept;
@@ -55,6 +55,6 @@ class Lexer
     void save_log(FILE *);
 }; // class Lexer
 
-void log_token(FILE *, const Token, const char *);
+void log_token(FILE *, const Token, cstr);
 
 } // namespace rotate
