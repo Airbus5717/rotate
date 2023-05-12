@@ -1,19 +1,15 @@
 #pragma once
 
-// C++ standard library
-#include <vector>
-
 // C standard library
-#include <cassert>
-#include <cctype>
-#include <climits>
-#include <cmath>
-#include <cstdbool>
-#include <cstdint>
-#include <cstdio>
-#include <cstdlib>
-#include <cstring>
-#include <ctime>
+#include <assert.h>
+#include <ctype.h>
+#include <limits.h>
+#include <math.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
 
 namespace rotate
 {
@@ -34,11 +30,15 @@ typedef uint16_t u16;
 typedef uint32_t u32;
 typedef uint64_t u64;
 
-typedef unsigned long long int usize;
-typedef signed long long int isize;
+typedef unsigned long long usize;
+typedef signed long long ssize;
+
+static_assert(sizeof(usize) == 8);
+static_assert(sizeof(ssize) == 8);
 
 // use this for the project
-typedef u32 UINT;
+typedef u32 uint;
+typedef const char *cstr;
 constexpr auto RUINT_MAX              = UINT32_MAX;
 constexpr auto RUINT_MIN              = 0;
 constexpr auto EXTRA_NULL_TERMINATORS = 3;
@@ -52,8 +52,8 @@ static_assert(RUINT_MAX == UINT32_MAX, "Max number");
     {                                                                                              \
         if (!(expr))                                                                               \
         {                                                                                          \
-            std::fprintf(stderr, "%sAssert failure: %s\n@file: %s:%d%s\n", LRED, msg, __FILE__,    \
-                         __LINE__, RESET);                                                         \
+            fprintf(stderr, "%sAssert failure: %s\n@file: %s:%d%s\n", LRED, msg, __FILE__,         \
+                    __LINE__, RESET);                                                              \
             exit(1);                                                                               \
         }                                                                                          \
     } while (0)
@@ -63,8 +63,8 @@ static_assert(RUINT_MAX == UINT32_MAX, "Max number");
     {                                                                                              \
         if ((expr1) != (expr2))                                                                    \
         {                                                                                          \
-            std::fprintf(stderr, "%sAssert failure: %s\n@file: %s:%d%s\n", LRED, msg, __FILE__,    \
-                         __LINE__, RESET);                                                         \
+            fprintf(stderr, "%sAssert failure: %s\n@file: %s:%d%s\n", LRED, msg, __FILE__,         \
+                    __LINE__, RESET);                                                              \
             exit(1);                                                                               \
         }                                                                                          \
     } while (0)
@@ -72,10 +72,10 @@ static_assert(RUINT_MAX == UINT32_MAX, "Max number");
 #define ASSERT_NULL(expr, msg)                                                                     \
     do                                                                                             \
     {                                                                                              \
-        if ((expr) == NULL)                                                                        \
+        if ((expr) == nullptr)                                                                     \
         {                                                                                          \
-            std::fprintf(stderr, "%sAssert failure: %s\n@file: %s:%d%s\n", LRED, msg, __FILE__,    \
-                         __LINE__, RESET);                                                         \
+            fprintf(stderr, "%sAssert failure: %s\n@file: %s:%d%s\n", LRED, msg, __FILE__,         \
+                    __LINE__, RESET);                                                              \
             exit(1);                                                                               \
         }                                                                                          \
     } while (0)
@@ -104,16 +104,15 @@ static_assert(RUINT_MAX == UINT32_MAX, "Max number");
 #define TODO(str)                                                                                  \
     do                                                                                             \
     {                                                                                              \
-        std::fprintf(stderr, "%sTODO: %s\n@file: %s:%d%s\n", YELLOW, str, __FILE__, __LINE__,      \
-                     RESET);                                                                       \
+        fprintf(stderr, "%sTODO: %s\n@file: %s:%d%s\n", YELLOW, str, __FILE__, __LINE__, RESET);   \
         exit(1);                                                                                   \
     } while (0)
 
 #define UNREACHABLE()                                                                              \
     do                                                                                             \
     {                                                                                              \
-        std::fprintf(stderr, "%sREACHED UNREACHABLE STAT\n@file: %s:%d%s\n", LRED, __FILE__,       \
-                     __LINE__, RESET);                                                             \
+        fprintf(stderr, "%sREACHED UNREACHABLE STAT\n@file: %s:%d%s\n", LRED, __FILE__, __LINE__,  \
+                RESET);                                                                            \
         exit(1);                                                                                   \
     } while (0)
 

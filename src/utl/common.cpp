@@ -7,7 +7,7 @@ namespace rotate
 {
 
 char *
-strndup(const char *src, const usize length)
+strndup(cstr src, const usize length)
 {
     char *res = new char[length];
     ASSERT_NULL(res, "failed mem allocation");
@@ -19,32 +19,32 @@ strndup(const char *src, const usize length)
 }
 
 void
-log_stage(const char *str)
+log_stage(cstr str)
 {
     fprintf(stderr, "[%sSTAGE%s]: %s\n", LRED, RESET, str);
 }
 
 void
-log_error(const char *str)
+log_error(cstr str)
 {
     fprintf(stderr, "[%sERROR%s]: %s\n", LRED, RESET, str);
 }
 
 void
-exit_error(const char *str)
+exit_error(cstr str)
 {
     log_error(str);
     exit(1);
 }
 
 void
-log_warn(const char *str)
+log_warn(cstr str)
 {
     fprintf(stderr, "[%sWARN%s] : %s\n", LYELLOW, RESET, str);
 }
 
 void // NOTE(5717): basically a print for debug builds
-log_debug(const char *str)
+log_debug(cstr str)
 {
 #if DEBUG
     fprintf(stderr, "[%sDEBUG%s]: %s\n", LYELLOW, RESET, str);
@@ -54,24 +54,24 @@ log_debug(const char *str)
 }
 
 void
-log_info(const char *str)
+log_info(cstr str)
 {
     fprintf(stderr, "[%sINFO%s] : %s\n", LGREEN, RESET, str);
 }
 
 // NOTE: func definition in ./frontend/include/lexer.hpp
 void
-log_token(FILE *output, const Token tkn, const char *str)
+log_token(FILE *output, const Token tkn, cstr str)
 {
     fprintf(output, "[TOKEN]: idx: %u, len: %u, type: %s, val: `%.*s`\n", tkn.index, tkn.length,
             tkn_type_describe(tkn.type), tkn.length, str + tkn.index);
 }
 
-UINT
-get_digits_from_number(const UINT num)
+uint
+get_digits_from_number(const uint num)
 {
     // TODO: Test this algorithm
-    return (UINT)std::floor(std::log10(num) + 1);
+    return (uint)floor(log10(num) + 1);
 }
 
 u8
@@ -96,4 +96,7 @@ bit_is_set(const u8 field, const u8 n)
     // NOTE(5717): returns non zero for true else 0 for false
     return ((field >> n) & 1);
 }
+
+// Custom ArrayList
+
 } // namespace rotate

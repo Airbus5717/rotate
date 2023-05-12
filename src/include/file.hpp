@@ -15,10 +15,10 @@ struct file_t
 {
     const char *name;
     const char *contents;
-    const UINT length = 0; // contents length
+    const uint length = 0; // contents length
     valid valid_code;
 
-    file_t(const char *name, const char *contents, const UINT length, valid valid_code)
+    file_t(const char *name, const char *contents, const uint length, valid valid_code)
         : name(name), contents(contents), length(length), valid_code(valid_code)
     {
     }

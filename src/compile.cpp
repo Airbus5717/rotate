@@ -3,7 +3,6 @@
 #include "include/file.hpp"
 #include "include/log.hpp"
 
-#include "fe/parser.hpp"
 
 namespace rotate
 {
@@ -37,7 +36,7 @@ compile(compile_options *options) noexcept
     options->st = Stage::lexer;
     Lexer lexer = Lexer(&file);
     exit        = lexer.lex();
-    if (lexer.get_tokens()->size() < 2) log_error("file is empty");
+    if (lexer.get_tokens()->count() < 2u) log_error("file is empty");
     if (exit == FAILURE) return FAILURE;
     // parse lexed tokens to Abstract Syntax tree
 
@@ -46,13 +45,7 @@ compile(compile_options *options) noexcept
      * PARSING
      *
      * */
-    options->st   = Stage::parser;
-    Parser parser = Parser(&file, &lexer);
-    if (!options->lex_only)
-    {
-        exit = parser.parse_lexer();
-        ASSERT_RET_FAIL(exit != FAILURE, "Parser error");
-    }
+    // TODO
 
     // log compiliation
     if (options->debug_info)
@@ -61,7 +54,7 @@ compile(compile_options *options) noexcept
         options->st = Stage::logger;
         if (FILE *output = fopen("output.org", "wb"))
         {
-            log_compilation(output, &file, &lexer, &parser);
+            log_compilation(output, &file, &lexer);
             fclose(output);
         }
         else

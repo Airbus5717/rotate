@@ -6,12 +6,12 @@ namespace rotate
 // file must not be null and lexer owns the file ptr
 Lexer::Lexer(const file_t *file)
     : index(0), len(0), line(1), file_length(file ? file->length : 0), file(file),
-      error(LexErr::UNKNOWN), tokens(new std::vector<Token>())
+      error(LexErr::UNKNOWN), tokens(new ArrayList<Token>())
 {
     ASSERT_NULL(file, "Lexer File passed is a null pointer");
     ASSERT_NULL(tokens, "Lexer vec of tokens passed is a null pointer");
 
-    tokens->reserve(file->length / 4);
+    tokens->resize(file->length / 4);
 }
 
 Lexer::~Lexer() noexcept
@@ -22,7 +22,7 @@ Lexer::~Lexer() noexcept
 void
 Lexer::save_log(FILE *output)
 {
-    for (UINT i = 0; i < tokens->size(); i++)
+    for (uint i = 0; i < tokens->count(); i++)
     {
         log_token(output, tokens->at(i), file->contents);
     }
@@ -40,7 +40,6 @@ Lexer::lex()
                 len = 0;
                 for (u8 i = 0; i < EXTRA_NULL_TERMINATORS; ++i)
                     add_token(TknType::EOT);
-                tokens->shrink_to_fit();
                 return SUCCESS;
             }
             case FAILURE: return report_error();
@@ -93,7 +92,7 @@ Lexer::lex_director()
     return lex_symbols();
 }
 
-std::vector<Token> *
+ArrayList<Token> *
 Lexer::get_tokens() const
 {
     return tokens;
@@ -616,7 +615,7 @@ Lexer::is_not_eof() const
 }
 
 inline bool
-Lexer::keyword_match(const char *string, UINT length)
+Lexer::keyword_match(const char *string, uint length)
 {
     return strncmp(file->contents + index, string, length) == 0;
 }
@@ -639,7 +638,7 @@ u8
 Lexer::report_error()
 {
     //
-    UINT low = index, col = 0;
+    uint low = index, col = 0;
     while (file->contents[low] != '\n' && low > 0)
     {
         low--;
@@ -648,7 +647,7 @@ Lexer::report_error()
     low = low > 1 ? low + 1 : 0;
 
     //
-    UINT _length = index;
+    uint _length = index;
     while (file->contents[_length] != '\n' && _length + 1 < file->length)
         _length++;
 
@@ -661,12 +660,12 @@ Lexer::report_error()
     // line from source code
     fprintf(stderr, "  %s%u%s | %.*s\n", LYELLOW, line, RESET, _length, (file->contents + low));
 
-    UINT num_line_digits = get_digits_from_number(line);
+    uint num_line_digits = get_digits_from_number(line);
 
     // arrows pointing to error location
-    UINT spaces = index - low + 1;
+    uint spaces = index - low + 1;
 
-    const UINT MAX_ARROW_LEN = 101;
+    const uint MAX_ARROW_LEN = 101;
     if (len < 101)
     {
         char arrows[MAX_ARROW_LEN];
@@ -691,7 +690,7 @@ Lexer::add_token(const TknType type)
 {
     // index at the end of the token
     // NOTE(Airbus5717): emplace_back constructs the token in the vector
-    tokens->emplace_back(index, len, begin_tok_line, type);
+    tokens->append(Token(index, len, begin_tok_line, type));
     advance_len_times(); // TODO: Test optimization
     return SUCCESS;
 }

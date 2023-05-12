@@ -5,7 +5,7 @@
 
 namespace rotate
 {
-typedef UINT TknIdx;
+typedef uint TknIdx;
 
 enum class TknType : u8
 {
@@ -79,12 +79,21 @@ const char *tkn_type_describe(const TknType type) noexcept;
 
 struct Token
 {
-    const UINT index, length, line;
-    const TknType type;
+    uint index, length, line;
+    TknType type;
 
-    Token(UINT index, UINT length, UINT line, TknType type)
+    Token()
+    {
+    }
+
+    Token(uint index, uint length, uint line, TknType type)
         : index(index), length(length), line(line), type(type)
     {
+    }
+
+    Token &operator=(const Token &)
+    {
+        return *this;
     }
 };
 

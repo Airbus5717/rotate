@@ -84,7 +84,7 @@ file_read(const char *name) noexcept
     fclose(file);
 
     // NOTE:
-    return file_t(name, buffer, (UINT)length, valid::success);
+    return file_t(name, buffer, (uint)length, valid::success);
 }
 
 } // namespace rotate
