@@ -33,8 +33,8 @@ typedef uint64_t u64;
 typedef unsigned long long usize;
 typedef signed long long ssize;
 
-static_assert(sizeof(usize) == 8);
-static_assert(sizeof(ssize) == 8);
+static_assert(sizeof(usize) == 8, "invalid sizes");
+static_assert(sizeof(ssize) == 8, "invalid sizes");
 
 // use this for the project
 typedef u32 uint;

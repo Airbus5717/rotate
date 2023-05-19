@@ -6,12 +6,10 @@ namespace rotate
 // file must not be null and lexer owns the file ptr
 Lexer::Lexer(const file_t *file)
     : index(0), len(0), line(1), file_length(file ? file->length : 0), file(file),
-      error(LexErr::UNKNOWN), tokens(new ArrayList<Token>())
+      error(LexErr::UNKNOWN), tokens(new Array<Token>(file->length / 4))
 {
     ASSERT_NULL(file, "Lexer File passed is a null pointer");
     ASSERT_NULL(tokens, "Lexer vec of tokens passed is a null pointer");
-
-    tokens->resize(file->length / 4);
 }
 
 Lexer::~Lexer() noexcept
@@ -86,7 +84,7 @@ Lexer::lex_director()
     return lex_symbols();
 }
 
-ArrayList<Token> *
+Array<Token> *
 Lexer::get_tokens() const
 {
     return tokens;
@@ -684,7 +682,8 @@ Lexer::add_token(const TknType type)
 {
     // index at the end of the token
     // NOTE(Airbus5717): emplace_back constructs the token in the vector
-    tokens->append(Token(index, len, begin_tok_line, type));
+    auto tkn = Token(index, len, begin_tok_line, type);
+    tokens->append(tkn);
     advance_len_times(); // TODO: Test optimization
     return SUCCESS;
 }

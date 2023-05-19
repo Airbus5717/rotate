@@ -82,14 +82,10 @@ struct Token
     uint index, length, line;
     TknType type;
 
-    Token() {}
-
     Token(uint index, uint length, uint line, TknType type)
         : index(index), length(length), line(line), type(type)
     {
     }
-
-    Token &operator=(const Token &) { return *this; }
 };
 
 enum class LexErr : u8

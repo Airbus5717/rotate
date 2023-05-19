@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ArrayList.hpp"
+#include "Array.hpp"
 #include "defines.hpp"
 
 namespace rotate

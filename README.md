@@ -1,7 +1,3 @@
-## UPDATE: ARCHIVED
-    due to C++ craziness i am switching to C# and i will maintain a C version for boostrapping the compiler
-
-
 
 ## Rotate (C++)
 > **Warning** Work is still in progress do not use for any serious project 

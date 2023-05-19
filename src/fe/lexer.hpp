@@ -12,7 +12,7 @@ class Lexer
     const file_t *file; // not owned by the lexer
     LexErr error    = LexErr::UNKNOWN;
     uint save_index = 0, save_line = 0;
-    ArrayList<Token> *tokens;
+    Array<Token> *tokens;
 
     //
     u8 lex_director();
@@ -49,7 +49,7 @@ class Lexer
     //
     Lexer(const file_t *);
     ~Lexer() noexcept;
-    ArrayList<Token> *get_tokens() const;
+    Array<Token> *get_tokens() const;
     uint get_num_of_lines();
     u8 lex();
     void save_log(FILE *);

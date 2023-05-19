@@ -97,6 +97,4 @@ bit_is_set(const u8 field, const u8 n)
     return ((field >> n) & 1);
 }
 
-// Custom ArrayList
-
 } // namespace rotate
