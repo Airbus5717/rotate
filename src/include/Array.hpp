@@ -35,9 +35,9 @@ class Array
         m_data[m_count++] = element;
     }
 
-    T at(usize index) { return m_data[index]; }
-    T operator[](usize index) { return m_data[index]; }
-    usize count() { return m_count; }
+    T at(const usize index) const { return m_data[index]; }
+    T operator[](const usize index) const { return m_data[index]; }
+    usize count() const { return m_count; }
 };
 
 } // namespace rotate
