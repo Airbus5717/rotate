@@ -18,7 +18,7 @@ tkn_type_describe(const TknType type) noexcept
         case TknType::BuiltinFunc: return "builtin_func";
         case TknType::Equal: return "assign'='";
         case TknType::Integer: return "integer";
-        case TknType::SemiColon: return "semicolon';'";
+        case TknType::Terminator: return "terminator';'|'\\n'";
         case TknType::Colon: return "colon':'";
         case TknType::String: return "string";
         case TknType::Function: return "function'fn'";
@@ -118,7 +118,7 @@ get_keyword_or_type(cstr string, const Token &tkn)
         case TknType::EqualEqual: return "==";
         case TknType::Equal: return "=";
         case TknType::Colon: return ":";
-        case TknType::SemiColon: return ";";
+        case TknType::Terminator: return ";|\\n";
         case TknType::AddEqual: return "+=";
         case TknType::SubEqual: return "-=";
         case TknType::MultEqual: return "*=";

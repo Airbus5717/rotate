@@ -60,7 +60,7 @@ Lexer::skip_whitespace() noexcept
         if (c == ' ') { index++; }
         else if (c == '\n')
         {
-            add_token(TknType::SemiColon);
+            add_token(TknType::Terminator);
             index++;
             line++;
         }
@@ -418,7 +418,7 @@ Lexer::lex_symbols()
         case ')': return add_token(TknType::CloseParen);
         case '[': return add_token(TknType::OpenSQRBrackets);
         case ']': return add_token(TknType::CloseSQRBrackets);
-        case ';': return add_token(TknType::SemiColon);
+        case ';': return add_token(TknType::Terminator);
         case ',': return add_token(TknType::Comma);
         // TODO(5717) bug below needs to check an eql during peeking
 

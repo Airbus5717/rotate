@@ -142,10 +142,10 @@ static_assert(DONE == 2, "Exit Done code is wrong");
         else { doWhenExpected; }                                                                   \
     } while (0)
 
-#define expect_semicolon(doWhenExpected, doElse)                                                   \
+#define expect_terminator(doWhenExpected, doElse)                                                  \
     do                                                                                             \
     {                                                                                              \
-        if (current().type != TknType::SemiColon)                                                  \
+        if (current().type != TknType::Terminator)                                                 \
         {                                                                                          \
             doElse;                                                                                \
             idx--;                                                                                 \

@@ -30,7 +30,7 @@ enum class TknType : u8
     True,             // 'true'
     False,            // 'false'
     BoolKeyword,      // 'bool'
-    SemiColon,        // ;
+    Terminator,       // ; or newline
     Colon,            // :
     Function,         // 'fn'
     PLUS,             // +
