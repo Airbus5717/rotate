@@ -55,7 +55,6 @@ tkn_type_describe(const TknType type) noexcept
         case TknType::IntKeyword: return "int_word";
         case TknType::Switch: return "switch";
         case TknType::BoolKeyword: return "bool_word";
-
         case TknType::EqualEqual: return "equality";
         case TknType::Break: return "break";
         case TknType::AddEqual: return "add_equal";
@@ -94,8 +93,6 @@ get_keyword_or_type(cstr string, const Token &tkn)
         case TknType::Or: return "or";
         case TknType::For: return "for";
         case TknType::Public: return "pub";
-        // case TknType::StringKeyword:
-        // return "str";
         case TknType::IntKeyword: return "int";
         case TknType::Ref: return "ref";
         case TknType::And: return "and";
@@ -113,8 +110,6 @@ get_keyword_or_type(cstr string, const Token &tkn)
         case TknType::Import: return "import";
         case TknType::FloatKeyword: return "float";
         case TknType::Struct: return "struct";
-
-        // symbols
         case TknType::EqualEqual: return "==";
         case TknType::Equal: return "=";
         case TknType::Colon: return ":";

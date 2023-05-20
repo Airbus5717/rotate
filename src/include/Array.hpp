@@ -19,6 +19,7 @@ class Array
         m_count    = 0;
         m_capacity = init_size;
         m_data     = static_cast<T *>(malloc(sizeof(T) * init_size));
+        ASSERT_NULL(m_data, "Array initialization failure");
     }
 
     ~Array() { free(static_cast<void *>(m_data)); }
@@ -28,18 +29,14 @@ class Array
         if (m_count == m_capacity)
         {
             m_capacity <<= 1;
-            T *new_elements = static_cast<T *>(malloc(sizeof(T) * m_capacity));
-            ASSERT_NULL(new_elements, "Array resize");
-            for (usize i = 0; i < m_count; i++)
-                new_elements[i] = m_data[i];
-            free(static_cast<void *>(m_data));
-            m_data = new_elements;
+            m_data = static_cast<T *>(realloc(m_data, m_capacity * sizeof(T)));
+            ASSERT_NULL(m_data, "Array resize");
         }
         m_data[m_count++] = element;
     }
 
     T at(usize index) { return m_data[index]; }
-
+    T operator[](usize index) { return m_data[index]; }
     usize count() { return m_count; }
 };
 
