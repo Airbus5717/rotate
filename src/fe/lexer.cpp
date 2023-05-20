@@ -4,11 +4,16 @@ namespace rotate
 {
 
 // file must not be null and lexer owns the file ptr
-Lexer::Lexer(const file_t *file)
-    : index(0), len(0), line(1), file_length(file ? file->length : 0), file(file),
-      error(LexErr::UNKNOWN), tokens(new Array<Token>(file->length / 4))
+Lexer::Lexer(const file_t *_file)
 {
-    ASSERT_NULL(file, "Lexer File passed is a null pointer");
+    ASSERT_NULL(_file, "Lexer File passed is a null pointer");
+    index       = 0;
+    len         = 0;
+    line        = 1;
+    file        = _file;
+    file_length = _file->length;
+    error       = LexErr::UNKNOWN;
+    tokens      = new Array<Token>(file->length >> 2);
     ASSERT_NULL(tokens, "Lexer vec of tokens passed is a null pointer");
 }
 
@@ -55,6 +60,7 @@ Lexer::skip_whitespace() noexcept
         if (c == ' ') { index++; }
         else if (c == '\n')
         {
+            add_token(TknType::SemiColon);
             index++;
             line++;
         }

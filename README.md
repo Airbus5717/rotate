@@ -4,10 +4,10 @@
 - inspired by C, Odin, Jai, Go and Zig programming languages
 
 ```cpp
-import "std/io";
+import "std/io"
 
 fn main() {
-    println("Hello, World"); 
+    println("Hello, World")
 }
 ```
 

@@ -27,7 +27,7 @@ class Array
     {
         if (m_count == m_capacity)
         {
-            m_capacity *= 2;
+            m_capacity <<= 1;
             T *new_elements = static_cast<T *>(malloc(sizeof(T) * m_capacity));
             ASSERT_NULL(new_elements, "Array resize");
             for (usize i = 0; i < m_count; i++)
